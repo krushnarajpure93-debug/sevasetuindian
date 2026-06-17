@@ -1,0 +1,134 @@
+[
+  {
+    "hotelName": "The Taj Mahal Palace",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "rating": 5.0,
+    "pricePerNight": 22000,
+    "type": "Luxury Resort",
+    "customerName": "Amit Sharma",
+    "status": "Confirmed",
+    "bookingId": "TRV-845124"
+  },
+  {
+    "hotelName": "Taj Exotica Resort & Spa",
+    "city": "Benaulim",
+    "state": "Goa",
+    "rating": 4.8,
+    "pricePerNight": 14500,
+    "type": "Luxury Resort",
+    "customerName": "Pooja Patil",
+    "status": "Confirmed",
+    "bookingId": "TRV-365214"
+  },
+  {
+    "hotelName": "Rambagh Palace",
+    "city": "Jaipur",
+    "state": "Rajasthan",
+    "rating": 4.9,
+    "pricePerNight": 28000,
+    "type": "Heritage Palace",
+    "customerName": "Rahul Deshmukh",
+    "status": "Confirmed",
+    "bookingId": "TRV-412587"
+  },
+  {
+    "hotelName": "The Leela Palace",
+    "city": "Chanakyapuri",
+    "state": "Delhi",
+    "rating": 4.7,
+    "pricePerNight": 16000,
+    "type": "Luxury Resort",
+    "customerName": "Suresh Kumar",
+    "status": "In Processing",
+    "bookingId": "TRV-954125"
+  },
+  {
+    "hotelName": "JW Marriott Hotel",
+    "city": "Bengaluru",
+    "state": "Karnataka",
+    "rating": 4.6,
+    "pricePerNight": 11500,
+    "type": "Luxury Resort",
+    "customerName": "Vikram Malhotra",
+    "status": "Confirmed",
+    "bookingId": "TRV-621458"
+  },
+  {
+    "hotelName": "Novotel Hyderabad Convention Centre",
+    "city": "Hyderabad",
+    "state": "Telangana",
+    "rating": 4.4,
+    "pricePerNight": 7500,
+    "type": "Standard",
+    "customerName": "Kiran Reddy",
+    "status": "Confirmed",
+    "bookingId": "TRV-215478"
+  },
+  {
+    "hotelName": "ITC Grand Chola",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "rating": 4.7,
+    "pricePerNight": 9500,
+    "type": "Luxury Resort",
+    "customerName": "Ananya Nair",
+    "status": "Confirmed",
+    "bookingId": "TRV-325412"
+  },
+  {
+    "hotelName": "The Oberoi Grand",
+    "city": "Kolkata",
+    "state": "West Bengal",
+    "rating": 4.6,
+    "pricePerNight": 10500,
+    "type": "Heritage Palace",
+    "customerName": "Subhash Bose",
+    "status": "In Processing",
+    "bookingId": "TRV-741258"
+  },
+  {
+    "hotelName": "Kumarakom Lake Resort",
+    "city": "Kottayam",
+    "state": "Kerala",
+    "rating": 4.8,
+    "pricePerNight": 13000,
+    "type": "Luxury Resort",
+    "customerName": "Meera Pillai",
+    "status": "Confirmed",
+    "bookingId": "TRV-154263"
+  },
+  {
+    "hotelName": "Radisson Blu Resort",
+    "city": "Alibaug",
+    "state": "Maharashtra",
+    "rating": 4.3,
+    "pricePerNight": 6800,
+    "type": "Standard",
+    "customerName": "Sachin Joshi",
+    "status": "Confirmed",
+    "bookingId": "TRV-965874"
+  },
+  {
+    "hotelName": "Zostel",
+    "city": "Manali",
+    "state": "Himachal Pradesh",
+    "rating": 4.2,
+    "pricePerNight": 1200,
+    "type": "Budget Stay",
+    "customerName": "Rohan Verma",
+    "status": "Confirmed",
+    "bookingId": "TRV-521478"
+  },
+  {
+    "hotelName": "The Hosteller",
+    "city": "Rishikesh",
+    "state": "Uttarakhand",
+    "rating": 4.1,
+    "pricePerNight": 950,
+    "type": "Budget Stay",
+    "customerName": "Deepak Negi",
+    "status": "In Processing",
+    "bookingId": "TRV-852369"
+  }
+]

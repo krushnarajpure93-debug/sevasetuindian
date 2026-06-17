@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seva Setu - One Stop Travel Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        sevaDarkNavy: '#03122f',
+                        sevaNavyCard: '#071c4d',
+                        sevaBlue: '#0f62fe',
+                        sevaLightBlue: '#e2edff',
+                        sevaGreen: '#118d57',
+                        sevaBg: '#f8fafc',
+                    },
+                    boxShadow: {
+                        'premium': '0 10px 30px -5px rgba(2, 12, 27, 0.08)',
+                        'floating': '0 20px 40px -15px rgba(0, 102, 255, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .glass-premium {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .glass-dark {
+            background: rgba(7, 28, 77, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .transition-all-300 {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .autocomplete-dropdown {
+            max-height: 280px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .drawer-transition {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes planeFly {
+            0% {
+                left: 0%;
+                transform: translate(-50%, -50%) rotate(90deg);
+            }
+
+            50% {
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(90deg) scale(1.2);
+            }
+
+            100% {
+                left: 100%;
+                transform: translate(-50%, -50%) rotate(90deg);
+            }
+        }
+
+        .live-plane-anim {
+            animation: planeFly 8s infinite linear;
+        }
+    </style>
+</head>
+
+<body class="bg-sevaBg text-gray-800 font-sans antialiased selection:bg-sevaBlue selection:text-white">
+
+    <div id="seva-setu-landing-view-screen" class="block">
+        <div
+            class="bg-gradient-to-r from-sevaDarkNavy to-sevaBlue text-white text-[11px] py-2 px-4 hidden sm:block border-b border-gray-800">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <span><i class="fa-solid fa-phone text-blue-400 mr-1.5"></i> 24x7 Customer Help:
+                        1800-SEVA-SETU</span>
+                    <span class="text-gray-400">|</span>
+                    <span><i class="fa-solid fa-envelope text-blue-400 mr-1.5"></i> support@sevasetu.com</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="#" class="hover:text-blue-300 transition-colors">Download App</a>
+                    <span class="text-gray-400">|</span>
+                    <a href="#" class="hover:text-blue-300 transition-colors">Partner Program</a>
+                    <span class="text-gray-400">|</span>
+                    <span class="text-amber-400 font-semibold"><i class="fa-solid fa-crown mr-1"></i> Seva Setu
+                        Prime</span>
+                </div>
+            </div>
+        </div>
+
+        <header
+            class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all-300 border-b border-gray-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+                <a href="#" class="flex items-center space-x-3 group">
+                    <div
+                        class="bg-gradient-to-tr from-sevaBlue to-blue-500 text-white p-2.5 rounded-xl shadow-md shadow-blue-500/20 group-hover:rotate-12 transition-transform duration-300">
+                        <i class="fa-solid fa-paper-plane text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black text-sevaDarkNavy block tracking-tight leading-none">Seva Setu
+                        </h1>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1 block">One Stop
+                            Travel Platform</span>
+                    </div>
+                </a>
+
+                <nav class="hidden lg:flex items-center space-x-8 text-[14px] font-semibold text-gray-600">
+                    <a href="#" class="text-sevaBlue border-b-2 border-sevaBlue pb-1 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-house-chimney text-xs"></i> <span>Home</span>
+                    </a>
+                    <a href="#" class="hover:text-sevaBlue transition-colors flex items-center space-x-1.5">
+                        <i class="fa-solid fa-plane text-xs"></i> <span>Flights</span>
+                    </a>
+                    <a href="#" class="hover:text-sevaBlue transition-colors flex items-center space-x-1.5">
+                        <i class="fa-solid fa-hotel text-xs"></i> <span>Hotels</span>
+                    </a>
+                    <a href="#" class="hover:text-sevaBlue transition-colors flex items-center space-x-1.5">
+                        <i class="fa-solid fa-train text-xs"></i> <span>Trains</span>
+                    </a>
+                    <a href="#" class="hover:text-sevaBlue transition-colors flex items-center space-x-1.5">
+                        <i class="fa-solid fa-bus text-xs"></i> <span>Bus</span>
+                    </a>
+                    <div class="relative group cursor-pointer py-1">
+                        <span class="hover:text-sevaBlue transition-colors flex items-center space-x-1">
+                            <span>Services</span> <i
+                                class="fa-solid fa-chevron-down text-[10px] text-gray-400 group-hover:rotate-180 transition-transform"></i>
+                        </span>
+                        <div
+                            class="absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0">
+                            <a href="#"
+                                class="flex items-center px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 hover:text-sevaBlue"><i
+                                    class="fa-solid fa-car w-5"></i> Cabs Booking</a>
+                            <a href="#"
+                                class="flex items-center px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 hover:text-sevaBlue"><i
+                                    class="fa-solid fa-umbrella-beach w-5"></i> Holiday Packages</a>
+                            <a href="#"
+                                class="flex items-center px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 hover:text-sevaBlue"><i
+                                    class="fa-solid fa-passport w-5"></i> Visa Assistance</a>
+                            <a href="#"
+                                class="flex items-center px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 hover:text-sevaBlue"><i
+                                    class="fa-solid fa-shield-heart w-5"></i> Travel Insurance</a>
+                        </div>
+                    </div>
+                    <a href="#" class="hover:text-sevaBlue transition-colors">About Us</a>
+                    <a href="#" class="hover:text-sevaBlue transition-colors">Contact Us</a>
+                </nav>
+
+                <div class="flex items-center space-x-4">
+                    <button id="themeToggleBtn"
+                        class="w-9 h-9 rounded-full bg-gray-50 border border-gray-200 text-gray-600 hover:text-sevaBlue hover:bg-blue-50 flex items-center justify-center transition-all-300">
+                        <i class="fa-regular fa-moon text-md"></i>
+                    </button>
+                    <div
+                        class="hidden sm:flex items-center space-x-1 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 cursor-pointer text-xs font-bold text-gray-600">
+                        <img src="https://flagcdn.com/w20/in.png" alt="India Flag" class="w-4 h-3 rounded-sm">
+                        <span>IN / INR</span>
+                    </div>
+                    <button
+                        class="bg-sevaBlue text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-blue-500/10 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/20 transition-all-300 flex items-center space-x-2">
+                        <i class="fa-regular fa-user-circle text-base"></i> <span>Login / Signup</span>
+                    </button>
+                    <button class="lg:hidden text-gray-700 text-xl focus:outline-none">
+                        <i class="fa-solid fa-bars-staggered"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <section class="relative bg-cover bg-center h-[460px] flex items-center"
+            style="background-image: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1920&q=80');">
+            <div class="absolute inset-0 bg-gradient-to-r from-sevaDarkNavy/70 via-sevaDarkNavy/40 to-transparent">
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-sevaBg via-transparent to-transparent"></div>
+
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 w-full text-white pb-12">
+                <div
+                    class="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border border-white/20 animate-pulse">
+                    <i class="fa-solid fa-plane-departure text-blue-400"></i>
+                    <span>Fly More, Pay Less</span>
+                </div>
+                <h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold mt-4 leading-tight tracking-tight max-w-2xl">
+                    Book Flights<br>Anywhere, <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Anytime</span>
+                </h2>
+                <p class="text-sm sm:text-base mt-3 max-w-lg text-gray-200 font-medium leading-relaxed">
+                    Compare and book domestic & international flights at the best prices with zero hidden charges.
+                </p>
+                <div class="flex flex-wrap gap-x-8 gap-y-3 mt-8 text-xs font-medium text-gray-100">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-4 h-4 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                            <i class="fa-solid fa-check text-[9px]"></i>
+                        </div> <span>Best Prices Guaranteed</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-4 h-4 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                            <i class="fa-solid fa-bolt text-[9px]"></i>
+                        </div> <span>Easy Booking Fast & Secure</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-4 h-4 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                            <i class="fa-solid fa-headset text-[9px]"></i>
+                        </div> <span>24/7 Support We are here</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-4 h-4 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                            <i class="fa-solid fa-shield-halved text-[9px]"></i>
+                        </div> <span>Safe & Secure Trusted
+                            Platform</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 -mt-24 relative z-20">
+            <div class="bg-sevaDarkNavy text-white rounded-2xl shadow-floating border border-slate-800/80 p-6 md:p-8">
+                <div class="flex flex-wrap items-center gap-2 sm:gap-6 border-b border-slate-800 pb-5 mb-6">
+                    <button
+                        class="flex items-center space-x-2.5 text-blue-400 border-b-2 border-blue-400 pb-3 font-bold text-sm tracking-wide">
+                        <i class="fa-solid fa-plane text-base"></i> <span>Flights</span>
+                    </button>
+                    <button
+                        class="flex items-center space-x-2.5 text-gray-400 hover:text-white pb-3 font-medium text-sm transition-colors">
+                        <i class="fa-solid fa-hotel text-base"></i> <span>Hotels</span>
+                    </button>
+                    <button
+                        class="flex items-center space-x-2.5 text-gray-400 hover:text-white pb-3 font-medium text-sm transition-colors">
+                        <i class="fa-solid fa-train text-base"></i> <span>Trains</span>
+                    </button>
+                    <button
+                        class="flex items-center space-x-2.5 text-gray-400 hover:text-white pb-3 font-medium text-sm transition-colors">
+                        <i class="fa-solid fa-bus text-base"></i> <span>Bus</span>
+                    </button>
+                    <button
+                        class="flex items-center space-x-2.5 text-gray-400 hover:text-white pb-3 font-medium text-sm transition-colors">
+                        <i class="fa-solid fa-car text-base"></i> <span>Cabs</span>
+                    </button>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-6 mb-5 text-xs font-semibold tracking-wide text-gray-300">
+                    <label class="flex items-center space-x-2 cursor-pointer group">
+                        <input type="radio" name="tripTypeRoute" checked class="w-4 h-4 accent-blue-500 focus:ring-0">
+                        <span class="group-hover:text-white transition-colors">One Way</span>
+                    </label>
+                    <label class="flex items-center space-x-2 cursor-pointer group">
+                        <input type="radio" name="tripTypeRoute" class="w-4 h-4 accent-blue-500 focus:ring-0">
+                        <span class="group-hover:text-white transition-colors">Round Trip</span>
+                    </label>
+                    <label class="flex items-center space-x-2 cursor-pointer group">
+                        <input type="radio" name="tripTypeRoute" class="w-4 h-4 accent-blue-500 focus:ring-0">
+                        <span class="group-hover:text-white transition-colors">Multi City</span>
+                    </label>
+                </div>
+
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-0.5 bg-gray-200 rounded-xl overflow-hidden p-0.5 border border-slate-700 relative">
+                    <div
+                        class="bg-white text-gray-800 p-4 hover:bg-blue-50/40 transition-colors cursor-pointer group relative">
+                        <label
+                            class="block text-[10px] uppercase font-extrabold tracking-widest text-gray-400">From</label>
+                        <div class="flex items-center mt-1.5">
+                            <i
+                                class="fa-solid fa-plane-departure text-gray-400 group-hover:text-sevaBlue transition-colors mr-2.5 text-base"></i>
+                            <input type="text" id="fromSearchInput" value="Delhi (DEL)" autocomplete="off"
+                                class="w-full font-bold focus:outline-none text-sm text-gray-900 bg-transparent"
+                                oninput="executeGlobalAirportSearch('from')">
+                        </div>
+                        <span id="fromSublabel"
+                            class="absolute right-3 bottom-3 text-[10px] font-medium text-gray-400">Indira Gandhi
+                            Int'l</span>
+                        <div id="fromAutocompleteContainer"
+                            class="absolute left-0 right-0 top-full mt-1 bg-white rounded-xl shadow-2xl border border-gray-100 hidden autocomplete-dropdown">
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-white text-gray-800 p-4 hover:bg-blue-50/40 transition-colors cursor-pointer group relative">
+                        <label
+                            class="block text-[10px] uppercase font-extrabold tracking-widest text-gray-400">To</label>
+                        <div class="flex items-center mt-1.5">
+                            <i
+                                class="fa-solid fa-plane-arrival text-gray-400 group-hover:text-sevaBlue transition-colors mr-2.5 text-base"></i>
+                            <input type="text" id="toSearchInput" value="Mumbai (BOM)" autocomplete="off"
+                                class="w-full font-bold focus:outline-none text-sm text-gray-900 bg-transparent"
+                                oninput="executeGlobalAirportSearch('to')">
+                        </div>
+                        <span id="toSublabel"
+                            class="absolute right-3 bottom-3 text-[10px] font-medium text-gray-400">Chhatrapati
+                            Shivaji</span>
+                        <div id="toAutocompleteContainer"
+                            class="absolute left-0 right-0 top-full mt-1 bg-white rounded-xl shadow-2xl border border-gray-100 hidden autocomplete-dropdown">
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-white text-gray-800 p-4 hover:bg-blue-50/40 transition-colors cursor-pointer group relative">
+                        <label class="block text-[10px] uppercase font-extrabold tracking-widest text-gray-400">Depart
+                            Date</label>
+                        <div class="flex items-center mt-1.5">
+                            <i
+                                class="fa-regular fa-calendar-days text-gray-400 group-hover:text-sevaBlue transition-colors mr-2.5 text-base"></i>
+                            <input type="text" value="23 May 2026"
+                                class="w-full font-bold focus:outline-none text-sm text-gray-900 bg-transparent">
+                        </div>
+                        <span class="absolute right-3 bottom-3 text-[10px] font-medium text-emerald-600">Saturday</span>
+                    </div>
+
+                    <div
+                        class="bg-white text-gray-800 p-4 hover:bg-blue-50/40 transition-colors cursor-pointer group relative">
+                        <label class="block text-[10px] uppercase font-extrabold tracking-widest text-gray-400">Return
+                            Date</label>
+                        <div class="flex items-center mt-1.5">
+                            <i
+                                class="fa-regular fa-calendar-plus text-gray-400 group-hover:text-sevaBlue transition-colors mr-2.5 text-base"></i>
+                            <input type="text" placeholder="Add Return"
+                                class="w-full font-semibold focus:outline-none text-sm text-gray-400 bg-transparent">
+                        </div>
+                        <span class="absolute right-3 bottom-3 text-[10px] font-medium text-gray-400">Save on
+                            roundtrip</span>
+                    </div>
+
+                    <div
+                        class="bg-white text-gray-800 p-4 hover:bg-blue-50/40 transition-colors cursor-pointer group relative">
+                        <label
+                            class="block text-[10px] uppercase font-extrabold tracking-widest text-gray-400">Passengers
+                            & Class</label>
+                        <div class="flex items-center mt-1.5">
+                            <i
+                                class="fa-solid fa-user-group text-gray-400 group-hover:text-sevaBlue transition-colors mr-2.5 text-sm"></i>
+                            <span class="text-sm font-bold text-gray-900 truncate block">1 Passenger, Economy</span>
+                        </div>
+                        <span class="absolute right-3 bottom-3 text-[10px] font-bold text-sevaBlue">Non-Stop
+                            Choices</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center justify-between mt-6 gap-4">
+                    <div class="flex flex-wrap items-center gap-3 text-xs font-semibold text-gray-300">
+                        <span class="text-gray-400">Select Special Fares:</span>
+                        <label
+                            class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-md cursor-pointer flex items-center space-x-1.5 transition-colors">
+                            <input type="checkbox" class="accent-blue-500"> <span>Student</span>
+                        </label>
+                        <label
+                            class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-md cursor-pointer flex items-center space-x-1.5 transition-colors">
+                            <input type="checkbox" class="accent-blue-500"> <span>Senior Citizen</span>
+                        </label>
+                        <label
+                            class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-md cursor-pointer flex items-center space-x-1.5 transition-colors">
+                            <input type="checkbox" class="accent-blue-500"> <span>Armed Forces</span>
+                        </label>
+                    </div>
+
+                    <div>
+                        <button id="searchFlightsSubmitBtn" type="button" onclick="pipelineSearchExecutionRouter()"
+                            class="w-full sm:w-auto bg-gradient-to-r from-sevaBlue to-blue-500 hover:from-blue-600 hover:to-blue-400 text-white font-bold px-14 py-3.5 rounded-xl transition-all shadow-md shadow-blue-500/20 text-sm flex items-center justify-center space-x-2 transform hover:-translate-y-0.5">
+                            <i class="fa-solid fa-magnifying-glass"></i> <span>Search Flights</span>
+                        </button>
+                    </div>
+                </div>!
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-5 border rounded-2xl shadow-premium space-y-4">
+                        <span
+                            class="bg-blue-100 text-blue-700 font-extrabold text-[10px] tracking-widest uppercase px-2.5 py-1 rounded">Protection</span>
+                        <h4 class="text-base font-black text-slate-900">Seva Setu Premium Secure Flight Insurance</h4>
+                        <p class="text-xs text-gray-500 leading-relaxed">Secure full trip cancel refund vectors up to
+                            ₹50,000 against unexpected health anomalies, missed flight connection configurations, or
+                            baggage
+                            misplacement parameters.</p>
+                        <div class="border-t pt-3 flex justify-between items-center"><span
+                                class="text-sm font-black text-slate-900">₹399 / Pax</span><span
+                                class="text-[11px] font-bold text-emerald-600">Active protection</span></div>
+                    </div>
+                    <div class="bg-white p-5 border rounded-2xl shadow-premium space-y-4">
+                        <span
+                            class="bg-purple-100 text-purple-700 font-extrabold text-[10px] tracking-widest uppercase px-2.5 py-1 rounded">Lounge
+                            Access</span>
+                        <h4 class="text-base font-black text-slate-900">Global Luxury Terminal Lounge Voucher</h4>
+                        <p class="text-xs text-gray-500 leading-relaxed">Gain complimentary access parameters to premium
+                            Tier-1 international host lounges with live gourmet chef setups, high speed fiber wifi
+                            matrices,
+                            and relax recliners.</p>
+                        <div class="border-t pt-3 flex justify-between items-center"><span
+                                class="text-sm font-black text-slate-900">₹1,200 / Terminal</span><span
+                                class="text-[11px] font-bold text-blue-600">Addon available</span></div>
+                    </div>
+                    <div class="bg-white p-5 border rounded-2xl shadow-premium space-y-4">
+                        <span
+                            class="bg-amber-100 text-amber-700 font-extrabold text-[10px] tracking-widest uppercase px-2.5 py-1 rounded">Currency
+                            Pack</span>
+                        <h4 class="text-base font-black text-slate-900">Multi-Currency Forex Cards Exchange</h4>
+                        <p class="text-xs text-gray-500 leading-relaxed">Lock zero markup currency exchange values for
+                            over
+                            14 global currency codes (USD, EUR, AED, SGD) straight into a single electronic distribution
+                            smartcard.</p>
+                        <div class="border-t pt-3 flex justify-between items-center"><span
+                                class="text-sm font-black text-slate-900">Zero Markup</span><span
+                                class="text-[11px] font-bold text-purple-600">Instant delivery</span></div>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-slate-900 rounded-2xl p-6 text-white grid grid-cols-2 md:grid-cols-4 gap-6 text-center shadow-inner border border-slate-800">
+                    <div class="space-y-1"><span
+                            class="text-3xl font-mono font-black text-blue-400 block">45,190+</span><span
+                            class="text-[10px] tracking-wider text-slate-400 uppercase font-bold block">Synced Global
+                            Routes</span></div>
+                    <div class="space-y-1"><span
+                            class="text-3xl font-mono font-black text-emerald-400 block">99.92%</span><span
+                            class="text-[10px] tracking-wider text-slate-400 uppercase font-bold block">Server Handshake
+                            Uptime</span></div>
+                    <div class="space-y-1"><span
+                            class="text-3xl font-mono font-black text-cyan-400 block">0%</span><span
+                            class="text-[10px] tracking-wider text-slate-400 uppercase font-bold block">Consolidator
+                            Markup
+                            Tax</span></div>
+                    <div class="space-y-1"><span
+                            class="text-3xl font-mono font-black text-amber-400 block">12.4M</span><span
+                            class="text-[10px] tracking-wider text-slate-400 uppercase font-bold block">Verified
+                            Identity
+                            Boardings</span></div>
+                </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 mt-12">
+            <div
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 bg-white p-5 rounded-xl shadow-premium border border-gray-100/80">
+                <div class="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                    <div
+                        class="text-sevaBlue bg-blue-50 w-12 h-12 rounded-xl flex items-center justify-center shadow-inner">
+                        <i class="fa-solid fa-tags text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-sevaDarkNavy">Exclusive Offers</h4>
+                        <p class="text-xs text-gray-400 mt-0.5">Best deals & instant discounts</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                    <div
+                        class="text-sevaBlue bg-blue-50 w-12 h-12 rounded-xl flex items-center justify-center shadow-inner">
+                        <i class="fa-regular fa-calendar-check text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-sevaDarkNavy">Flexible Booking</h4>
+                        <p class="text-xs text-gray-400 mt-0.5">Change or cancel choices easily</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                    <div
+                        class="text-sevaBlue bg-blue-50 w-12 h-12 rounded-xl flex items-center justify-center shadow-inner">
+                        <i class="fa-solid fa-suitcase-rolling text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-sevaDarkNavy">Baggage Included</h4>
+                        <p class="text-xs text-gray-400 mt-0.5">Check-in luggage options available</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                    <div
+                        class="text-sevaBlue bg-blue-50 w-12 h-12 rounded-xl flex items-center justify-center shadow-inner">
+                        <i class="fa-solid fa-face-smile text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-sevaDarkNavy">Hassle Free Support</h4>
+                        <p class="text-xs text-gray-400 mt-0.5">Instant refunds & premium assistance</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 mt-12">
+            <div class="flex justify-between items-end mb-6">
+                <div>
+                    <h3 class="text-2xl font-black text-sevaDarkNavy tracking-tight">Popular Destinations</h3>
+                    <p class="text-sm text-gray-400 font-medium mt-1">Top flight routes loved and trending by our
+                        traveler network</p>
+                </div>
+                <button id="viewAllRoutesBtn"
+                    class="text-sevaBlue font-bold text-sm flex items-center space-x-1 group hover:underline bg-transparent border-none outline-none cursor-pointer">
+                    <span id="viewAllRoutesText">View All Routes</span> <i id="viewAllRoutesIcon"
+                        class="fa-solid fa-arrow-right text-xs transform group-hover:translate-x-1 transition-transform"></i>
+                </button>
+            </div>
+
+            <div id="destinationsContainerGrid"
+                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
+                <div class="bg-white rounded-xl overflow-hidden shadow-premium hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 group destination-card-node"
+                    onclick="document.getElementById('fromSearchInput').value='Delhi (DEL)'; document.getElementById('toSearchInput').value='Mumbai (BOM)'; pipelineSearchExecutionRouter();">
+                    <div class="relative overflow-hidden h-32">
+                        <img src="https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=400&q=80"
+                            alt="Delhi"
+                            class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <span
+                            class="absolute top-2.5 right-2.5 bg-black/40 backdrop-blur-md text-white text-[9px] font-bold px-2 py-0.5 rounded-full"><i
+                                class="fa-solid fa-fire text-amber-400 mr-1"></i>Trending</span>
+                    </div>
+                    <div class="p-3.5">
+                        <h4 class="text-sm font-extrabold text-gray-900">Delhi</h4>
+                        <p class="text-xs text-gray-400 font-medium mt-0.5">To Mumbai Route</p>
+                        <div class="flex justify-between items-center mt-3 pt-2 border-t border-gray-50">
+                            <span class="text-xs font-black text-sevaBlue">From ₹2,499</span>
+                            <span class="text-[9px] bg-slate-100 text-slate-500 px-1.5 py-0.5 font-bold rounded">One
+                                Way</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl overflow-hidden shadow-premium hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 group destination-card-node"
+                    onclick="document.getElementById('fromSearchInput').value='Mumbai (BOM)'; document.getElementById('toSearchInput').value='Bengaluru (BLR)'; pipelineSearchExecutionRouter();">
+                    <div class="relative overflow-hidden h-32">
+                        <img src="https://images.unsplash.com/photo-1566552881560-0be862a7c445?auto=format&fit=crop&w=400&q=80"
+                            alt="Mumbai"
+                            class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="p-3.5">
+                        <h4 class="text-sm font-extrabold text-gray-900">Mumbai</h4>
+                        <p class="text-xs text-gray-400 font-medium mt-0.5">To Bangalore Route</p>
+                        <div class="flex justify-between items-center mt-3 pt-2 border-t border-gray-50">
+                            <span class="text-xs font-black text-sevaBlue">From ₹2,199</span>
+                            <span class="text-[9px] bg-slate-100 text-slate-500 px-1.5 py-0.5 font-bold rounded">One
+                                Way</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl overflow-hidden shadow-premium hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 group destination-card-node"
+                    onclick="document.getElementById('fromSearchInput').value='Hyderabad (HYD)'; document.getElementById('toSearchInput').value='Delhi (DEL)'; pipelineSearchExecutionRouter();">
+                    <div class="relative overflow-hidden h-32">
+                        <img src="https://images.unsplash.com/photo-1605007493699-af65834f8a00?auto=format&fit=crop&w=400&q=80"
+                            alt="Hyderabad"
+                            class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="p-3.5">
+                        <h4 class="text-sm font-extrabold text-gray-900">Hyderabad</h4>
+                        <p class="text-xs text-gray-400 font-medium mt-0.5">To Delhi Route</p>
+                        <div class="flex justify-between items-center mt-3 pt-2 border-t border-gray-50">
+                            <span class="text-xs font-black text-sevaBlue">From ₹2,799</span>
+                            <span class="text-[9px] bg-slate-100 text-slate-500 px-1.5 py-0.5 font-bold rounded">One
+                                Way</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl overflow-hidden shadow-premium hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 group destination-card-node"
+                    onclick="document.getElementById('fromSearchInput').value='Chennai (MAA)'; document.getElementById('toSearchInput').value='Bengaluru (BLR)'; pipelineSearchExecutionRouter();">
+                    <div class="relative overflow-hidden h-32">
+                        <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=400&q=80"
+                            alt="Chennai"
+                            class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="p-3.5">
+                        <h4 class="text-sm font-extrabold text-gray-900">Chennai</h4>
+                        <p class="text-xs text-gray-400 font-medium mt-0.5">To Bangalore Route</p>
+                        <div class="flex justify-between items-center mt-3 pt-2 border-t border-gray-50">
+                            <span class="text-xs font-black text-sevaBlue">From ₹2,199</span>
+                            <span class="text-[9px] bg-slate-100 text-slate-500 px-1.5 py-0.5 font-bold rounded">One
+                                Way</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl overflow-hidden shadow-premium hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 group destination-card-node"
+                    onclick="document.getElementById('fromSearchInput').value='Kolkata (CCU)'; document.getElementById('toSearchInput').value='Delhi (DEL)'; pipelineSearchExecutionRouter();">
+                    <div class="relative overflow-hidden h-32">
+                        <img src="https://images.unsplash.com/photo-1558431382-bb7b68c4b517?auto=format&fit=crop&w=400&q=80"
+                            alt="Kolkata"
+                            class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="p-3.5">
+                        <h4 class="text-sm font-extrabold text-gray-900">Kolkata</h4>
+                        <p class="text-xs text-gray-400 font-medium mt-0.5">To Delhi Route</p>
+                        <div class="flex justify-between items-center mt-3 pt-2 border-t border-gray-50">
+                            <span class="text-xs font-black text-sevaBlue">From ₹2,899</span>
+                            <span class="text-[9px] bg-slate-100 text-slate-500 px-1.5 py-0.5 font-bold rounded">One
+                                Way</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl overflow-hidden shadow-premium hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 group destination-card-node"
+                    onclick="document.getElementById('fromSearchInput').value='Goa (GOI)'; document.getElementById('toSearchInput').value='Mumbai (BOM)'; pipelineSearchExecutionRouter();">
+                    <div class="relative overflow-hidden h-32">
+                        <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=400&q=80"
+                            alt="Goa"
+                            class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="p-3.5">
+                        <h4 class="text-sm font-extrabold text-gray-900">Goa</h4>
+                        <p class="text-xs text-gray-400 font-medium mt-0.5">To Mumbai Route</p>
+                        <div class="flex justify-between items-center mt-3 pt-2 border-t border-gray-50">
+                            <span class="text-xs font-black text-sevaBlue">From ₹2,699</span>
+                            <span class="text-[9px] bg-slate-100 text-slate-500 px-1.5 py-0.5 font-bold rounded">One
+                                Way</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 mt-10">
+            <h4 class="text-[11px] uppercase tracking-widest font-extrabold text-gray-400 mb-3.5">Fly with India's most
+                trusted airlines</h4>
+            <div
+                class="bg-white p-5 rounded-xl flex flex-wrap justify-center items-center gap-x-12 gap-y-6 shadow-premium border border-gray-100/60">
+                <span
+                    class="text-2xl font-black italic text-blue-900 tracking-tight hover:opacity-80 cursor-pointer">IndiGo</span>
+                <span class="text-2xl font-bold text-red-600 tracking-wide hover:opacity-80 cursor-pointer">AIR
+                    INDIA</span>
+                <span
+                    class="text-2xl font-medium tracking-widest text-amber-800 font-serif hover:opacity-80 cursor-pointer">VISTARA</span>
+                <span
+                    class="text-2xl font-extrabold text-red-500 italic hover:opacity-80 cursor-pointer">SpiceJet</span>
+                <span class="text-2xl font-bold text-orange-500 tracking-tight hover:opacity-80 cursor-pointer">Akasa
+                    Air</span>
+                <span
+                    class="text-2xl font-extrabold text-red-600 tracking-tighter hover:opacity-80 cursor-pointer">AirAsia</span>
+            </div>
+        </section>
+
+        <footer class="bg-sevaDarkNavy text-gray-400 text-xs mt-20 pt-16 pb-8 border-t border-slate-800 relative z-10">
+            <div
+                class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(15,98,254,0.05),transparent_35%)]">
+            </div>
+            <div
+                class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+                <div class="md:col-span-2 space-y-4">
+                    <div class="flex items-center space-x-2.5 text-white">
+                        <div class="bg-sevaBlue p-2 rounded-xl text-white shadow-md"><i
+                                class="fa-solid fa-paper-plane text-md"></i></div>
+                        <span class="text-lg font-black tracking-tight">Seva Setu</span>
+                    </div>
+                    <p class="text-slate-400 leading-relaxed max-w-sm text-[13px]">
+                        Seva Setu is India's premier aggregate travel portal designed to deliver ultra-fast booking
+                        engines, crystal clear zero-markup pricing vectors, and flawless consumer support workflows.
+                    </p>
+                </div>
+                <div>
+                    <h5
+                        class="text-white font-extrabold mb-4 text-xs uppercase tracking-widest border-l-2 border-sevaBlue pl-2">
+                        Quick Routes</h5>
+                    <ul class="space-y-2.5 font-medium text-slate-400">
+                        <li><a href="#" class="hover:text-white transition-colors"><i
+                                    class="fa-solid fa-chevron-right text-[8px] mr-1.5 text-blue-500"></i> Platform
+                                Home</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5
+                        class="text-white font-extrabold mb-4 text-xs uppercase tracking-widest border-l-2 border-sevaBlue pl-2">
+                        Customer First</h5>
+                    <ul class="space-y-2.5 font-medium text-slate-400">
+                        <li><a href="#" class="hover:text-white transition-colors"><i
+                                    class="fa-solid fa-chevron-right text-[8px] mr-1.5 text-blue-500"></i> Terms &
+                                Services</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5
+                        class="text-white font-extrabold mb-4 text-xs uppercase tracking-widest border-l-2 border-sevaBlue pl-2">
+                        Newsletter</h5>
+                    <div class="space-y-2">
+                        <input type="email" placeholder="Enter corporate email"
+                            class="w-full px-3 py-3 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none focus:border-sevaBlue text-xs">
+                        <button
+                            class="w-full bg-gradient-to-r from-sevaBlue to-blue-600 text-white font-bold py-3 rounded-lg">Subscribe
+                            Channels</button>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="flight-search-container-screen" class="hidden">
+        <header class="bg-white border-b border-slate-200/80 py-4 px-6 sticky top-0 z-50 shadow-sm">
+            <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center space-x-3 group cursor-pointer" onclick="window.location.reload();">
+                    <span class="text-3xl font-black italic text-[#002855] tracking-tighter">Seva Setu</span>
+                    <div class="h-5 w-[2px] bg-slate-300"></div>
+                    <span
+                        class="text-[10px] bg-[#002855] text-white font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-widest">GDS
+                        Matrix</span>
+                </div>
+
+                <div
+                    class="flex items-center space-x-6 bg-slate-50 border border-slate-200 hover:border-blue-500 rounded-full px-6 py-2.5 text-xs text-blue-950 font-bold shadow-inner cursor-pointer transition-all">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-plane-departure text-blue-600 text-sm"></i>
+                        <span id="pill-origin-text" class="tracking-wide">DEL</span>
+                        <i class="fa-solid fa-arrow-right-long text-slate-400 mx-1"></i>
+                        <span id="pill-destination-text" class="tracking-wide">BOM</span>
+                    </div>
+                    <div class="text-slate-300 font-normal text-sm">|</div>
+                    <div class="flex items-center gap-1.5 text-slate-700"><i
+                            class="fa-regular fa-calendar-check text-blue-600 text-sm"></i> 26th May, 2026</div>
+                    <div class="text-slate-300 font-normal text-sm">|</div>
+                    <div class="flex items-center gap-1.5 text-slate-700"><i
+                            class="fa-regular fa-user text-blue-600 text-sm"></i> 1 Passenger</div>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <button
+                        class="text-xs font-extrabold text-slate-600 hover:text-blue-900 transition flex items-center gap-1"><i
+                            class="fa-solid fa-globe"></i> INR (₹)</button>
+                    <div class="h-4 w-[1px] bg-slate-200"></div>
+                    <button
+                        class="bg-blue-50 text-blue-900 hover:bg-blue-100 text-xs font-black px-4 py-2 rounded-xl border border-blue-200 shadow-sm transition">Krushna
+                        Rajpure</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+            <div
+                class="bg-slate-900 rounded-2xl p-6 text-white border border-slate-800 relative overflow-hidden shadow-lg">
+                <div
+                    class="absolute inset-0 bg-opacity-20 bg-[radial-gradient(circle_at_center,rgba(15,98,254,0.15),transparent_70%)]">
+                </div>
+                <div class="absolute top-3 right-4 text-[10px] font-mono tracking-widest text-slate-400 uppercase"><i
+                        class="fa-solid fa-circle text-emerald-500 animate-ping mr-1"></i> Telemetry Radar Engine</div>
+                <div class="flex justify-between items-center max-w-2xl mx-auto relative z-10 py-2">
+                    <div class="text-center">
+                        <span class="text-3xl font-mono font-black text-blue-400 checkout-origin-city-node">DEL</span>
+                        <span class="text-[10px] text-slate-400 block uppercase font-bold tracking-widest mt-1">Origin
+                            Terminal</span>
+                    </div>
+                    <div class="flex-1 px-10 relative">
+                        <div
+                            class="w-full h-[2px] bg-gradient-to-r from-blue-500/20 via-blue-400 to-blue-500/20 relative">
+                            <i
+                                class="fa-solid fa-plane text-blue-400 text-base absolute top-1/2 -translate-y-1/2 live-plane-anim"></i>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <span
+                            class="text-3xl font-mono font-black text-cyan-400 checkout-destination-city-node">BOM</span>
+                        <span class="text-[10px] text-slate-400 block uppercase font-bold tracking-widest mt-1">Dest
+                            Hub</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+            <div class="mb-6">
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+                    <span>Choose your preferred flight from</span>
+                    <span id="title-route-display"
+                        class="text-[#002855] underline decoration-blue-500 underline-offset-4">Delhi to Mumbai</span>
+                </h1>
+                <p class="text-sm text-slate-500 font-medium mt-1">Directly syncing route context attributes from search
+                    session state metrics parameters.</p>
+            </div>
+
+            <div
+                class="bg-gradient-to-r from-[#002855] via-slate-900 to-[#002855] text-white rounded-xl p-4 text-center font-bold tracking-widest text-xs uppercase shadow-md mb-6 flex justify-center items-center gap-6 border border-blue-950">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-plane-departure text-blue-300"></i>
+                    <span id="banner-origin-code">DEL</span>
+                    <span id="banner-origin-name" class="text-[10px] font-normal text-blue-200 lowercase">(delhi
+                        international airport)</span>
+                </div>
+                <div
+                    class="w-48 h-[2px] bg-gradient-to-r from-transparent via-blue-400 to-transparent relative flex items-center justify-center">
+                    <i class="fa-solid fa-plane text-xs text-white absolute animate-pulse"></i>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="banner-destination-code">BOM</span>
+                    <span id="banner-destination-name" class="text-[10px] font-normal text-blue-200 lowercase">(mumbai
+                        airport)</span>
+                    <i class="fa-solid fa-plane-arrival text-blue-300"></i>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-12 gap-4 mb-4 text-right pr-4 hidden md:grid items-end px-2">
+                <div class="col-span-6 text-left text-xs font-black text-slate-400 uppercase tracking-widest">Flight
+                    Operations & Matrix Grid</div>
+                <div
+                    class="col-span-3 flex items-center justify-end gap-2 text-xs font-black text-amber-800 uppercase tracking-widest">
+                    <i class="fa-solid fa-couch text-amber-500"></i> STRETCH | BUSINESS
+                </div>
+                <div
+                    class="col-span-3 flex items-center justify-end gap-2 text-xs font-black text-[#002855] uppercase tracking-widest">
+                    <i class="fa-solid fa-chair text-blue-500"></i> ECONOMY
+                </div>
+            </div>
+
+            <div id="gds-flight-results-root" class="space-y-5 mb-24"></div>
+        </main>
+
+        <footer class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-md py-4 px-6 z-50">
+            <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                    <p class="text-sm font-black text-slate-950" id="footer-manifest-summary">Select a specific flight
+                        option from the GDS rows above</p>
+                </div>
+                <div class="flex items-center gap-6">
+                    <p class="text-2xl font-black text-slate-900" id="footer-live-price">₹0</p>
+                    <button onclick="navigateToPassengerScreen()"
+                        class="bg-[#002855] hover:bg-slate-900 text-white font-black px-12 py-4 rounded-xl text-xs uppercase tracking-widest flex items-center gap-2 group">
+                        <span>Continue Booking</span> <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="passenger-details-screen" class="hidden min-h-screen bg-[#f4f8fb] pb-24">
+        <div
+            class="bg-white border-b border-gray-200 sticky top-0 z-50 px-6 py-4 shadow-sm flex items-center justify-between">
+            <button onclick="navigateBackToSearchGrid()"
+                class="text-xs font-bold text-[#002855] uppercase hover:underline"><i
+                    class="fa-solid fa-chevron-left"></i> BACK TO SEARCH RESULTS</button>
+            <div class="flex items-center space-x-2 text-xs font-bold text-gray-400">
+                <span class="text-[#002855]">Passenger Validation</span> <i
+                    class="fa-solid fa-chevron-right text-[9px]"></i>
+                <span>Custom Add-ons</span> <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                <span>Digital Verification Receipts</span>
+            </div>
+        </div>
+
+        <div
+            class="bg-[#002855] text-white font-bold text-xs py-3 px-6 text-center shadow-md border-b uppercase tracking-widest flex justify-center items-center gap-4">
+            <span class="top-checkout-origin-node">DEL</span>
+            <div class="w-16 h-[1px] bg-blue-300 relative flex items-center justify-center"><i
+                    class="fa-solid fa-plane text-[9px] absolute text-white"></i></div>
+            <span class="text-[10px] bg-blue-800 px-2 py-0.5 rounded font-black" id="top-checkout-class">STRETCH |
+                BUSINESS</span>
+            <div class="w-16 h-[1px] bg-blue-300 relative flex items-center justify-center"><i
+                    class="fa-solid fa-plane text-[9px] absolute text-white"></i></div>
+            <span class="top-checkout-destination-node">BOM</span>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div class="lg:col-span-8 space-y-6">
+                <div>
+                    <h2 class="text-xl font-black text-slate-900 tracking-tight">Enter passenger details</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Insert manual identity fields below to bind securely into
+                        ticket nodes.</p>
+                </div>
+
+                <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                    <div class="bg-slate-50/80 px-5 py-3 border-b flex justify-between items-center">
+                        <span class="text-xs font-black text-blue-900 uppercase tracking-wider">Adult Passenger 1</span>
+                        <i class="fa-solid fa-chevron-up text-xs text-gray-400"></i>
+                    </div>
+
+                    <div class="p-5 space-y-5">
+                        <div class="flex items-center space-x-6 text-xs font-bold text-slate-700">
+                            <label class="flex items-center space-x-2 cursor-pointer"><input type="radio"
+                                    name="p-gender" checked class="w-4 h-4 accent-blue-900"> <span>Male</span></label>
+                            <label class="flex items-center space-x-2 cursor-pointer"><input type="radio"
+                                    name="p-gender" class="w-4 h-4 accent-blue-900"> <span>Female</span></label>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="border rounded-lg p-2.5 bg-white">
+                                <label class="block text-[9px] font-bold text-gray-400 uppercase">First And Middle
+                                    Name</label>
+                                <input type="text" id="cust-first-name-field" oninput="validatePassengerForm()"
+                                    placeholder="Ex. Krushna"
+                                    class="w-full text-xs font-bold text-slate-800 focus:outline-none mt-0.5 bg-transparent">
+                            </div>
+                            <div class="border rounded-lg p-2.5 bg-white">
+                                <label class="block text-[9px] font-bold text-gray-400 uppercase">Last Name</label>
+                                <input type="text" id="cust-last-name-field" oninput="validatePassengerForm()"
+                                    placeholder="Ex. Rajpure"
+                                    class="w-full text-xs font-bold text-slate-800 focus:outline-none mt-0.5 bg-transparent">
+                            </div>
+                        </div>
+
+                        <div class="border rounded-lg p-2.5 max-w-sm bg-white">
+                            <label class="block text-[9px] font-bold text-gray-400 uppercase">Date Of Birth
+                                (Optional)</label>
+                            <input type="text" placeholder="DD-MM-YYYY"
+                                class="w-full text-xs font-bold text-slate-800 focus:outline-none bg-transparent mt-0.5">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="text-sm font-black text-slate-900 uppercase">Contact details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="border rounded-lg p-2.5 bg-white flex items-center">
+                            <span class="text-xs font-bold text-slate-500 border-r pr-2 mr-2">+91</span>
+                            <input type="tel" id="checkout-mobile-field" oninput="validatePassengerForm()"
+                                placeholder="Flyer's primary mobile number"
+                                class="w-full text-xs font-bold text-slate-800 focus:outline-none bg-transparent">
+                        </div>
+                        <div class="border rounded-lg p-2.5 bg-white">
+                            <input type="email" id="checkout-email-field" oninput="validatePassengerForm()"
+                                placeholder="Email Id Address"
+                                class="w-full text-xs font-bold text-slate-800 focus:outline-none bg-transparent h-full">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-start space-x-2.5 text-xs text-slate-500 font-semibold leading-relaxed">
+                    <input type="checkbox" id="terms-acceptance-checkbox" checked
+                        class="w-4 h-4 rounded accent-blue-900 mt-0.5">
+                    <label for="terms-acceptance-checkbox">I agree to the <a href="#"
+                            class="text-blue-600 underline">Conditions of Carriage</a> & <a href="#"
+                            class="text-blue-600 underline">Privacy Policy</a>.</label>
+                </div>
+            </div>
+
+            <div class="lg:col-span-4 space-y-6">
+                <div class="bg-white border rounded-xl shadow-sm overflow-hidden">
+                    <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
+                        <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider">Trip Summary</h3>
+                        <span class="text-blue-600 text-xs font-bold underline">DETAILS</span>
+                    </div>
+                    <div class="p-4 space-y-4 text-xs font-semibold text-slate-600">
+                        <div class="bg-sky-50 p-3 rounded-lg flex items-center gap-2 text-blue-950">
+                            <i class="fa-regular fa-user text-blue-600 text-sm"></i> <span>1 Adult Passenger</span>
+                        </div>
+                        <div class="border-l-2 border-dashed border-blue-500 pl-4 ml-2 relative space-y-2">
+                            <div class="absolute -left-[5px] top-0 w-2 h-2 rounded-full bg-blue-600"></div>
+                            <div><strong class="text-slate-900 text-sm" id="pax-card-departure-time">05:00</strong>
+                                <span id="summary-flight-code-node" class="text-blue-600 ml-2">6E 449</span>
+                            </div>
+                            <p class="text-slate-800 font-bold"><span class="checkout-origin-city-node">Delhi</span> ➔
+                                <span class="checkout-destination-city-node">Mumbai</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-4 px-6 z-50">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
+                <span id="validation-hint-label" class="text-xs text-red-500 font-extrabold uppercase"><i
+                        class="fa-solid fa-triangle-exclamation"></i> Fill mandatory name, mobile & email details to
+                    continue</span>
+                <div class="flex items-center gap-6">
+                    <p class="text-2xl font-black text-slate-900" id="footer-price-screen2">₹21,900</p>
+                    <button id="screen2-next-btn" onclick="navigateToSeatSelectionScreen()" disabled
+                        class="bg-gray-300 text-white font-black px-12 py-4 rounded-xl text-xs uppercase tracking-widest cursor-not-allowed transition-all">Next
+                        Step <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="seat-selection-screen" class="hidden min-h-screen bg-[#f4f8fb] pb-24">
+        <div
+            class="bg-white border-b border-gray-200 sticky top-0 z-50 px-6 py-4 shadow-sm flex items-center justify-between">
+            <button
+                onclick="document.getElementById('seat-selection-screen').classList.add('hidden'); document.getElementById('passenger-details-screen').classList.remove('hidden');"
+                class="text-xs font-bold text-[#002855] uppercase hover:underline"><i
+                    class="fa-solid fa-chevron-left"></i> Back to Passenger Details</button>
+            <span class="text-xs font-bold text-[#002855] uppercase tracking-widest">Select Aircraft Cabin Seat</span>
+        </div>
+
+        <div
+            class="max-w-md mx-auto mt-8 bg-white border border-gray-200 rounded-2xl shadow-premium p-6 text-center space-y-6">
+            <div>
+                <h3 class="text-lg font-black text-[#002855]">Interactive Flight Deck Seat Allocator</h3>
+                <p class="text-xs text-slate-400 mt-1">Choose your preferred seat from the available fuselage rows below
+                </p>
+            </div>
+
+            <div
+                class="bg-slate-950 p-6 rounded-2xl text-white space-y-4 max-w-[280px] mx-auto shadow-inner border border-slate-900">
+                <div
+                    class="w-12 h-6 border-t-2 border-slate-700 bg-slate-900 mx-auto rounded-t-full mb-2 flex items-center justify-center">
+                    <span class="text-[8px] text-slate-500 font-mono">NOSE</span>
+                </div>
+                <div class="grid grid-cols-3 gap-3 text-center text-xs font-mono font-bold">
+                    <button onclick="bindCabinSeatSelection('1A')"
+                        class="p-2.5 bg-slate-800 hover:bg-blue-600 rounded text-white seat-button-unit transition-all">1A</button>
+                    <span class="text-[10px] text-slate-600 flex items-center justify-center">Row 1</span>
+                    <button onclick="bindCabinSeatSelection('1B')"
+                        class="p-2.5 bg-slate-800 hover:bg-blue-600 rounded text-white seat-button-unit transition-all">1B</button>
+
+                    <button onclick="bindCabinSeatSelection('2A')"
+                        class="p-2.5 bg-slate-800 hover:bg-blue-600 rounded text-white seat-button-unit transition-all">2A</button>
+                    <span class="text-[10px] text-slate-600 flex items-center justify-center">Row 2</span>
+                    <button class="p-2.5 bg-slate-600 text-slate-400 rounded cursor-not-allowed" disabled>2B</button>
+
+                    <button onclick="bindCabinSeatSelection('3A')"
+                        class="p-2.5 bg-slate-800 hover:bg-blue-600 rounded text-white seat-button-unit transition-all">3A</button>
+                    <span class="text-[10px] text-slate-600 flex items-center justify-center">Row 3</span>
+                    <button onclick="bindCabinSeatSelection('3B')"
+                        class="p-2.5 bg-slate-800 hover:bg-blue-600 rounded text-white seat-button-unit transition-all">3B</button>
+                </div>
+            </div>
+
+            <div class="border-t pt-4">
+                <p class="text-sm font-bold text-slate-800">Assigned Seat Token: <span id="liveSeatDisplayNode"
+                        class="text-blue-600 font-mono font-black">Not Selected</span></p>
+            </div>
+
+            <button id="seatNextButtonWidget" disabled onclick="navigateToNotificationAddonScreen()"
+                class="w-full bg-gray-300 text-slate-500 font-black py-4 rounded-xl text-xs uppercase tracking-widest cursor-not-allowed transition-all">Confirm
+                Seat & Continue <i class="fa-solid fa-angle-right ml-1"></i></button>
+        </div>
+    </div>
+
+    <div id="addon-baggage-screen" class="hidden min-h-screen bg-[#f4f8fb] pb-24">
+        <div
+            class="bg-white border-b border-gray-200 sticky top-0 z-50 px-6 py-4 shadow-sm flex items-center justify-between">
+            <button onclick="navigateBackToPassengerForm()"
+                class="text-xs font-bold text-[#002855] uppercase hover:underline"><i
+                    class="fa-solid fa-chevron-left"></i> Back to Passenger Details</button>
+            <div class="flex items-center space-x-2 text-xs font-bold text-gray-400">
+                <span>Passenger</span> <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                <span class="text-[#002855]">Add-on Options</span> <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                <span>Payment Gateways</span>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div class="lg:col-span-8 space-y-6">
+                <div class="bg-white border rounded-xl p-5 shadow-sm space-y-4">
+                    <h4 class="text-xs font-black text-slate-400 uppercase tracking-wider">Excess Baggage Surcharges
+                        Selection Matrix</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-bold">
+                        <label onclick="applyExtraBaggagePrice(0)"
+                            class="border-2 border-blue-600 bg-blue-50/40 p-4 rounded-xl flex items-center space-x-3 cursor-pointer baggage-label-node">
+                            <input type="radio" name="baggage-select" checked class="w-4 h-4 accent-blue-900">
+                            <div>
+                                <p class="text-slate-900 font-black">No excess baggage</p>
+                            </div>
+                        </label>
+                        <label onclick="applyExtraBaggagePrice(2100)"
+                            class="border border-gray-200 p-4 rounded-xl flex items-center space-x-3 cursor-pointer bg-white baggage-label-node hover:border-blue-400 transition">
+                            <input type="radio" name="baggage-select" class="w-4 h-4 accent-blue-900">
+                            <div>
+                                <p class="text-slate-900">3 Kg</p>
+                                <p class="text-gray-400 font-medium mt-0.5">₹2,100</p>
+                            </div>
+                        </label>
+                        <label onclick="applyExtraBaggagePrice(3500)"
+                            class="border border-gray-200 p-4 rounded-xl flex items-center space-x-3 cursor-pointer bg-white baggage-label-node hover:border-blue-400 transition">
+                            <input type="radio" name="baggage-select" class="w-4 h-4 accent-blue-900">
+                            <div>
+                                <p class="text-slate-900">5 Kg</p>
+                                <p class="text-gray-400 font-medium mt-0.5">₹3,500</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-4 space-y-6">
+                <div class="bg-white border rounded-xl shadow-premium overflow-hidden">
+                    <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
+                        <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider">Trip Summary</h3>
+                    </div>
+                    <div class="p-4 space-y-4 text-xs font-semibold text-slate-600">
+                        <div class="border-l-2 border-dashed border-blue-500 pl-4 ml-2 relative">
+                            <div><strong class="text-slate-900 text-sm" id="summary-checkout-flight-id">6E 449</strong>
+                            </div>
+                            <p class="text-slate-800 font-bold text-xs mt-0.5"><span
+                                    class="checkout-origin-city-node">Delhi</span> ➔ <span
+                                    class="checkout-destination-city-node">Mumbai</span></p>
+                        </div>
+                        <div class="flex justify-between text-[11px] text-slate-500">
+                            <span>Excess Added Weight:</span>
+                            <span class="text-blue-600 font-black" id="summary-excess-weight-label">₹0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-4 px-6 z-50 shadow-lg">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
+                <span class="text-xs text-slate-400 font-medium flex items-center gap-1.5"><i
+                        class="fa-solid fa-shield-halved text-emerald-600"></i> Seva Setu Payment Layer Security Engine
+                    Active</span>
+                <div class="flex items-center gap-6">
+                    <div class="text-right">
+                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest leading-none">Grand
+                            Total Price</p>
+                        <p class="text-2xl font-black text-slate-900 tracking-tight mt-1.5"><span
+                                id="footer-price-screen3">₹21,900</span></p>
+                    </div>
+                    <button onclick="navigateToLedgerVerificationScreen()"
+                        class="bg-[#002855] hover:bg-slate-900 text-white font-black px-12 py-4 rounded-xl text-xs uppercase tracking-widest shadow-md flex items-center gap-2 group">
+                        <span>Review Fare Ledger</span> <i class="fa-solid fa-file-invoice-dollar text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="comprehensive-ledger-screen" class="hidden min-h-screen bg-[#f4f8fb] pb-24">
+        <div
+            class="bg-white border-b border-gray-200 sticky top-0 z-50 px-6 py-4 shadow-sm flex items-center justify-between">
+            <button
+                onclick="document.getElementById('comprehensive-ledger-screen').classList.add('hidden'); document.getElementById('addon-baggage-screen').classList.remove('hidden');"
+                class="text-xs font-bold text-[#002855] uppercase hover:underline"><i
+                    class="fa-solid fa-chevron-left"></i> Return back</button>
+            <span class="text-xs font-black uppercase tracking-widest text-[#002855]">Multi-Stage Settled Invoice
+                Statement</span>
+        </div>
+
+        <div class="max-w-xl mx-auto mt-8 bg-white rounded-2xl shadow-floating border border-slate-100 overflow-hidden">
+            <div
+                class="bg-slate-900 p-4 text-white font-mono text-[11px] uppercase tracking-widest flex justify-between">
+                <span>Core Breakdown Metrics</span>
+                <span>Invoiced Rates</span>
+            </div>
+            <div class="p-6 space-y-4 text-xs font-bold text-slate-600">
+                <div class="flex justify-between"><span>Base Base Transport Passenger Air Tariff Rate</span><span
+                        id="ledgerBaseFareDisplay" class="font-mono text-slate-900 text-sm">₹18,200</span></div>
+                <div class="flex justify-between"><span>Aviation Security Infrastructure Fee Surcharges</span><span
+                        class="font-mono text-slate-900 text-sm">₹1,250</span></div>
+                <div class="flex justify-between"><span>Integrated Central Goods & Services Tax (CGST) Layer</span><span
+                        class="font-mono text-slate-900 text-sm">₹840</span></div>
+                <div class="flex justify-between"><span>Supplementary Added Load Weight Surcharge Settle</span><span
+                        id="ledgerExcessFareDisplay" class="font-mono text-blue-600 text-sm">₹0</span></div>
+
+                <div
+                    class="border-t border-dashed pt-4 flex justify-between items-center text-base text-slate-900 font-black">
+                    <span class="uppercase text-[11px] tracking-wider text-slate-500">Grand Base Settled Invoice
+                        Due</span>
+                    <span id="ledgerGrandTotalDisplay" class="text-2xl font-mono text-emerald-600">₹21,900</span>
+                </div>
+
+                <div class="border-t pt-4 space-y-3">
+                    <span class="text-[10px] uppercase font-extrabold text-slate-400 tracking-wider block">Secure
+                        Payment Hub Mainframe Gateway</span>
+                    <div class="grid grid-cols-1 gap-2 font-bold text-xs text-slate-700">
+                        <label
+                            class="border p-3 rounded-xl bg-slate-50 flex items-center space-x-3 cursor-pointer"><input
+                                type="radio" name="paymentMethodGroup" checked class="accent-blue-600"> <span>Instant
+                                UPI QR Mode Node (GooglePay / PhonePe Gateway)</span></label>
+                        <label
+                            class="border p-3 rounded-xl bg-slate-50 flex items-center space-x-3 cursor-pointer"><input
+                                type="radio" name="paymentMethodGroup" class="accent-blue-600"> <span>Visa / MasterCard
+                                Secure Commercial Payment Vault</span></label>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-blue-50 border border-blue-200 p-4 rounded-xl text-blue-950 leading-relaxed text-[11px] font-medium">
+                    <i class="fa-solid fa-circle-info text-blue-600 mr-1 text-sm inline-block align-middle"></i>
+                    <strong>System Direct Handshake Alert:</strong> Clicking the payload dispatch transaction controller
+                    below binds identity records to database nodes and fires an automated e-ticket matrix voucher
+                    straight onto your client destination inbox envelope wrapper.
+                </div>
+
+                <button id="finalSettleExecutionBtnWidget" onclick="commitFinalAviationPayloadToDatabase()"
+                    class="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white font-black py-4 rounded-xl text-xs uppercase tracking-widest shadow-md flex items-center justify-center gap-2">
+                    <span>Execute Booking & Fire Direct Email</span> <i
+                        class="fa-solid fa-paper-plane text-xs animate-bounce"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="digital-receipt-success-view-screen"
+        class="hidden min-h-screen bg-slate-100 flex items-center justify-center p-6 font-inter">
+        <div class="max-w-xl w-full bg-white p-8 rounded-2xl shadow-floating border border-slate-200 space-y-6">
+            <div class="text-center">
+                <div
+                    class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-emerald-100 text-emerald-600 mb-3">
+                    <i class="fa-solid fa-circle-check text-3xl animate-pulse"></i>
+                </div>
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Booking Confirmed!</h2>
+                <p class="text-xs text-slate-500 mt-2">Your automated digital passenger itinerary receipt voucher has
+                    been compiled and dispatched safely onto your verified custom Gmail node.</p>
+            </div>
+
+            <div
+                class="bg-gradient-to-br from-slate-900 to-[#02122f] text-white p-5 rounded-2xl border border-slate-800 space-y-4 font-mono">
+                <div
+                    class="flex justify-between items-center border-b border-slate-800 pb-2 text-[10px] uppercase text-slate-400 font-bold tracking-widest">
+                    <span>Boarding Document / Receipt</span>
+                    <span id="receipt-flight-code-tag" class="text-blue-400">6E 449</span>
+                </div>
+                <div class="grid grid-cols-2 gap-4 text-xs">
+                    <div>
+                        <span class="text-[9px] uppercase text-slate-500 font-bold block tracking-wider">Passenger
+                            Ident</span>
+                        <span id="receipt-passenger-name" class="font-bold text-white text-sm">--</span>
+                    </div>
+                    <div>
+                        <span class="text-[9px] uppercase text-slate-500 font-bold block tracking-wider">Assigned Deck
+                            Seat</span>
+                        <span id="receipt-allocated-seat-tag" class="font-bold text-amber-400 text-sm">--</span>
+                    </div>
+                    <div>
+                        <span class="text-[9px] uppercase text-slate-500 font-bold block tracking-wider">Sector Vector
+                            Path</span>
+                        <span id="receipt-route-display" class="font-bold text-white">--</span>
+                    </div>
+                    <div>
+                        <span class="text-[9px] uppercase text-slate-500 font-bold block tracking-wider">Command
+                            Pilot-In-Charge</span>
+                        <span id="receipt-assigned-pilot-node" class="font-bold text-cyan-400 block truncate">--</span>
+                    </div>
+                    <div class="col-span-2">
+                        <span class="text-[9px] uppercase text-slate-500 font-bold block tracking-wider">Fare Privilege
+                            Category</span>
+                        <span id="receipt-category" class="font-bold text-slate-300">--</span>
+                    </div>
+                </div>
+                <div class="border-t border-dashed border-slate-800 pt-3 flex justify-between items-center text-sm">
+                    <span class="font-bold text-slate-400 uppercase text-[10px]">Total Settled Invoice</span>
+                    <span id="receipt-total-price" class="font-black text-emerald-400 text-lg">₹0</span>
+                </div>
+            </div>
+
+            <button onclick="window.location.reload()"
+                class="w-full bg-[#002855] text-white py-3.5 rounded-xl text-xs font-black uppercase tracking-widest shadow-md hover:bg-slate-900 transition-colors">Return
+                to Root Command Grid</button>
+        </div>
+    </div>
+
+    <script>
+        // INIT EMAILJS SYSTEM CORE CONTEXT BINDINGS VIA YOUR KEY
+        emailjs.init("67ud_Kw4kPCS_XMjq");
+
+        const COMPREHENSIVE_WORLD_AIRPORT_DATABASE = [
+            { code: "DEL", city: "Delhi", country: "India", hub: "Indira Gandhi International Airport" },
+            { code: "BOM", city: "Mumbai", country: "India", hub: "Chhatrapati Shivaji Maharaj Airport" },
+            { code: "BLR", city: "Bengaluru", country: "India", hub: "Kempegowda International Airport" },
+            { code: "HYD", city: "Hyderabad", country: "India", hub: "Rajiv Gandhi International Airport" },
+            { code: "MAA", city: "Chennai", country: "India", hub: "Chennai International Airport" },
+            { code: "CCU", city: "Kolkata", country: "India", hub: "Netaji Subhash Chandra Bose Airport" },
+            { code: "GOI", city: "Goa", country: "India", hub: "Dabolim Airport Terminal Hub" },
+            { code: "DXB", city: "Dubai", country: "United Arab Emirates", hub: "Dubai International Terminal" },
+            { code: "LHR", city: "London", country: "United Kingdom", hub: "London Heathrow Airport Hub" },
+            { code: "JFK", city: "New York", country: "United States", hub: "John F Kennedy International Airport" },
+            { code: "SIN", city: "Singapore", country: "Singapore", hub: "Singapore Changi Aviation Deck" },
+            { code: "HND", city: "Tokyo", country: "Japan", hub: "Tokyo Haneda Aviation Center" },
+            { code: "CDG", city: "Paris", country: "France", hub: "Charles de Gaulle Terminal Matrix" },
+            { code: "AMS", city: "Amsterdam", country: "Netherlands", hub: "Schiphol International Airport" },
+            { code: "SYD", city: "Sydney", country: "Australia", hub: "Kingsford Smith Terminal Operations" }
+        ];
+
+        // MOCK REAL LUXURY GLOBAL CARRIERS BRAND DIRECTORY LOGS
+        const REAL_GDS_CARRIERS_POOL = ["IndiGo Airlines", "Air India", "Vistara Airways", "SpiceJet", "Akasa Air", "Emirates", "Singapore Airlines", "Qatar Airways", "Etihad Airways", "British Airways"];
+        const COMMAND_PILOTS_POOL = ["Capt. Vikram Samudra", "Capt. Rajdeep Malhotra", "Capt. Ananya Goel", "Capt. Zayed Al-Mansoor", "Capt. Michael Chang", "Capt. Sarah Jenkins", "Capt. Rohan Deshmukh", "Capt. David Miller"];
+        const FLIGHT_ATTENDANTS_POOL = ["Purser Nilesh Das", "Purser Aisha Khan", "Purser Priya Sharma", "Purser Carlos Mendez", "Purser Tanya Sen"];
+
+        let MASTER_GENERATED_FLIGHTS_MATRIX_CACHE = [];
+        let selectedFlightNo = "";
+        let selectedCategory = "Economy Standard";
+        let finalSettledPrice = 0;
+        let excessBaggageSurchargeWeightFee = 0;
+        let chosenCabinSeatToken = "Not Selected";
+        let boundCaptainIdentityNode = "Capt. Vikram Samudra";
+        let boundDepartureTimeNode = "05:00";
+
+        // LIVE CORE GENERATOR ARRAY PACK SYSTEM LOOPS UNTO 50+ INVENTORIES
+        function generateFiftyGdsManifestSchedulesGrid() {
+            MASTER_GENERATED_FLIGHTS_MATRIX_CACHE = [];
+            let coreHourTracker = 5;
+            let coreMinTracker = 0;
+
+            for (let i = 1; i <= 55; i++) {
+                let randomCarrier = REAL_GDS_CARRIERS_POOL[Math.floor(Math.random() * REAL_GDS_CARRIERS_POOL.length)];
+                let randomPilot = COMMAND_PILOTS_POOL[Math.floor(Math.random() * COMMAND_PILOTS_POOL.length)];
+                let randomPurser = FLIGHT_ATTENDANTS_POOL[Math.floor(Math.random() * FLIGHT_ATTENDANTS_POOL.length)];
+
+                let numericRegistryCode = Math.floor(Math.random() * 850) + 100;
+                let calculatedEcoRate = Math.floor(Math.random() * 3500) + 6200;
+                let calculatedBizRate = calculatedEcoRate * 3;
+
+                coreMinTracker += 20;
+                if (coreMinTracker >= 60) {
+                    coreHourTracker += 1;
+                    coreMinTracker = 0;
+                }
+                if (coreHourTracker >= 24) coreHourTracker = 0;
+
+                let parsedTimeStr = `${String(coreHourTracker).padStart(2, '0')}:${String(coreMinTracker).padStart(2, '0')}`;
+
+                MASTER_GENERATED_FLIGHTS_MATRIX_CACHE.push({
+                    index: i,
+                    brandName: randomCarrier,
+                    iataCode: `${randomCarrier.substring(0, 2).toUpperCase()} ${numericRegistryCode}`,
+                    captainName: randomPilot,
+                    purserName: randomPurser,
+                    departTime: parsedTimeStr,
+                    duration: "02h 15m",
+                    ecoPrice: calculatedEcoRate,
+                    bizPrice: calculatedBizRate
+                });
+            }
+        }
+
+        function executeGlobalAirportSearch(directionKeyType) {
+            const currentInputElement = document.getElementById(`${directionKeyType}SearchInput`);
+            const targetContainerNode = document.getElementById(`${directionKeyType}AutocompleteContainer`);
+            const queryValueString = currentInputElement.value.trim().toLowerCase();
+
+            if (queryValueString.length < 1) {
+                targetContainerNode.classList.add('hidden');
+                return;
+            }
+
+            const mathematicallyMatchedAirports = COMPREHENSIVE_WORLD_AIRPORT_DATABASE.filter(airport =>
+                airport.city.toLowerCase().includes(queryValueString) ||
+                airport.code.toLowerCase().includes(queryValueString)
+            );
+
+            if (mathematicallyMatchedAirports.length === 0) {
+                targetContainerNode.innerHTML = `<div class="p-3 text-xs text-slate-400 font-bold italic">No matching airport infrastructure node found</div>`;
+                targetContainerNode.classList.remove('hidden');
+                return;
+            }
+
+            let layoutHtmlBlockBuilder = "";
+            mathematicallyMatchedAirports.forEach(airport => {
+                layoutHtmlBlockBuilder += `
+                    <div onclick="lockTargetAirportMapping('${directionKeyType}', '${airport.city}', '${airport.code}', '${airport.hub}')" class="p-3 border-b border-slate-50 last:border-none hover:bg-slate-50 cursor-pointer flex justify-between items-center transition-colors">
+                        <div>
+                            <span class="text-xs font-black text-slate-900 block">${airport.city} (${airport.code})</span>
+                            <span class="text-[10px] font-medium text-slate-400 block truncate max-w-[240px] mt-0.5">${airport.hub}</span>
+                        </div>
+                        <span class="text-[9px] font-mono font-black bg-slate-900 text-blue-400 border border-slate-800 rounded px-1.5 py-0.5 uppercase tracking-wider">${airport.country.substring(0, 3)}</span>
+                    </div>
+                `;
+            });
+
+            targetContainerNode.innerHTML = layoutHtmlBlockBuilder;
+            targetContainerNode.classList.remove('hidden');
+        }
+
+        function lockTargetAirportMapping(directionKeyType, targetCity, targetCode, targetHubName) {
+            document.getElementById(`${directionKeyType}SearchInput`).value = `${targetCity} (${targetCode})`;
+            if (directionKeyType === 'from') {
+                document.getElementById('fromSublabel').innerText = targetHubName;
+            } else {
+                document.getElementById('toSublabel').innerText = targetHubName;
+            }
+            document.getElementById(`${directionKeyType}AutocompleteContainer`).classList.add('hidden');
+        }
+
+        function pipelineSearchExecutionRouter() {
+            let fromInputVal = document.getElementById('fromSearchInput').value;
+            let toInputVal = document.getElementById('toSearchInput').value;
+
+            let cleanOriginCode = fromInputVal.includes('(') ? fromInputVal.split('(')[1].replace(')', '').trim() : "DEL";
+            let cleanDestCode = toInputVal.includes('(') ? toInputVal.split('(')[1].replace(')', '').trim() : "BOM";
+
+            localStorage.setItem('flightOriginCity', fromInputVal.split(' (')[0]);
+            localStorage.setItem('flightOriginCode', cleanOriginCode);
+            localStorage.setItem('flightDestinationCity', toInputVal.split(' (')[0]);
+            localStorage.setItem('flightDestinationCode', cleanDestCode);
+
+            document.getElementById('seva-setu-landing-view-screen').classList.add('hidden');
+            document.getElementById('flight-search-container-screen').classList.remove('hidden');
+
+            document.getElementById('pill-origin-text').innerText = cleanOriginCode;
+            document.getElementById('pill-destination-text').innerText = cleanDestCode;
+            document.getElementById('banner-origin-code').innerText = cleanOriginCode;
+            document.getElementById('banner-destination-code').innerText = cleanDestCode;
+
+            document.querySelectorAll('.top-checkout-origin-node').forEach(el => el.innerText = cleanOriginCode);
+            document.querySelectorAll('.top-checkout-destination-node').forEach(el => el.innerText = cleanDestCode);
+            document.querySelectorAll('.checkout-origin-city-node').forEach(el => el.innerText = fromInputVal.split(' (')[0]);
+            document.querySelectorAll('.checkout-destination-city-node').forEach(el => el.innerText = toInputVal.split(' (')[0]);
+
+            generateFiftyGdsManifestSchedulesGrid();
+            renderInjectedWholesaleManifestGridUi();
+        }
+
+        // FULL 50+ LOOPS UI INTERFACE CONSTRUCTOR
+        function renderInjectedWholesaleManifestGridUi() {
+            const resultsTargetWrapper = document.getElementById('gds-flight-results-root');
+            let complexGridHtmlBuilder = "";
+
+            MASTER_GENERATED_FLIGHTS_MATRIX_CACHE.forEach(flight => {
+                complexGridHtmlBuilder += `
+                    <div id="flight-row-idx-${flight.index}" class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+                        <div class="p-5 grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-white border-b border-slate-100">
+                            <div class="col-span-1 md:col-span-6 grid grid-cols-3 items-center text-center md:text-left">
+                                <div>
+                                    <span class="text-[10px] uppercase font-extrabold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md inline-block mb-1"><i class="fa-solid fa-plane-up"></i> ${flight.iataCode}</span>
+                                    <p class="text-2xl font-black text-slate-900 tracking-tight">${flight.departTime}</p>
+                                    <p class="text-xs font-bold text-slate-500">${localStorage.getItem('flightOriginCode')}</p>
+                                </div>
+                                <div class="text-center px-4">
+                                    <p class="text-xs text-slate-400 font-bold">${flight.duration}</p>
+                                    <div class="w-full h-[2px] bg-slate-200 relative my-1.5">
+                                        <div class="w-2 h-2 rounded-full bg-slate-400 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+                                    </div>
+                                    <span class="text-[9px] font-mono text-slate-400 block">${flight.captainName}</span>
+                                </div>
+                                <div class="text-right md:text-left md:pl-8">
+                                    <span class="text-[10px] uppercase text-emerald-600 font-black tracking-wider block mb-1">Non-stop</span>
+                                    <p class="text-2xl font-black text-slate-900 tracking-tight">09:15</p>
+                                    <p class="text-xs font-bold text-slate-500">${localStorage.getItem('flightDestinationCode')}</p>
+                                </div>
+                            </div>
+
+                            <div class="col-span-1 md:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div onclick="selectFinalTierPrice(${flight.bizPrice}, '${flight.iataCode}', 'Stretch Business Premium', '${flight.captainName}', '${flight.departTime}')" class="border border-slate-200 hover:border-amber-400 rounded-xl p-4 text-right cursor-pointer relative bg-white transition-all">
+                                    <span class="absolute top-2 left-2 bg-amber-100 text-amber-900 text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-wider">Business</span>
+                                    <p class="text-xs text-slate-400 mt-2 font-medium">Starts at</p>
+                                    <p class="text-2xl font-black text-slate-900 tracking-tight">₹${flight.bizPrice.toLocaleString('en-IN')}</p>
+                                </div>
+                                <div onclick="selectFinalTierPrice(${flight.ecoPrice}, '${flight.iataCode}', 'Economy Saver Standard', '${flight.captainName}', '${flight.departTime}')" class="border border-slate-200 hover:border-blue-400 rounded-xl p-4 text-right cursor-pointer relative bg-white transition-all">
+                                    <span class="absolute top-2 left-2 bg-blue-50 text-blue-700 text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-wider">Economy</span>
+                                    <p class="text-xs text-slate-400 mt-2 font-medium">Starts at</p>
+                                    <p class="text-2xl font-black text-slate-900 tracking-tight">₹${flight.ecoPrice.toLocaleString('en-IN')}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            resultsTargetWrapper.innerHTML = complexGridHtmlBuilder;
+        }
+
+        function selectFinalTierPrice(price, flightNo, categoryLabel, captainName, departTime) {
+            finalSettledPrice = price;
+            selectedFlightNo = flightNo;
+            selectedCategory = categoryLabel;
+            boundCaptainIdentityNode = captainName;
+            boundDepartureTimeNode = departTime;
+
+            document.getElementById('footer-live-price').innerText = "₹" + price.toLocaleString('en-IN');
+            document.getElementById('footer-manifest-summary').innerText = `Selected Manifest Node: ${flightNo} (${categoryLabel}) | PIC: ${captainName}`;
+        }
+
+        function navigateToPassengerScreen() {
+            if (finalSettledPrice === 0) { alert("Infrastructure Alert: Point and select a valid carrier segment pricing tier."); return; }
+            document.getElementById('flight-search-container-screen').classList.add('hidden');
+            document.getElementById('passenger-details-screen').classList.remove('hidden');
+            document.getElementById('footer-price-screen2').innerText = "₹" + finalSettledPrice.toLocaleString('en-IN');
+            document.getElementById('summary-flight-code-node').innerText = selectedFlightNo;
+            document.getElementById('pax-card-departure-time').innerText = boundDepartureTimeNode;
+            document.getElementById('top-checkout-class').innerText = selectedCategory.toUpperCase();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function validatePassengerForm() {
+            const first = document.getElementById('cust-first-name-field').value.trim();
+            const last = document.getElementById('cust-last-name-field').value.trim();
+            const phone = document.getElementById('checkout-mobile-field').value.trim();
+            const email = document.getElementById('checkout-email-field').value.trim();
+
+            const nextBtn = document.getElementById('screen2-next-btn');
+            const validationHint = document.getElementById('validation-hint-label');
+
+            if (first.length >= 2 && last.length >= 2 && phone.length >= 10 && email.includes('@')) {
+                nextBtn.disabled = false;
+                nextBtn.className = "bg-blue-900 text-white font-black px-12 py-4 rounded-xl text-xs uppercase tracking-widest cursor-pointer shadow-md";
+                validationHint.className = "text-xs text-emerald-600 font-bold uppercase";
+                validationHint.innerHTML = `<i class="fa-solid fa-circle-check"></i> Form identity criteria successfully passed validation constraints.`;
+            } else {
+                nextBtn.disabled = true;
+                nextBtn.className = "bg-gray-300 text-white font-black px-12 py-4 rounded-xl text-xs uppercase tracking-widest cursor-not-allowed";
+            }
+        }
+
+        function navigateToSeatSelectionScreen() {
+            document.getElementById('passenger-details-screen').classList.add('hidden');
+            document.getElementById('seat-selection-screen').classList.remove('hidden');
+        }
+
+        function bindCabinSeatSelection(seatAlphaNumericCode) {
+            document.querySelectorAll('.seat-button-unit').forEach(btn => {
+                btn.classList.remove('bg-blue-600');
+                btn.classList.add('bg-slate-800');
+            });
+            event.target.classList.remove('bg-slate-800');
+            event.target.classList.add('bg-blue-600');
+
+            chosenCabinSeatToken = seatAlphaNumericCode;
+            document.getElementById('liveSeatDisplayNode').innerText = seatAlphaNumericCode;
+
+            const nextBtn = document.getElementById('seatNextButtonWidget');
+            nextBtn.disabled = false;
+            nextBtn.className = "w-full bg-[#002855] text-white font-black py-4 rounded-xl text-xs uppercase tracking-widest cursor-pointer shadow-md transition-all";
+        }
+
+        function navigateToNotificationAddonScreen() {
+            document.getElementById('seat-selection-screen').classList.add('hidden');
+            document.getElementById('addon-baggage-screen').classList.remove('hidden');
+            document.getElementById('summary-checkout-flight-id').innerText = selectedFlightNo;
+            updateAllPriceIndicators();
+        }
+
+        function applyExtraBaggagePrice(addonPriceValue) {
+            excessBaggageSurchargeWeightFee = addonPriceValue;
+            document.getElementById('summary-excess-weight-label').innerText = "₹" + addonPriceValue.toLocaleString('en-IN');
+            updateAllPriceIndicators();
+        }
+
+        function updateAllPriceIndicators() {
+            let totalAmountSumValue = finalSettledPrice + excessBaggageSurchargeWeightFee;
+            document.getElementById('footer-price-screen3').innerText = "₹" + totalAmountSumValue.toLocaleString('en-IN');
+        }
+
+        function navigateToLedgerVerificationScreen() {
+            document.getElementById('addon-baggage-screen').classList.add('hidden');
+            document.getElementById('comprehensive-ledger-screen').classList.remove('hidden');
+
+            document.getElementById('ledgerBaseFareDisplay').innerText = "₹" + finalSettledPrice.toLocaleString('en-IN');
+            document.getElementById('ledgerExcessFareDisplay').innerText = "₹" + excessBaggageSurchargeWeightFee.toLocaleString('en-IN');
+
+            let grandInvoicedTotal = finalSettledPrice + 1250 + 840 + excessBaggageSurchargeWeightFee;
+            document.getElementById('ledgerGrandTotalDisplay').innerText = "₹" + grandInvoicedTotal.toLocaleString('en-IN');
+        }
+
+        function navigateBackToSearchGrid() {
+            document.getElementById('passenger-details-screen').classList.add('hidden');
+            document.getElementById('flight-search-container-screen').classList.remove('hidden');
+        }
+
+        function navigateBackToPassengerForm() {
+            document.getElementById('addon-baggage-screen').classList.add('hidden');
+            document.getElementById('passenger-details-screen').classList.remove('hidden');
+        }
+
+        // DISPATCH SECURE TRANSACTION MANIFEST STRIPPED OFF CODES INTO USER ENVELOPE INBOX
+        async function commitFinalAviationPayloadToDatabase() {
+            const first = document.getElementById('cust-first-name-field').value.trim();
+            const last = document.getElementById('cust-last-name-field').value.trim();
+            const email = document.getElementById('checkout-email-field').value.trim();
+            const mobile = document.getElementById('checkout-mobile-field').value.trim();
+            let grandCalculatedTotal = finalSettledPrice + 1250 + 840 + excessBaggageSurchargeWeightFee;
+
+            const secureTriggerBtn = document.getElementById('finalSettleExecutionBtnWidget');
+            secureTriggerBtn.disabled = true;
+            secureTriggerBtn.innerText = "Processing Handshake...";
+
+            // तुझ्या ईमेल टेम्पलेटमधील रिकाम्या जागा (Variables) भरण्यासाठी हा डेटा:
+            const templateParams = {
+                customer_email: email,
+                customer_name: first + " " + last,
+                flight_info: selectedFlightNo + " (" + selectedCategory + ")",
+                pilot_name: boundCaptainIdentityNode,
+                seat_node: chosenCabinSeatToken,
+                route_display: localStorage.getItem('flightOriginCode') + " ➔ " + localStorage.getItem('flightDestinationCode'),
+                fare_paid: "₹" + grandCalculatedTotal.toLocaleString('en-IN')
+            };
+
+            try {
+                // आता अचूक Service ID आणि Template ID वापरत आहोत
+                await emailjs.send("service_wuyxe4d", "rh1m9yg", templateParams);
+
+                console.log("SUCCESS! Email dispatched.");
+
+                // यश मिळाल्यावर पुढची स्क्रीन दाखव
+                document.getElementById('receipt-passenger-name').innerText = first + " " + last;
+                document.getElementById('receipt-flight-code-tag').innerText = selectedFlightNo;
+                document.getElementById('receipt-allocated-seat-tag').innerText = chosenCabinSeatToken;
+                document.getElementById('receipt-assigned-pilot-node').innerText = boundCaptainIdentityNode;
+                document.getElementById('receipt-route-display').innerText = localStorage.getItem('flightOriginCode') + " ➔ " + localStorage.getItem('flightDestinationCode');
+                document.getElementById('receipt-category').innerText = selectedCategory;
+                document.getElementById('receipt-total-price').innerText = "₹" + grandCalculatedTotal.toLocaleString('en-IN');
+
+                document.getElementById('comprehensive-ledger-screen').classList.add('hidden');
+                document.getElementById('digital-receipt-success-view-screen').classList.remove('hidden');
+
+            } catch (err) {
+                console.error("EmailJS Error:", err);
+                alert("Transaction Error: " + err.text);
+                secureTriggerBtn.disabled = false;
+                secureTriggerBtn.innerText = "Execute Booking & Fire Direct Email";
+            }
+        }
+
+        // NO-CODE DIRECT TEXT MANIFEST DATA MATRIX STRIPPED OF EMBEDDED TAGS CODES FOR GMAIL COMPLIANCE
+        const cleanPlainTextPassportItineraryManifest = `
+OFFICIAL SEVA SETU DISTRIBUTION DIGITAL MANIFEST ITINERARY RECEIPT
+========================================================================
+TRANSACTION TOKEN KEY : AMADEUS-TXN-${Math.floor(Math.random() * 800000) + 100000}
+ROUTING MAINHOST NODE : AP-SECURE-STABLE-2026
+========================================================================
+
+PASSENGER MASTER DATA SEGMENT PROFILE:
+--------------------------------------
+Passenger Name Handle     : ${first.toUpperCase()} ${last.toUpperCase()}
+Registered Contact Mobile : +91 ${mobile}
+Notification Inbox Node   : ${email}
+
+FLIGHT INFRASTRUCTURE AND CREW MANIFEST:
+-----------------------------------------
+Aviation Carrier ID Code  : ${selectedFlightNo}
+Privilege Cabin Category  : ${selectedCategory}
+Assigned Airframe Pilot   : ${boundCaptainIdentityNode}
+Fuselage Deck Seat Assigned: ${chosenCabinSeatToken}
+
+FLIGHT TIME & SECTOR ROUTING VECTOR:
+-------------------------------------
+Sector Departure Hub      : ${localStorage.getItem('flightOriginCode')}
+Arrival Destination Hub   : ${localStorage.getItem('flightDestinationCode')}
+Manifest Flight State     : CONFIRMED / SEAT ALLOCATED SECURELY
+
+FINAL BALANCES SETTLED LEDGER STATEMENT:
+-----------------------------------------
+Base Core Passenger Tariff : ₹${finalSettledPrice}
+Aviation Security Surcharge: ₹1,250
+Integrated CGST Allocation : ₹840
+Supplementary Extra Luggage: ₹${excessBaggageSurchargeWeightFee}
+-----------------------------------------
+GRAND NET INVOICED PAID AMOUNT : ₹${grandCalculatedTotal}
+
+========================================================================
+Thank you for executing travel matrices under Seva Setu Aviation Networks.
+Present this plain text data token document at terminal checkpoints.
+            `;
+
+        try {
+            // EmailJS Secure Protocol Payload Handshake Relay Dispatch
+            await emailjs.send("service_8d5s308", "template_itinerary", {
+                customer_email: email,
+                customer_name: `${first} ${last}`,
+                flight_info: `${selectedFlightNo} (${selectedCategory})`,
+                seat_node: chosenCabinSeatToken,
+                route_display: `${localStorage.getItem('flightOriginCode')} ➔ ${localStorage.getItem('flightDestinationCode')}`,
+                fare_paid: "₹" + grandCalculatedTotal.toLocaleString('en-IN'),
+                message: cleanPlainTextPassportItineraryManifest
+            });
+        } catch (err) {
+            console.log("Trace log execution fallback triggered over server exception loops.");
+        }
+
+        // POPULATE THE FINAL LIVING UI SCOPE DISPLAY OBJECT BLOCKS
+        document.getElementById('receipt-passenger-name').innerText = `${first} ${last}`;
+        document.getElementById('receipt-flight-no').innerText = `${selectedFlightNo} (${selectedCategory})`;
+        document.getElementById('receipt-flight-code-tag').innerText = selectedFlightNo;
+        document.getElementById('receipt-allocated-seat-tag').innerText = chosenCabinSeatToken;
+        document.getElementById('receipt-assigned-pilot-node').innerText = boundCaptainIdentityNode;
+        document.getElementById('receipt-route-display').innerText = `${localStorage.getItem('flightOriginCode')} ➔ ${localStorage.getItem('flightDestinationCode')}`;
+        document.getElementById('receipt-category').innerText = selectedCategory;
+        document.getElementById('receipt-total-price').innerText = "₹" + grandCalculatedTotal.toLocaleString('en-IN');
+
+        document.getElementById('comprehensive-ledger-screen').classList.add('hidden');
+        document.getElementById('digital-receipt-success-view-screen').classList.remove('hidden');
+
+    </script>
+</body>
+
+</html>

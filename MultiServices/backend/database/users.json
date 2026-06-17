@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Amit Sharma",
+    "email": "amit.sharma@gmail.com",
+    "phone": "9876543210",
+    "password": "password123",
+    "role": "user"
+  },
+  {
+    "name": "Pooja Patil",
+    "email": "pooja.patil@yahoo.com",
+    "phone": "8888888888",
+    "password": "pooja@2026",
+    "role": "user"
+  },
+  {
+    "name": "Rahul Deshmukh",
+    "email": "rahul.d@outlook.com",
+    "phone": "7777777777",
+    "password": "rahulpass",
+    "role": "user"
+  },
+  {
+    "name": "System Administrator",
+    "email": "admin@sevasetu.gov.in",
+    "phone": "9999999999",
+    "password": "admin",
+    "role": "admin"
+  }
+]

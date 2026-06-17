@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+  content="width=device-width, initial-scale=1.0">
+
+  <title>Users Panel | Seva Setu</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+  rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
+    }
+
+    body{
+      background:#020617;
+      color:white;
+      overflow-x:hidden;
+      transition:.4s;
+    }
+
+    /* LIGHT MODE */
+    .light-mode{
+      background:#f1f5f9;
+      color:#020617;
+    }
+
+    .light-mode .sidebar{
+      background:white;
+      border-right:1px solid #e2e8f0;
+    }
+
+    .light-mode .glass,
+    .light-mode .card,
+    .light-mode .topbar,
+    .light-mode .table-box{
+      background:white;
+      color:#020617;
+      border:1px solid #e2e8f0;
+    }
+
+    .light-mode table th{
+      color:#475569;
+    }
+
+    .light-mode table td{
+      color:#020617;
+    }
+
+    .light-mode .menu-link{
+      color:#020617;
+    }
+
+    /* BACKGROUND */
+    .bg1{
+      position:fixed;
+      width:550px;
+      height:550px;
+      background:#06b6d4;
+      filter:blur(170px);
+      opacity:.18;
+      border-radius:50%;
+      top:-180px;
+      left:-180px;
+      z-index:-1;
+    }
+
+    .bg2{
+      position:fixed;
+      width:550px;
+      height:550px;
+      background:#8b5cf6;
+      filter:blur(170px);
+      opacity:.18;
+      border-radius:50%;
+      bottom:-180px;
+      right:-180px;
+      z-index:-1;
+    }
+
+    /* SIDEBAR */
+    .sidebar{
+      width:300px;
+      background:rgba(15,23,42,.88);
+      backdrop-filter:blur(20px);
+      border-right:1px solid rgba(255,255,255,.08);
+      padding:30px;
+      position:fixed;
+      top:0;
+      left:0;
+      height:100vh;
+      overflow-y:auto;
+    }
+
+    /* MENU */
+    .menu{
+      margin-top:50px;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+
+    .menu-link{
+      text-decoration:none;
+      color:#cbd5e1;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      padding:18px 20px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      gap:16px;
+      font-weight:600;
+      transition:.3s;
+      backdrop-filter:blur(16px);
+    }
+
+    .menu-link:hover{
+      background:linear-gradient(to right,#06b6d4,#8b5cf6);
+      transform:translateX(6px);
+      color:white;
+    }
+
+    /* MAIN */
+    .main{
+      margin-left:300px;
+      padding:40px;
+    }
+
+    /* TOPBAR */
+    .topbar{
+      background:rgba(255,255,255,.05);
+      backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:30px;
+      padding:25px 35px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:20px;
+    }
+
+    /* PROFILE */
+    .profile{
+      display:flex;
+      align-items:center;
+      gap:15px;
+    }
+
+    .profile img{
+      width:65px;
+      height:65px;
+      border-radius:50%;
+      border:3px solid #06b6d4;
+      object-fit:cover;
+      box-shadow:0 0 20px rgba(6,182,212,.5);
+    }
+
+    /* STATS */
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:25px;
+      margin-top:35px;
+    }
+
+    /* CARD */
+    .card{
+      background:rgba(255,255,255,.05);
+      backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:30px;
+      padding:30px;
+      transition:.4s;
+    }
+
+    .card:hover{
+      transform:translateY(-10px) scale(1.03);
+      box-shadow:
+      0 25px 50px rgba(6,182,212,.25),
+      0 0 40px rgba(139,92,246,.18);
+    }
+
+    .icon{
+      width:80px;
+      height:80px;
+      border-radius:22px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:34px;
+      margin-bottom:25px;
+      animation:floating 4s ease-in-out infinite;
+    }
+
+    @keyframes floating{
+
+      0%{
+        transform:translateY(0px);
+      }
+
+      50%{
+        transform:translateY(-10px);
+      }
+
+      100%{
+        transform:translateY(0px);
+      }
+
+    }
+
+    /* TABLE */
+    .table-box{
+      margin-top:40px;
+      background:rgba(255,255,255,.05);
+      backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:35px;
+      padding:35px;
+      overflow-x:auto;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:20px;
+    }
+
+    th,td{
+      padding:22px;
+      text-align:left;
+    }
+
+    th{
+      color:#94a3b8;
+      font-size:14px;
+    }
+
+    tr{
+      border-bottom:1px solid rgba(255,255,255,.05);
+      transition:.3s;
+    }
+
+    tr:hover{
+      background:rgba(255,255,255,.03);
+    }
+
+    /* USER */
+    .user-box{
+      display:flex;
+      align-items:center;
+      gap:15px;
+    }
+
+    .user-box img{
+      width:55px;
+      height:55px;
+      border-radius:50%;
+      object-fit:cover;
+    }
+
+    /* BUTTON */
+    .btn{
+      padding:10px 18px;
+      border:none;
+      border-radius:14px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.3s;
+      color:white;
+    }
+
+    .btn:hover{
+      transform:scale(1.05);
+    }
+
+    /* SEARCH */
+    .search-box{
+      position:relative;
+    }
+
+    .search-box input{
+      width:320px;
+      background:#0f172a;
+      border:1px solid rgba(255,255,255,.08);
+      padding:16px 20px 16px 55px;
+      border-radius:18px;
+      outline:none;
+      color:white;
+    }
+
+    .search-box i{
+      position:absolute;
+      left:20px;
+      top:50%;
+      transform:translateY(-50%);
+      color:#94a3b8;
+    }
+
+    /* DARK MODE BUTTON */
+    .theme-btn{
+      position:fixed;
+      top:25px;
+      right:25px;
+      z-index:1000;
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      border:none;
+      background:rgba(255,255,255,.08);
+      backdrop-filter:blur(16px);
+      color:white;
+      font-size:24px;
+      cursor:pointer;
+      transition:.3s;
+    }
+
+    .theme-btn:hover{
+      transform:scale(1.1);
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <button id="themeToggle"
+  class="theme-btn">
+
+    <i class="fa-solid fa-moon"></i>
+
+  </button>
+
+  <div class="bg1"></div>
+  <div class="bg2"></div>
+
+  <aside class="sidebar">
+
+    <h1 class="text-5xl font-extrabold font-[Orbitron]">
+
+      Seva
+      <span class="text-cyan-400">
+        Setu
+      </span>
+
+    </h1>
+
+    <p class="text-slate-400 mt-4 text-lg">
+      Premium Users Panel
+    </p>
+
+    <div class="menu">
+
+      <a href="dashboard.html"
+      class="menu-link">
+
+        <i class="fa-solid fa-chart-line text-xl"></i>
+
+        Dashboard
+
+      </a>
+
+      <a href="users.html"
+      class="menu-link">
+
+        <i class="fa-solid fa-users text-xl"></i>
+
+        Users
+
+      </a>
+
+      <a href="booking.html"
+      class="menu-link">
+
+        <i class="fa-solid fa-calendar-check text-xl"></i>
+
+        Bookings
+
+      </a>
+
+      <a href="emergency.html"
+      class="menu-link">
+
+        <i class="fa-solid fa-truck-medical text-xl"></i>
+
+        Emergency
+
+      </a>
+
+      <a href="login.html"
+      class="menu-link">
+
+        <i class="fa-solid fa-right-to-bracket text-xl text-cyan-400"></i>
+
+        Login
+
+      </a>
+
+      <a href="register.html"
+      class="menu-link">
+
+        <i class="fa-solid fa-user-plus text-xl text-purple-400"></i>
+
+        Register
+
+      </a>
+
+      <a href="settings.html"
+      class="menu-link">
+
+        <i class="fa-solid fa-gear text-xl"></i>
+
+        Settings
+
+      </a>
+
+    </div>
+
+  </aside>
+
+  <main class="main">
+
+    <div class="topbar">
+
+      <div>
+
+        <h1 class="text-5xl font-extrabold">
+          Users Management
+        </h1>
+
+        <p class="text-slate-400 mt-3 text-lg">
+          Manage all users and activities.
+        </p>
+
+      </div>
+
+      <div class="profile">
+
+        <img src="https://i.pravatar.cc/100">
+
+        <div>
+
+          <h3 class="text-2xl font-bold">
+            Krushna Admin
+          </h3>
+
+          <p class="text-cyan-400">
+            Super Admin
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="stats">
+
+      <div class="card">
+
+        <div class="icon bg-cyan-500">
+
+          <i class="fa-solid fa-users"></i>
+
+        </div>
+
+        <p class="text-slate-400 text-lg">
+          Total Users
+        </p>
+
+        <h2 id="totalUsersCard" class="text-6xl font-extrabold mt-4">
+          4
+        </h2>
+
+      </div>
+
+      <div class="card">
+
+        <div class="icon bg-green-500">
+
+          <i class="fa-solid fa-user-check"></i>
+
+        </div>
+
+        <p class="text-slate-400 text-lg">
+          Active Users
+        </p>
+
+        <h2 id="activeUsersCard" class="text-6xl font-extrabold mt-4">
+          2
+        </h2>
+
+      </div>
+
+      <div class="card">
+
+        <div class="icon bg-yellow-500">
+
+          <i class="fa-solid fa-user-clock"></i>
+
+        </div>
+
+        <p class="text-slate-400 text-lg">
+          Pending Users
+        </p>
+
+        <h2 id="pendingUsersCard" class="text-6xl font-extrabold mt-4">
+          1
+        </h2>
+
+      </div>
+
+      <div class="card">
+
+        <div class="icon bg-red-500">
+
+          <i class="fa-solid fa-user-xmark"></i>
+
+        </div>
+
+        <p class="text-slate-400 text-lg">
+          Blocked Users
+        </p>
+
+        <h2 id="blockedUsersCard" class="text-6xl font-extrabold mt-4">
+          1
+        </h2>
+
+      </div>
+
+    </div>
+
+    <div class="table-box">
+
+      <div class="flex flex-wrap items-center justify-between gap-5">
+
+        <h2 class="text-4xl font-extrabold">
+          Registered Users Details
+        </h2>
+
+        <div class="search-box">
+
+          <i class="fa-solid fa-magnifying-glass"></i>
+
+          <input type="text" id="userSearch"
+          placeholder="Search users...">
+
+        </div>
+
+      </div>
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>User</th>
+
+            <th>Email</th>
+
+            <th>Phone</th>
+
+            <th>City</th>
+
+            <th>Status</th>
+
+            <th>Action</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="userTableBody">
+          
+          <tr data-status="Active">
+            <td>
+              <div class="user-box">
+                <img src="https://i.pravatar.cc/60?img=1">
+                Rahul Patil
+              </div>
+            </td>
+            <td>rahul@gmail.com</td>
+            <td>9876543210</td>
+            <td>Mumbai</td>
+            <td class="text-green-400 font-bold">Active</td>
+            <td>
+              <div class="flex gap-3">
+                <button class="btn bg-cyan-500">Edit</button>
+                <button class="btn bg-red-500 delete-btn">Delete</button>
+              </div>
+            </td>
+          </tr>
+
+          <tr data-status="Pending">
+            <td>
+              <div class="user-box">
+                <img src="https://i.pravatar.cc/60?img=5">
+                Priya Sharma
+              </div>
+            </td>
+            <td>priya@gmail.com</td>
+            <td>9876512345</td>
+            <td>Pune</td>
+            <td class="text-yellow-400 font-bold">Pending</td>
+            <td>
+              <div class="flex gap-3">
+                <button class="btn bg-cyan-500">Edit</button>
+                <button class="btn bg-red-500 delete-btn">Delete</button>
+              </div>
+            </td>
+          </tr>
+
+          <tr data-status="Blocked">
+            <td>
+              <div class="user-box">
+                <img src="https://i.pravatar.cc/60?img=8">
+                Amit Kumar (Fake)
+              </div>
+            </td>
+            <td>amit@gmail.com</td>
+            <td>9988776655</td>
+            <td>Delhi</td>
+            <td class="text-red-400 font-bold">Blocked</td>
+            <td>
+              <div class="flex gap-3">
+                <button class="btn bg-cyan-500">Edit</button>
+                <button class="btn bg-red-500 delete-btn">Delete</button>
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </main>
+
+  <script>
+
+    // 1. LIGHT/DARK MODE TOGGLE
+    const themeToggle = document.getElementById("themeToggle");
+
+    themeToggle.onclick = function(){
+      document.body.classList.toggle("light-mode");
+      if(document.body.classList.contains("light-mode")){
+        themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>';
+      } else {
+        themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>';
+      }
+    }
+
+    // 2. LIVE LOGIN & REGISTER SYSTEM (LOCALSTORAGE)
+    function loadRegisteredUsers() {
+      const tableBody = document.getElementById("userTableBody");
+      
+      // LocalStorage मधून नवीन युझरचा डेटा मिळवणे (जर login/register पेजवरून डेटा टाकला असेल तर)
+      // उदाहरणार्थ: localStorage.setItem('allUsers', JSON.stringify([...]))
+      let storedUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+      
+      storedUsers.forEach((user, index) => {
+        // जर हा युझर आधीच टेबलमध्ये नसेल तरच जोडा
+        if (!document.getElementById(`stored-user-${index}`)) {
+          const tr = document.createElement("tr");
+          tr.id = `stored-user-${index}`;
+          tr.setAttribute("data-status", user.status || "Active");
+          
+          // स्टेटस नुसार कलर कोड ठरवणे
+          let statusColor = "text-green-400";
+          if (user.status === "Pending") statusColor = "text-yellow-400";
+          if (user.status === "Blocked") statusColor = "text-red-400";
+
+          tr.innerHTML = `
+            <td>
+              <div class="user-box">
+                <img src="${user.profilePic || 'https://i.pravatar.cc/60?img=' + (index + 10)}">
+                ${user.name || 'New User'}
+              </div>
+            </td>
+            <td>${user.email || 'N/A'}</td>
+            <td>${user.phone || 'N/A'}</td>
+            <td>${user.city || 'N/A'}</td>
+            <td class="${statusColor} font-bold">${user.status || 'Active'}</td>
+            <td>
+              <div class="flex gap-3">
+                <button class="btn bg-cyan-500">Edit</button>
+                <button class="btn bg-red-500 delete-btn">Delete</button>
+              </div>
+            </td>
+          `;
+          tableBody.appendChild(tr);
+        }
+      });
+
+      updateStatsCounters();
+      attachDeleteEvents();
+    }
+
+    // 3. COUNTERS UPDATE (संख्या अपडेट करणे)
+    function updateStatsCounters() {
+      const rows = document.querySelectorAll("#userTableBody tr");
+      let total = rows.length;
+      let active = 0;
+      let pending = 0;
+      let blocked = 0;
+
+      rows.forEach(row => {
+        const status = row.getAttribute("data-status");
+        if (status === "Active") active++;
+        if (status === "Pending") pending++;
+        if (status === "Blocked") blocked++;
+      });
+
+      document.getElementById("totalUsersCard").innerText = total;
+      document.getElementById("activeUsersCard").innerText = active;
+      document.getElementById("pendingUsersCard").innerText = pending;
+      document.getElementById("blockedUsersCard").innerText = blocked;
+    }
+
+    // 4. LIVE DELETE BUTTON FUNCTIONALITY (फेक युझर्स डिलीट करणे)
+    function attachDeleteEvents() {
+      const tableBody = document.getElementById("userTableBody");
+      
+      tableBody.onclick = function(event) {
+        if (event.target.classList.contains("delete-btn")) {
+          const row = event.target.closest("tr");
+          const userName = row.querySelector(".user-box").innerText.trim();
+          
+          if (confirm(`Do you want to permanently delete fake user: ${userName}?`)) {
+            // अ‍ॅनिमेशनसह डिलीट करणे
+            row.style.opacity = '0';
+            row.style.transform = 'scale(0.9)';
+            row.style.transition = '0.3s ease';
+            
+            setTimeout(() => {
+              row.remove();
+              updateStatsCounters(); // संख्या पुन्हा मोजणे
+            }, 300);
+          }
+        }
+      };
+    }
+
+    // 5. LIVE USER SEARCH FILTER
+    const searchInput = document.getElementById("userSearch");
+    searchInput.addEventListener("input", function() {
+      const filter = this.value.toLowerCase();
+      const rows = document.querySelectorAll("#userTableBody tr");
+
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        if (text.includes(filter)) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    });
+
+    // पेज लोड झाल्यावर सर्व फंक्शन्स रन करणे
+    window.onload = function() {
+      loadRegisteredUsers();
+    };
+
+  </script>
+
+</body>
+
+</html>

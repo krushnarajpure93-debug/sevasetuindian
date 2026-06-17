@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telecom Service Hub - Smart Telecom & Internet Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #060b1f;
+            color: #ffffff;
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+        }
+        .glow-purple {
+            box-shadow: 0 0 20px rgba(123, 47, 247, 0.4);
+        }
+        .glow-blue {
+            box-shadow: 0 0 20px rgba(0, 198, 255, 0.4);
+        }
+        .glow-text-purple {
+            text-shadow: 0 0 10px rgba(123, 47, 247, 0.6);
+        }
+        .glow-text-blue {
+            text-shadow: 0 0 10px rgba(0, 198, 255, 0.6);
+        }
+        .glassmorphism {
+            background: rgba(16, 22, 53, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(123, 47, 247, 0.15);
+        }
+        .glassmorphism:hover {
+            border-color: rgba(123, 47, 247, 0.4);
+            box-shadow: 0 0 25px rgba(123, 47, 247, 0.2);
+        }
+        .glass-nav {
+            background: rgba(6, 11, 31, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid rgba(123, 47, 247, 0.2);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #060b1f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #7b2ff7;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00c6ff;
+        }
+        /* Page transition view styling */
+        .page-view {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+        .page-view.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Floating particles effect simulation */
+        .telecom-particle {
+            position: absolute;
+            pointer-events: none;
+            background: linear-gradient(to right, #00c6ff, #7b2ff7);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: floatUp 8s infinite linear;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100px) scale(0); opacity: 0; }
+            50% { opacity: 0.4; }
+            100% { transform: translateY(-500px) scale(1.2); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden text-gray-100 min-h-screen">
+
+    <div class="w-full bg-gradient-to-right from-purple-700 via-indigo-800 to-blue-600 bg-[linear-gradient(90deg,#7b2ff7_0%,#00c6ff_100%)] text-white text-center py-2 px-4 text-xs md:text-sm font-medium tracking-wide z-50 relative flex items-center justify-center gap-2">
+        <i class="fa-solid fa-fire text-amber-400 animate-pulse"></i>
+        <span>Exclusive Offer: Get up to 40% OFF on selected broadband plans. Limited time only!</span>
+    </div>
+
+    <nav class="sticky top-0 z-40 glass-nav w-full px-4 lg:px-12 py-4 flex items-center justify-between transition-all duration-300">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('home')">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#7b2ff7] to-[#00c6ff] flex items-center justify-center shadow-lg shadow-purple-500/30">
+                <i class="fa-solid fa-satellite-dish text-white text-lg"></i>
+            </div>
+            <div>
+                <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-gray-200 to-cyan-400 bg-clip-text text-transparent">Telecom</span>
+                <span class="block text-[10px] uppercase tracking-widest text-[#00c6ff] font-semibold -mt-1">Service Hub</span>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center gap-8 font-medium text-sm text-gray-300">
+            <a href="javascript:void(0)" onclick="navigateTo('home')" class="hover:text-[#00c6ff] transition-colors duration-200 navbar-link active-nav text-[#00c6ff]">Home</a>
+            <a href="javascript:void(0)" onclick="scrollToSection('services-section')" class="hover:text-[#00c6ff] transition-colors duration-200 navbar-link">Services</a>
+            <a href="javascript:void(0)" onclick="navigateTo('company', 'Jio')" class="hover:text-[#00c6ff] transition-colors duration-200 navbar-link">Companies</a>
+            <a href="javascript:void(0)" onclick="scrollToSection('forms-section')" class="hover:text-[#00c6ff] transition-colors duration-200 navbar-link">Recharge</a>
+            <a href="javascript:void(0)" onclick="scrollToSection('forms-section')" class="hover:text-[#00c6ff] transition-colors duration-200 navbar-link">Complaints</a>
+            <a href="javascript:void(0)" onclick="scrollToSection('forms-section')" class="hover:text-[#00c6ff] transition-colors duration-200 navbar-link">Booking</a>
+            <a href="javascript:void(0)" onclick="scrollToSection('dashboard-section')" class="hover:text-[#00c6ff] transition-colors duration-200 navbar-link">Dashboard</a>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <div class="relative hidden sm:block">
+                <input type="text" id="globalSearch" placeholder="Search services, plans..." class="w-64 bg-[#101635] text-xs text-white pl-4 pr-10 py-2.5 rounded-full border border-purple-900/40 focus:outline-none focus:border-[#00c6ff] transition-all">
+                <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3 text-gray-400 text-xs cursor-pointer" onclick="triggerGlobalSearch()"></i>
+            </div>
+            <div class="relative cursor-pointer py-1 px-2 text-gray-300 hover:text-white" onclick="toggleNotificationBadge()">
+                <i class="fa-regular fa-bell text-lg"></i>
+                <span id="notifBadge" class="absolute -top-0.5 -right-0.5 bg-red-500 text-[9px] w-4 h-4 rounded-full flex items-center justify-center text-white font-bold">3</span>
+            </div>
+            <div class="w-12 h-6 bg-[#101635] rounded-full border border-purple-500/20 p-0.5 flex items-center cursor-pointer relative">
+                <div class="w-5 h-5 bg-[#7b2ff7] rounded-full flex items-center justify-center shadow-md translate-x-6 transition-transform duration-300">
+                    <i class="fa-solid fa-moon text-[10px] text-white"></i>
+                </div>
+            </div>
+            <button class="lg:hidden text-xl text-gray-300 focus:outline-none" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div id="mobileMenu" class="hidden fixed inset-0 z-30 bg-[#060b1f]/95 backdrop-blur-lg flex-col justify-center items-center gap-6 text-xl font-semibold text-gray-200">
+        <button class="absolute top-6 right-6 text-3xl text-gray-400" onclick="toggleMobileMenu()">&times;</button>
+        <a href="javascript:void(0)" onclick="navigateTo('home'); toggleMobileMenu();" class="hover:text-[#00c6ff]">Home</a>
+        <a href="javascript:void(0)" onclick="scrollToSection('services-section'); toggleMobileMenu();" class="hover:text-[#00c6ff]">Services</a>
+        <a href="javascript:void(0)" onclick="navigateTo('company', 'Jio'); toggleMobileMenu();" class="hover:text-[#00c6ff]">Companies</a>
+        <a href="javascript:void(0)" onclick="scrollToSection('forms-section'); toggleMobileMenu();" class="hover:text-[#00c6ff]">Recharge</a>
+        <a href="javascript:void(0)" onclick="scrollToSection('forms-section'); toggleMobileMenu();" class="hover:text-[#00c6ff]">Complaints</a>
+        <a href="javascript:void(0)" onclick="scrollToSection('dashboard-section'); toggleMobileMenu();" class="hover:text-[#00c6ff]">Dashboard</a>
+    </div>
+
+    <main id="homeView" class="page-view active relative">
+        <div class="absolute inset-0 z-0 overflow-hidden opacity-20 pointer-events-none">
+            <div class="telecom-particle w-2 h-2 top-[20%] left-[10%] animate-[floatUp_12s_infinite]"></div>
+            <div class="telecom-particle w-3 h-3 top-[50%] left-[45%] animate-[floatUp_9s_infinite_1s]"></div>
+            <div class="telecom-particle w-1.5 h-1.5 top-[80%] left-[80%] animate-[floatUp_15s_infinite_3s]"></div>
+        </div>
+
+        <section class="relative z-10 max-w-7xl mx-auto px-4 lg:px-8 pt-12 pb-20 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#101635] border border-purple-500/30 text-xs font-semibold text-[#00c6ff]">
+                    <i class="fa-solid fa-circle-check text-emerald-400 text-[10px] animate-ping"></i> Next-Gen Network Management Live
+                </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+                    Smart Telecom & <br>
+                    <span class="bg-gradient-to-r from-[#00c6ff] via-purple-400 to-[#7b2ff7] bg-clip-text text-transparent glow-text-purple">Internet Solutions</span>
+                </h1>
+                <p class="text-gray-400 text-sm sm:text-base max-w-xl mx-auto lg:mx-0 font-normal leading-relaxed">
+                    All your telecom needs in one unified intelligence dashboard. Instant mobile recharges, ultra-fast fiber booking, SIM profile activation, OTT bundles, and high-tier enterprise business solutions.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-lg mx-auto lg:mx-0">
+                    <div class="flex items-center gap-2 bg-[#101635]/60 border border-purple-500/10 p-2.5 rounded-lg text-xs font-medium">
+                        <i class="fa-solid fa-bolt text-amber-400 text-sm"></i> Fast & Reliable
+                    </div>
+                    <div class="flex items-center gap-2 bg-[#101635]/60 border border-purple-500/10 p-2.5 rounded-lg text-xs font-medium">
+                        <i class="fa-solid fa-shield-halved text-[#00c6ff] text-sm"></i> Secure Payments
+                    </div>
+                    <div class="flex items-center gap-2 bg-[#101635]/60 border border-purple-500/10 p-2.5 rounded-lg text-xs font-medium">
+                        <i class="fa-solid fa-headset text-purple-400 text-sm"></i> 24/7 Support
+                    </div>
+                    <div class="flex items-center gap-2 bg-[#101635]/60 border border-purple-500/10 p-2.5 rounded-lg text-xs font-medium">
+                        <i class="fa-solid fa-tags text-emerald-400 text-sm"></i> Best Offers
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                    <button onclick="scrollToSection('services-section')" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-[#7b2ff7] to-[#631cd4] hover:from-[#631cd4] hover:to-[#7b2ff7] rounded-xl font-semibold text-sm shadow-lg shadow-purple-600/30 transition-all transform hover:-translate-y-1">
+                        Explore Services <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                    </button>
+                    <button onclick="scrollToSection('forms-section')" class="w-full sm:w-auto px-8 py-3.5 bg-[#101635] hover:bg-[#161f4b] border border-purple-500/30 rounded-xl font-semibold text-sm transition-all transform hover:-translate-y-1">
+                        Book Connection
+                    </button>
+                </div>
+            </div>
+            <div class="lg:col-span-5 relative flex justify-center items-center">
+                <div class="w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-gradient-to-br from-purple-600/10 to-blue-500/10 absolute filter blur-2xl z-0"></div>
+                <div class="relative z-10 w-full max-w-sm glassmorphism p-6 rounded-3xl text-center space-y-6 border border-cyan-500/20 glow-blue">
+                    <div class="relative w-full h-48 bg-gradient-to-b from-[#0a0f24] to-[#131b42] rounded-2xl flex items-center justify-center overflow-hidden">
+                        <div class="absolute bottom-0 w-1 bg-gradient-to-t from-cyan-400 via-purple-500 to-transparent h-40"></div>
+                        <i class="fa-solid fa-tower-cell text-6xl text-[#00c6ff] opacity-80 z-10 animate-bounce"></i>
+                        <div class="absolute top-8 w-12 h-12 rounded-full border border-cyan-400/40 animate-ping"></div>
+                        <div class="absolute top-4 w-24 h-24 rounded-full border border-purple-500/20 animate-pulse"></div>
+                        <span class="absolute top-4 right-4 bg-emerald-500 text-black text-[9px] font-bold px-2 py-0.5 rounded-full">ACTIVE</span>
+                    </div>
+                    <div class="flex items-center justify-between text-left px-2">
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">Core Signal Engine</p>
+                            <h4 class="text-xl font-bold text-white tracking-wider glow-text-blue">5G HYPERLINK</h4>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs text-emerald-400 font-bold block"><i class="fa-solid fa-wifi"></i> 99.8%</span>
+                            <span class="text-[10px] text-gray-500">Node Cluster</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-4 lg:px-8 pb-16">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div class="glassmorphism p-4 rounded-xl text-center space-y-1">
+                    <p class="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">1.25M+</p>
+                    <p class="text-gray-400 text-xs">Happy Customers</p>
+                </div>
+                <div class="glassmorphism p-4 rounded-xl text-center space-y-1 border-b-2 border-b-cyan-400">
+                    <p class="text-2xl font-bold text-[#00c6ff] glow-text-blue">98.6%</p>
+                    <p class="text-gray-400 text-xs">Service Uptime</p>
+                </div>
+                <div class="glassmorphism p-4 rounded-xl text-center space-y-1">
+                    <p class="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">50K+</p>
+                    <p class="text-gray-400 text-xs">Connections Booked</p>
+                </div>
+                <div class="glassmorphism p-4 rounded-xl text-center space-y-1">
+                    <p class="text-2xl font-bold text-purple-400">24/7</p>
+                    <p class="text-gray-400 text-xs">Customer Support</p>
+                </div>
+                <div class="glassmorphism p-4 rounded-xl text-center space-y-1">
+                    <p class="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">120+</p>
+                    <p class="text-gray-400 text-xs">Cities Covered</p>
+                </div>
+                <div class="glassmorphism p-4 rounded-xl text-center space-y-1 border-b-2 border-b-purple-500">
+                    <p class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#7b2ff7] to-[#00c6ff]">5G Ready</p>
+                    <p class="text-gray-400 text-xs">Future Connected</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-4 lg:px-8 py-12">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h2 class="text-2xl font-bold text-white tracking-tight">Top Telecom & Internet Companies</h2>
+                    <p class="text-xs text-gray-400 mt-1">Direct integration with major top-tier cellular and broadband providers</p>
+                </div>
+                <button onclick="toggleAllCompanies()" id="btnViewAllCompanies" class="text-xs font-bold text-[#00c6ff] bg-[#101635] px-4 py-2 rounded-lg border border-cyan-500/30 hover:bg-cyan-500 hover:text-black transition-all">
+                    View All Companies
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" id="companyGrid">
+                <div class="glassmorphism p-5 rounded-2xl flex flex-col justify-between items-center text-center group relative overflow-hidden h-64 border border-blue-600/20">
+                    <div class="w-14 h-14 rounded-full bg-blue-600 flex items-center justify-center font-bold text-xl tracking-tight shadow-md">Jio</div>
+                    <div class="space-y-1 mt-3">
+                        <h4 class="font-bold text-sm text-gray-100">Unlimited 5G Data</h4>
+                        <p class="text-[11px] text-gray-400">Plans from <span class="text-emerald-400 font-semibold">₹199</span></p>
+                    </div>
+                    <button onclick="navigateTo('company', 'Jio')" class="w-full mt-4 py-2 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-xs font-semibold text-white tracking-wide transition-all">
+                        View Plans
+                    </button>
+                </div>
+                <div class="glassmorphism p-5 rounded-2xl flex flex-col justify-between items-center text-center group relative overflow-hidden h-64 border border-red-600/20">
+                    <div class="w-14 h-14 rounded-full bg-red-600 flex items-center justify-center font-bold text-xl tracking-tight shadow-md">airtel</div>
+                    <div class="space-y-1 mt-3">
+                        <h4 class="font-bold text-sm text-gray-100">Airtel 5G Plus</h4>
+                        <p class="text-[11px] text-gray-400">Plans from <span class="text-emerald-400 font-semibold">₹179</span></p>
+                    </div>
+                    <button onclick="navigateTo('company', 'Airtel')" class="w-full mt-4 py-2 rounded-xl bg-red-600/20 hover:bg-red-600 text-xs font-semibold text-white tracking-wide transition-all">
+                        View Plans
+                    </button>
+                </div>
+                <div class="glassmorphism p-5 rounded-2xl flex flex-col justify-between items-center text-center group relative overflow-hidden h-64 border border-red-500/20">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-red-600 to-yellow-500 flex items-center justify-center font-black text-2xl shadow-md">Vi</div>
+                    <div class="space-y-1 mt-3">
+                        <h4 class="font-bold text-sm text-gray-100">Vi 5G Network</h4>
+                        <p class="text-[11px] text-gray-400">Plans from <span class="text-emerald-400 font-semibold">₹179</span></p>
+                    </div>
+                    <button onclick="navigateTo('company', 'Vi')" class="w-full mt-4 py-2 rounded-xl bg-red-500/20 hover:bg-red-500 text-xs font-semibold text-white tracking-wide transition-all">
+                        View Plans
+                    </button>
+                </div>
+                <div class="glassmorphism p-5 rounded-2xl flex flex-col justify-between items-center text-center group relative overflow-hidden h-64 border border-blue-400/20">
+                    <div class="w-14 h-14 rounded-full bg-blue-500 flex flex-col items-center justify-center text-[10px] font-bold shadow-md">
+                        <span class="leading-none">BSNL</span>
+                    </div>
+                    <div class="space-y-1 mt-3">
+                        <h4 class="font-bold text-sm text-gray-100">BSNL 4G/5G</h4>
+                        <p class="text-[11px] text-gray-400">Plans from <span class="text-emerald-400 font-semibold">₹99</span></p>
+                    </div>
+                    <button onclick="navigateTo('company', 'BSNL')" class="w-full mt-4 py-2 rounded-xl bg-blue-400/20 hover:bg-blue-500 text-xs font-semibold text-white tracking-wide transition-all">
+                        View Plans
+                    </button>
+                </div>
+                <div class="glassmorphism p-5 rounded-2xl flex flex-col justify-between items-center text-center group relative overflow-hidden h-64 border border-pink-600/20">
+                    <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-[10px] font-bold shadow-md">TATA PLAY</div>
+                    <div class="space-y-1 mt-3">
+                        <h4 class="font-bold text-sm text-gray-100">Tata Play DTH</h4>
+                        <p class="text-[11px] text-gray-400">Plans from <span class="text-emerald-400 font-semibold">₹149</span></p>
+                    </div>
+                    <button onclick="navigateTo('company', 'Tata Play')" class="w-full mt-4 py-2 rounded-xl bg-pink-600/20 hover:bg-pink-600 text-xs font-semibold text-white tracking-wide transition-all">
+                        View Plans
+                    </button>
+                </div>
+
+                <div class="hidden extra-companies glassmorphism p-5 rounded-2xl flex flex-col justify-between items-center text-center h-64 border border-orange-500/20">
+                    <div class="w-14 h-14 rounded-full bg-orange-600 flex items-center justify-center font-bold text-xs shadow-md">ACT</div>
+                    <div class="space-y-1 mt-3">
+                        <h4 class="font-bold text-sm text-gray-100">ACT Fibernet</h4>
+                        <p class="text-[11px] text-gray-400">Plans from <span class="text-emerald-400 font-semibold">₹499</span></p>
+                    </div>
+                    <button onclick="navigateTo('company', 'ACT Fibernet')" class="w-full mt-4 py-2 rounded-xl bg-orange-500/20 hover:bg-orange-500 text-xs font-semibold text-white tracking-wide transition-all">View Plans</button>
+                </div>
+                <div class="hidden extra-companies glassmorphism p-5 rounded-2xl flex flex-col justify-between items-center text-center h-64 border border-amber-500/20">
+                    <div class="w-14 h-14 rounded-full bg-amber-500 flex items-center justify-center font-bold text-xs shadow-md">EXCITEL</div>
+                    <div class="space-y-1 mt-3">
+                        <h4 class="font-bold text-sm text-gray-100">Excitel Fiber</h4>
+                        <p class="text-[11px] text-gray-400">Plans from <span class="text-emerald-400 font-semibold">₹400</span></p>
+                    </div>
+                    <button onclick="navigateTo('company', 'Excitel')" class="w-full mt-4 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500 text-xs font-semibold text-white tracking-wide transition-all">View Plans</button>
+                </div>
+                <div class="hidden extra-companies glassmorphism p-5 rounded-2xl flex flex-col justify-between items-center text-center h-64 border border-cyan-500/20">
+                    <div class="w-14 h-14 rounded-full bg-cyan-700 flex items-center justify-center font-bold text-xs shadow-md">HATHWAY</div>
+                    <div class="space-y-1 mt-3">
+                        <h4 class="font-bold text-sm text-gray-100">Hathway Cable</h4>
+                        <p class="text-[11px] text-gray-400">Plans from <span class="text-emerald-400 font-semibold">₹299</span></p>
+                    </div>
+                    <button onclick="navigateTo('company', 'Hathway')" class="w-full mt-4 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500 text-xs font-semibold text-white tracking-wide transition-all">View Plans</button>
+                </div>
+                <div class="hidden extra-companies glassmorphism p-5 rounded-2xl flex flex-col justify-between items-center text-center h-64 border border-violet-500/20">
+                    <div class="w-14 h-14 rounded-full bg-violet-600 flex items-center justify-center font-bold text-xs shadow-md">ASIANET</div>
+                    <div class="space-y-1 mt-3">
+                        <h4 class="font-bold text-sm text-gray-100">Asianet Broadband</h4>
+                        <p class="text-[11px] text-gray-400">Plans from <span class="text-emerald-400 font-semibold">₹299</span></p>
+                    </div>
+                    <button onclick="navigateTo('company', 'Asianet')" class="w-full mt-4 py-2 rounded-xl bg-violet-500/20 hover:bg-violet-600 text-xs font-semibold text-white tracking-wide transition-all">View Plans</button>
+                </div>
+                <div class="hidden extra-companies glassmorphism p-5 rounded-2xl flex flex-col justify-between items-center text-center h-64 border border-lime-500/20">
+                    <div class="w-14 h-14 rounded-full bg-lime-600 flex items-center justify-center font-bold text-xs shadow-md">YOU</div>
+                    <div class="space-y-1 mt-3">
+                        <h4 class="font-bold text-sm text-gray-100">You Broadband</h4>
+                        <p class="text-[11px] text-gray-400">Plans from <span class="text-emerald-400 font-semibold">₹449</span></p>
+                    </div>
+                    <button onclick="navigateTo('company', 'You Broadband')" class="w-full mt-4 py-2 rounded-xl bg-lime-500/20 hover:bg-lime-600 text-xs font-semibold text-white tracking-wide transition-all">View Plans</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="services-section" class="max-w-7xl mx-auto px-4 lg:px-8 py-12">
+            <div class="text-center space-y-2 mb-12">
+                <h2 class="text-3xl font-bold tracking-tight text-white">Our Popular Services</h2>
+                <p class="text-sm text-gray-400 max-w-lg mx-auto">Instant deployment digital infrastructure tasks handled securely</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5" id="servicesGrid">
+                <div class="glassmorphism p-5 rounded-2xl space-y-4 group transition-all relative">
+                    <span class="absolute top-4 right-4 text-[9px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">LIVE</span>
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 text-xl group-hover:bg-[#7b2ff7] group-hover:text-white transition-all">
+                        <i class="fa-solid fa-sim-card"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-gray-200">SIM Activation</h4>
+                        <p class="text-xs text-gray-400 mt-1">Instant digital eSIM or post profile allocation verification.</p>
+                    </div>
+                </div>
+                <div class="glassmorphism p-5 rounded-2xl space-y-4 group transition-all relative">
+                    <span class="absolute top-4 right-4 text-[9px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">LIVE</span>
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-[#00c6ff] text-xl group-hover:bg-[#00c6ff] group-hover:text-black transition-all">
+                        <i class="fa-solid fa-arrow-rotate-left"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-gray-200">MNP Portability</h4>
+                        <p class="text-xs text-gray-400 mt-1">Switch legacy networks effortlessly keeping your current number.</p>
+                    </div>
+                </div>
+                <div class="glassmorphism p-5 rounded-2xl space-y-4 group transition-all relative">
+                    <span class="absolute top-4 right-4 text-[9px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">LIVE</span>
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 text-xl group-hover:bg-blue-500 group-hover:text-white transition-all">
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-gray-200">Broadband Booking</h4>
+                        <p class="text-xs text-gray-400 mt-1">Gigabit line routing terminal requests initialized immediately.</p>
+                    </div>
+                </div>
+                <div class="glassmorphism p-5 rounded-2xl space-y-4 group transition-all relative">
+                    <span class="absolute top-4 right-4 text-[9px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">LIVE</span>
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl group-hover:bg-amber-500 group-hover:text-black transition-all">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-gray-200">Fiber Installation</h4>
+                        <p class="text-xs text-gray-400 mt-1">FTTH laser optics direct structure cabling layout maps.</p>
+                    </div>
+                </div>
+
+                <div class="hidden extra-services glassmorphism p-5 rounded-2xl space-y-4 group transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 text-xl"><i class="fa-solid fa-tv"></i></div>
+                    <div><h4 class="font-bold text-sm text-gray-200">DTH Connection</h4><p class="text-xs text-gray-400 mt-1">HD satellite receiver setup configurations.</p></div>
+                </div>
+                <div class="hidden extra-services glassmorphism p-5 rounded-2xl space-y-4 group transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-400 text-xl"><i class="fa-solid fa-wifi"></i></div>
+                    <div><h4 class="font-bold text-sm text-gray-200">WiFi Router Setup</h4><p class="text-xs text-gray-400 mt-1">Dual-band mesh matrix coverage setup optimizations.</p></div>
+                </div>
+                <div class="hidden extra-services glassmorphism p-5 rounded-2xl space-y-4 group transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 text-xl"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div><h4 class="font-bold text-sm text-gray-200">Network Complaint</h4><p class="text-xs text-gray-400 mt-1">Signal drop telemetry ticket dispatch systems.</p></div>
+                </div>
+                <div class="hidden extra-services glassmorphism p-5 rounded-2xl space-y-4 group transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-xl"><i class="fa-solid fa-fingerprint"></i></div>
+                    <div><h4 class="font-bold text-sm text-gray-200">eSIM Activation</h4><p class="text-xs text-gray-400 mt-1">Remote matrix dynamic QR profile embedding lines.</p></div>
+                </div>
+            </div>
+
+            <div class="text-center mt-10">
+                <button onclick="toggleAllServices()" id="btnViewAllServices" class="px-8 py-3 bg-gradient-to-r from-[#7b2ff7] to-[#00c6ff] font-semibold text-sm rounded-xl shadow-md tracking-wide transition-all transform hover:scale-105">
+                    View All Services
+                </button>
+            </div>
+        </section>
+
+        <section id="forms-section" class="max-w-7xl mx-auto px-4 lg:px-8 py-12 scroll-mt-24">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <div class="glassmorphism p-6 rounded-2xl space-y-6 border border-purple-500/20 relative">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400"><i class="fa-solid fa-file-signature"></i></div>
+                        <h3 class="text-lg font-bold text-white">Book a New Connection</h3>
+                    </div>
+                    <form id="formBookConnection" onsubmit="handleBookConnection(event)" class="space-y-4 text-xs">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="space-y-1.5">
+                                <label class="text-gray-400 font-medium">Full Name</label>
+                                <input type="text" required id="bookName" class="w-full bg-[#0a0f24] border border-purple-900/40 p-3 rounded-lg focus:outline-none focus:border-[#7b2ff7]">
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="text-gray-400 font-medium">Mobile Number</label>
+                                <input type="tel" required id="bookMobile" class="w-full bg-[#0a0f24] border border-purple-900/40 p-3 rounded-lg focus:outline-none focus:border-[#7b2ff7]">
+                            </div>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-gray-400 font-medium">Email Address</label>
+                            <input type="email" required id="bookEmail" class="w-full bg-[#0a0f24] border border-purple-900/40 p-3 rounded-lg focus:outline-none focus:border-[#7b2ff7]">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="space-y-1.5">
+                                <label class="text-gray-400 font-medium">Select Company</label>
+                                <select id="bookCompany" class="w-full bg-[#0a0f24] border border-purple-900/40 p-3 rounded-lg focus:outline-none focus:border-[#7b2ff7]">
+                                    <option>Jio</option>
+                                    <option>Airtel</option>
+                                    <option>Vi</option>
+                                    <option>BSNL</option>
+                                </select>
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="text-gray-400 font-medium">Select Service</label>
+                                <select id="bookService" class="w-full bg-[#0a0f24] border border-purple-900/40 p-3 rounded-lg focus:outline-none focus:border-[#7b2ff7]">
+                                    <option>Broadband Fiber</option>
+                                    <option>Postpaid Connection</option>
+                                    <option>Prepaid SIM Pack</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-gray-400 font-medium">Installation Address</label>
+                            <textarea required id="bookAddress" rows="2" class="w-full bg-[#0a0f24] border border-purple-900/40 p-3 rounded-lg focus:outline-none focus:border-[#7b2ff7] resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-[#7b2ff7] hover:bg-[#631cd4] text-white font-bold rounded-xl shadow-lg transition-all tracking-wider uppercase text-[11px]">
+                            Book Connection Now
+                        </button>
+                    </form>
+                </div>
+
+                <div class="glassmorphism p-6 rounded-2xl space-y-6 border border-cyan-500/20 relative">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-cyan-500/10 flex items-center justify-center text-[#00c6ff]"><i class="fa-solid fa-bolt"></i></div>
+                        <h3 class="text-lg font-bold text-white">Quick Recharge Portal</h3>
+                    </div>
+                    <div class="space-y-4 text-xs">
+                        <div class="space-y-1.5">
+                            <label class="text-gray-400 font-medium">Mobile Number / Consumer ID</label>
+                            <input type="tel" id="rechargeMobile" placeholder="Enter 10-digit link ID" class="w-full bg-[#0a0f24] border border-purple-900/40 p-3 rounded-lg focus:outline-none focus:border-[#00c6ff]">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="space-y-1.5">
+                                <label class="text-gray-400 font-medium">Operator</label>
+                                <select id="rechargeOperator" class="w-full bg-[#0a0f24] border border-purple-900/40 p-3 rounded-lg focus:outline-none focus:border-[#00c6ff]">
+                                    <option>Jio Network</option>
+                                    <option>Airtel Network</option>
+                                    <option>Vi Network</option>
+                                    <option>BSNL Network</option>
+                                </select>
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="text-gray-400 font-medium">Custom Amount (₹)</label>
+                                <input type="number" id="rechargeAmount" value="299" class="w-full bg-[#0a0f24] border border-purple-900/40 p-3 rounded-lg focus:outline-none focus:border-[#00c6ff]">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-gray-400 font-medium block">Popular Matrix Recommendations</label>
+                            <div class="grid grid-cols-4 gap-2 text-center text-xs">
+                                <div onclick="selectQuickAmount(199)" class="p-2.5 bg-[#0a0f24] border border-purple-900/40 rounded-lg cursor-pointer hover:border-[#00c6ff] hover:text-[#00c6ff] transition-all font-semibold">₹199</div>
+                                <div onclick="selectQuickAmount(299)" class="p-2.5 bg-[#0a0f24] border border-[#00c6ff] text-[#00c6ff] rounded-lg cursor-pointer font-semibold">₹299</div>
+                                <div onclick="selectQuickAmount(399)" class="p-2.5 bg-[#0a0f24] border border-purple-900/40 rounded-lg cursor-pointer hover:border-[#00c6ff] hover:text-[#00c6ff] transition-all font-semibold">₹399</div>
+                                <div onclick="selectQuickAmount(599)" class="p-2.5 bg-[#0a0f24] border border-purple-900/40 rounded-lg cursor-pointer hover:border-[#00c6ff] hover:text-[#00c6ff] transition-all font-semibold">₹599</div>
+                            </div>
+                        </div>
+                        <button onclick="handleQuickRechargeSubmit()" class="w-full py-3 bg-[#00c6ff] hover:bg-[#0099cc] text-black font-bold rounded-xl shadow-lg transition-all tracking-wider uppercase text-[11px] mt-2">
+                            Proceed to Recharge Now
+                        </button>
+                    </div>
+                </div>
+
+                <div class="glassmorphism p-6 rounded-2xl space-y-6 border border-purple-500/20 relative">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <h3 class="text-lg font-bold text-white">Raise formal Ticket / Complaint</h3>
+                    </div>
+                    <form onsubmit="handleComplaintSubmit(event)" class="space-y-4 text-xs">
+                        <div class="space-y-1.5">
+                            <label class="text-gray-400 font-medium">Issue Metric Segment</label>
+                            <select id="compType" class="w-full bg-[#0a0f24] border border-purple-900/40 p-3 rounded-lg focus:outline-none focus:border-purple-500">
+                                <option>Internet Speed Issues</option>
+                                <option>Frequent Connection Drops</option>
+                                <option>DTH Encryption Errors</option>
+                                <option>Incorrect Billing Profile</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-gray-400 font-medium">Describe your issue in detail</label>
+                            <textarea required id="compDesc" rows="4" placeholder="Mention error codes or telemetry observations..." class="w-full bg-[#0a0f24] border border-purple-900/40 p-3 rounded-lg focus:outline-none focus:border-purple-500 resize-none"></textarea>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-gray-400 font-medium">Upload Diagnostic Logs / Screenshot</label>
+                            <input type="file" class="w-full text-gray-400 bg-[#0a0f24] rounded-lg file:mr-4 file:py-2.5 file:px-4 file:rounded-l-lg file:border-0 file:text-xs file:font-semibold file:bg-purple-950 file:text-purple-300 hover:file:bg-purple-900 border border-purple-900/30">
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-indigo-600 hover:to-purple-600 text-white font-bold rounded-xl shadow-md transition-all tracking-wider uppercase text-[11px]">
+                            Submit Operational Complaint
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="dashboard-section" class="max-w-7xl mx-auto px-4 lg:px-8 py-12 scroll-mt-24">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold tracking-tight text-white">Live Platform Operational Dashboard</h2>
+                <p class="text-xs text-gray-400 mt-1">Real-time telemetries processed across national connection loops</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-3 grid grid-cols-2 lg:grid-cols-1 gap-4">
+                    <div class="glassmorphism p-4 rounded-xl space-y-1 flex flex-col justify-center">
+                        <span class="text-xs text-gray-400 block">Active Live Users</span>
+                        <span class="text-2xl font-bold text-white tracking-tight">12,458</span>
+                        <span class="text-[10px] text-emerald-400 font-medium"><i class="fa-solid fa-arrow-up"></i> +12.5% Today</span>
+                    </div>
+                    <div class="glassmorphism p-4 rounded-xl space-y-1 flex flex-col justify-center">
+                        <span class="text-xs text-gray-400 block">Total Bookings Today</span>
+                        <span class="text-2xl font-bold text-purple-400 tracking-tight">8,965</span>
+                        <span class="text-[10px] text-emerald-400 font-medium"><i class="fa-solid fa-arrow-up"></i> +8.8% Today</span>
+                    </div>
+                    <div class="glassmorphism p-4 rounded-xl space-y-1 flex flex-col justify-center">
+                        <span class="text-xs text-gray-400 block">Processed Recharges</span>
+                        <span class="text-2xl font-bold text-[#00c6ff] tracking-tight">15,632</span>
+                        <span class="text-[10px] text-emerald-400 font-medium"><i class="fa-solid fa-arrow-up"></i> +15.3% Today</span>
+                    </div>
+                    <div class="glassmorphism p-4 rounded-xl space-y-1 flex flex-col justify-center">
+                        <span class="text-xs text-gray-400 block">Complaints Resolved</span>
+                        <span class="text-2xl font-bold text-amber-400 tracking-tight">2,458</span>
+                        <span class="text-[10px] text-rose-400 font-medium"><i class="fa-solid fa-arrow-down"></i> -3.5% Backlog</span>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 glassmorphism p-6 rounded-2xl relative flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-sm font-bold tracking-tight text-white">Internet Bandwidth Performance Matrix</h4>
+                        <select class="bg-[#0a0f24] text-[11px] text-gray-400 p-1.5 rounded border border-purple-900/30">
+                            <option>This Month</option>
+                            <option>Previous Month</option>
+                        </select>
+                    </div>
+                    <div class="w-full h-64">
+                        <canvas id="telecomChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-3 glassmorphism p-5 rounded-2xl flex flex-col justify-between">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-4">Top Cities Data Coverage</h4>
+                    <div class="space-y-4 text-xs">
+                        <div>
+                            <div class="flex justify-between mb-1 text-gray-300 font-medium"><span>Mumbai Nodes</span><span class="font-bold text-[#00c6ff]">98%</span></div>
+                            <div class="w-full bg-[#0a0f24] h-2 rounded-full overflow-hidden"><div class="bg-[#00c6ff] h-full rounded-full" style="width: 98%;"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1 text-gray-300 font-medium"><span>Delhi Core Network</span><span class="font-bold text-purple-400">96%</span></div>
+                            <div class="w-full bg-[#0a0f24] h-2 rounded-full overflow-hidden"><div class="bg-purple-500 h-full rounded-full" style="width: 96%;"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1 text-gray-300 font-medium"><span>Bangalore Tech Line</span><span class="font-bold text-emerald-400">94%</span></div>
+                            <div class="w-full bg-[#0a0f24] h-2 rounded-full overflow-hidden"><div class="bg-emerald-400 h-full rounded-full" style="width: 94%;"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1 text-gray-300 font-medium"><span>Hyderabad Link Grid</span><span class="font-bold text-amber-400">92%</span></div>
+                            <div class="w-full bg-[#0a0f24] h-2 rounded-full overflow-hidden"><div class="bg-amber-400 h-full rounded-full" style="width: 92%;"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1 text-gray-300 font-medium"><span>Pune Cluster Terminal</span><span class="font-bold text-pink-400">99%</span></div>
+                            <div class="w-full bg-[#0a0f24] h-2 rounded-full overflow-hidden"><div class="bg-pink-500 h-full rounded-full" style="width: 99%;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-4 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glassmorphism p-6 rounded-2xl relative overflow-hidden group border-l-4 border-l-[#00c6ff]">
+                    <div class="space-y-4">
+                        <span class="text-[10px] uppercase font-bold text-[#00c6ff] tracking-widest block">Hyper Performance</span>
+                        <h3 class="text-lg font-bold text-white">Superfast Fiber Internet</h3>
+                        <p class="text-xs text-gray-400">Blazing speeds up to 1Gbps with symmetric throughput connectivity lines.</p>
+                        <div class="pt-2"><button onclick="scrollToSection('forms-section')" class="px-4 py-2 bg-[#00c6ff] text-black text-xs font-bold rounded-lg hover:bg-white transition-colors">Get Now</button></div>
+                    </div>
+                </div>
+                <div class="glassmorphism p-6 rounded-2xl relative overflow-hidden group border-l-4 border-l-purple-500">
+                    <div class="space-y-4">
+                        <span class="text-[10px] uppercase font-bold text-purple-400 tracking-widest block">Entertainment Matrix</span>
+                        <h3 class="text-lg font-bold text-white">OTT Combo Subscriptions</h3>
+                        <p class="text-xs text-gray-400">Bundle Amazon Prime, Disney Hotstar, and Netflix into one localized bill.</p>
+                        <div class="pt-2"><button class="px-4 py-2 bg-purple-600 text-white text-xs font-bold rounded-lg hover:bg-purple-700 transition-colors">Explore</button></div>
+                    </div>
+                </div>
+                <div class="glassmorphism p-6 rounded-2xl relative overflow-hidden group border-l-4 border-l-pink-500">
+                    <div class="space-y-4">
+                        <span class="text-[10px] uppercase font-bold text-pink-400 tracking-widest block">Cellular Unlimited</span>
+                        <h3 class="text-lg font-bold text-white">5G Unlimited Data Plans</h3>
+                        <p class="text-xs text-gray-400">Experience true uncapped wireless infrastructure with zero throttling bars.</p>
+                        <div class="pt-2"><button onclick="navigateTo('company', 'Jio')" class="px-4 py-2 bg-pink-600 text-white text-xs font-bold rounded-lg hover:bg-pink-700 transition-colors">View Plans</button></div>
+                    </div>
+                </div>
+                <div class="glassmorphism p-6 rounded-2xl relative overflow-hidden group border-l-4 border-l-amber-500">
+                    <div class="space-y-4">
+                        <span class="text-[10px] uppercase font-bold text-amber-400 tracking-widest block">Enterprise Grid</span>
+                        <h3 class="text-lg font-bold text-white">Business Solutions Matrix</h3>
+                        <p class="text-xs text-gray-400">SLA-backed corporate leased lines, structured cloud lines, trunk lines.</p>
+                        <div class="pt-2"><button class="px-4 py-2 bg-amber-500 text-black text-xs font-bold rounded-lg hover:bg-amber-600 transition-colors">Get Started</button></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-4 lg:px-8 py-12">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl font-bold tracking-tight text-white">What Our Customers Say</h2>
+                <div class="text-amber-400 text-xs mt-1 flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <span class="text-gray-400 ml-1 font-semibold">4.85 / 5 based on 12,500+ reviews</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="testimonialSlider">
+                <div class="glassmorphism p-5 rounded-2xl space-y-4 border border-purple-500/10">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-cyan-400 flex items-center justify-center font-bold text-sm text-black">RS</div>
+                        <div>
+                            <h4 class="font-bold text-sm text-white">Rahul Sharma</h4>
+                            <span class="text-[10px] text-gray-400">Mumbai Subscriber</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 italic">"The automated fiber broadband allocation setup task finalized within 4 hours. Download line performance easily handles 940Mbps continuously."</p>
+                </div>
+                <div class="glassmorphism p-5 rounded-2xl space-y-4 border border-cyan-500/10">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center font-bold text-sm text-black">PV</div>
+                        <div>
+                            <h4 class="font-bold text-sm text-white">Priya Verma</h4>
+                            <span class="text-[10px] text-gray-400">Delhi Corporate User</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 italic">"Best portal unified structure dashboard for multi-network management lines. Payments process within milliseconds with instant notification updates."</p>
+                </div>
+                <div class="glassmorphism p-5 rounded-2xl space-y-4 border border-purple-500/10">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500 flex items-center justify-center font-bold text-sm text-black">AP</div>
+                        <div>
+                            <h4 class="font-bold text-sm text-white">Amit Patel</h4>
+                            <span class="text-[10px] text-gray-400">Bangalore Developer</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 italic">"Very responsive automated diagnostic support logs routing structures. Resolved my routing encapsulation mismatch terminal error in minutes."</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-4xl mx-auto px-4 lg:px-8 py-12">
+            <h2 class="text-2xl font-bold tracking-tight text-center text-white mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-3">
+                <div class="bg-[#101635] rounded-xl border border-purple-900/40 overflow-hidden">
+                    <button onclick="toggleFaq(1)" class="w-full p-4 text-left font-semibold text-sm flex items-center justify-between text-gray-200 hover:text-white transition-colors">
+                        <span>How can I book a new high-speed broadband fiber connection line?</span>
+                        <i id="faqIcon1" class="fa-solid fa-plus text-xs text-purple-400 transition-transform"></i>
+                    </button>
+                    <div id="faqAns1" class="hidden p-4 pt-0 text-xs text-gray-400 leading-relaxed border-t border-purple-900/10 bg-[#0c102b]">
+                        Simply navigate to the Booking Form card module right on this home cockpit page view dashboard. Complete the entry parameters, choose your designated core service network provider, and submit. The platform engines instantly dispatch physical field teams matching your location nodes.
+                    </div>
+                </div>
+                <div class="bg-[#101635] rounded-xl border border-purple-900/40 overflow-hidden">
+                    <button onclick="toggleFaq(2)" class="w-full p-4 text-left font-semibold text-sm flex items-center justify-between text-gray-200 hover:text-white transition-colors">
+                        <span>How long does the complete optic fiber layout installation take?</span>
+                        <i id="faqIcon2" class="fa-solid fa-plus text-xs text-purple-400 transition-transform"></i>
+                    </button>
+                    <div id="faqAns2" class="hidden p-4 pt-0 text-xs text-gray-400 leading-relaxed border-t border-purple-900/10 bg-[#0c102b]">
+                        Standard dynamic mapping pipelines verify addresses instantly. Physical splicing, ONU device deployment, and routing authentication maps finalize within 12 to 24 hours max from timestamp lock.
+                    </div>
+                </div>
+                <div class="bg-[#101635] rounded-xl border border-purple-900/40 overflow-hidden">
+                    <button onclick="toggleFaq(3)" class="w-full p-4 text-left font-semibold text-sm flex items-center justify-between text-gray-200 hover:text-white transition-colors">
+                        <span>What transaction gateways and payment protocols are integrated?</span>
+                        <i id="faqIcon3" class="fa-solid fa-plus text-xs text-purple-400 transition-transform"></i>
+                    </button>
+                    <div id="faqAns3" class="hidden p-4 pt-0 text-xs text-gray-400 leading-relaxed border-t border-purple-900/10 bg-[#0c102b]">
+                        We accept multi-token framework parameters including secure UPI networks, Credit/Debit chips (Visa, Mastercard, RuPay), NetBanking portals, and encrypted digital storage wallet pipelines.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-4 lg:px-8 py-12 border-t border-purple-900/30">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="space-y-4">
+                    <h3 class="text-base font-bold text-white tracking-wide border-b border-purple-500/20 pb-2">Latest Telecom News</h3>
+                    <div class="space-y-3 text-xs">
+                        <div class="bg-[#101635]/60 p-3.5 rounded-xl border border-purple-500/10 space-y-1">
+                            <span class="text-[9px] text-cyan-400 font-bold block">MAY 20, 2026</span>
+                            <h4 class="font-bold text-gray-200 hover:text-[#00c6ff] cursor-pointer">Jio Launches New 5G Plans with More Cloud Storage Data</h4>
+                        </div>
+                        <div class="bg-[#101635]/60 p-3.5 rounded-xl border border-purple-500/10 space-y-1">
+                            <span class="text-[9px] text-cyan-400 font-bold block">MAY 18, 2026</span>
+                            <h4 class="font-bold text-gray-200 hover:text-[#00c6ff] cursor-pointer">Airtel Expands Satellite Backhaul Network to 500+ Cities</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <h3 class="text-base font-bold text-white tracking-wide border-b border-purple-500/20 pb-2">Trending Network Offers</h3>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex items-center justify-between bg-[#101635]/60 p-3 rounded-xl border border-purple-500/10">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded bg-blue-600 flex items-center justify-center font-bold text-[10px]">Jio</div>
+                                <div><p class="font-bold">5G Unlimited Add-on</p><p class="text-[10px] text-gray-400">Valid on base packs</p></div>
+                            </div>
+                            <span class="text-emerald-400 font-bold">₹299</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-[#101635]/60 p-3 rounded-xl border border-purple-500/10">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded bg-red-600 flex items-center justify-center font-bold text-[10px]">airtel</div>
+                                <div><p class="font-bold">International Roaming</p><p class="text-[10px] text-gray-400">10 Countries pack</p></div>
+                            </div>
+                            <span class="text-emerald-400 font-bold">₹2,449</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="glassmorphism p-5 rounded-2xl border border-cyan-500/20 flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-bold text-sm text-white">Download Mobile Application</h4>
+                        <p class="text-xs text-gray-400 mt-1">Manage network grids, telemetry streams, and profile bills directly from your smartphone.</p>
+                    </div>
+                    <div class="flex items-center gap-3 mt-4">
+                        <button class="flex-1 flex items-center justify-center gap-2 bg-[#0a0f24] hover:bg-black border border-purple-500/30 py-2 rounded-lg text-[11px] font-medium transition-all">
+                            <i class="fa-brands fa-google-play text-cyan-400"></i> Google Play
+                        </button>
+                        <button class="flex-1 flex items-center justify-center gap-2 bg-[#0a0f24] hover:bg-black border border-purple-500/30 py-2 rounded-lg text-[11px] font-medium transition-all">
+                            <i class="fa-brands fa-apple text-purple-400"></i> App Store
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <main id="companyView" class="page-view max-w-7xl mx-auto px-4 lg:px-8 py-12 relative">
+        <div class="mb-6">
+            <button onclick="navigateTo('home')" class="text-xs font-semibold text-gray-400 hover:text-[#00c6ff] transition-colors">
+                <i class="fa-solid fa-arrow-left-long mr-2"></i> Back to Unified Dashboard Cockpit
+            </button>
+        </div>
+
+        <div class="glassmorphism p-8 rounded-3xl mb-12 flex flex-col md:flex-row items-center justify-between gap-6 border border-blue-500/30 relative overflow-hidden">
+            <div class="absolute -right-20 -top-20 w-64 h-64 bg-blue-600/10 rounded-full filter blur-3xl"></div>
+            <div class="flex items-center gap-6 text-center md:text-left flex-col md:flex-row">
+                <div id="companyHeroLogo" class="w-20 h-20 rounded-2xl bg-blue-600 flex items-center justify-center text-3xl font-extrabold text-white shadow-xl shadow-blue-600/20">Jio</div>
+                <div class="space-y-1">
+                    <h1 id="companyTitle" class="text-3xl font-extrabold tracking-tight text-white">Jio Plans & Recharge Matrix</h1>
+                    <p class="text-sm text-gray-400">Select premier prepaid tiers, active postpaid line configurations, data add-ons, and OTT bundles.</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 text-xs">
+                <div class="bg-[#0a0f24] px-4 py-3 rounded-xl border border-purple-500/10 text-center">
+                    <span class="block text-gray-400 font-medium text-[10px] uppercase">Node Density</span>
+                    <span class="font-bold text-emerald-400 text-sm">99.4% SLA</span>
+                </div>
+                <div class="bg-[#0a0f24] px-4 py-3 rounded-xl border border-purple-500/10 text-center">
+                    <span class="block text-gray-400 font-medium text-[10px] uppercase">Active Channels</span>
+                    <span class="font-bold text-[#00c6ff] text-sm">40 Gbps Line</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-3 space-y-6">
+                <div class="glassmorphism p-5 rounded-2xl space-y-6">
+                    <h3 class="font-bold text-sm text-white border-b border-purple-500/10 pb-2">Filter Network Packs</h3>
+                    
+                    <div class="space-y-2 text-xs">
+                        <label class="text-gray-400 font-medium block mb-2">Plan Type Category</label>
+                        <div class="flex items-center gap-2 cursor-pointer p-1.5 hover:bg-[#0a0f24] rounded"><input type="radio" checked name="planType" class="accent-purple-500"> <span>All Plans</span></div>
+                        <div class="flex items-center gap-2 cursor-pointer p-1.5 hover:bg-[#0a0f24] rounded"><input type="radio" name="planType" class="accent-purple-500"> <span>Popular Recharge Packs</span></div>
+                        <div class="flex items-center gap-2 cursor-pointer p-1.5 hover:bg-[#0a0f24] rounded"><input type="radio" name="planType" class="accent-purple-500"> <span>Data Add-On Layers</span></div>
+                        <div class="flex items-center gap-2 cursor-pointer p-1.5 hover:bg-[#0a0f24] rounded"><input type="radio" name="planType" class="accent-purple-500"> <span>Unlimited True 5G Tiers</span></div>
+                    </div>
+
+                    <div class="space-y-2 text-xs">
+                        <label class="text-gray-400 font-medium block">Price Limit Spectrum</label>
+                        <div class="w-full bg-[#0a0f24] h-1 rounded relative my-4"><div class="absolute left-2 right-4 bg-[#00c6ff] h-full"></div><div class="w-3 h-3 bg-white rounded-full absolute left-2 -top-1"></div><div class="w-3 h-3 bg-white rounded-full absolute right-4 -top-1"></div></div>
+                        <div class="flex justify-between text-[10px] text-gray-400"><span>Min: ₹100</span><span>Max: ₹2,999</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-9 space-y-4" id="tariffsContainer">
+                </div>
+        </div>
+    </main>
+
+    <main id="detailsView" class="page-view max-w-7xl mx-auto px-4 lg:px-8 py-12 relative">
+        <div class="mb-6">
+            <button onclick="navigateTo('company', 'Jio')" class="text-xs font-semibold text-gray-400 hover:text-[#00c6ff] transition-colors">
+                <i class="fa-solid fa-arrow-left-long mr-2"></i> Back to Tariff Listing Page
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-8 space-y-6">
+                <div class="glassmorphism p-6 rounded-3xl border border-purple-500/30 relative">
+                    <span class="absolute top-6 right-6 bg-purple-500/20 text-purple-300 font-bold text-[10px] px-3 py-1 rounded-full border border-purple-500/30">PREMIER TIER PACK</span>
+                    <div class="space-y-2">
+                        <h2 id="detPackTitle" class="text-3xl font-extrabold text-white tracking-tight">₹299 Dynamic Config Package</h2>
+                        <p class="text-xs text-gray-400 font-medium">Core Service Network Target Provider: <span id="detPackProvider" class="text-[#00c6ff] font-bold">Jio Network</span></p>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 text-xs text-center">
+                        <div class="bg-[#0a0f24] p-4 rounded-xl border border-purple-950">
+                            <i class="fa-solid fa-database text-[#00c6ff] text-lg block mb-1"></i>
+                            <span class="text-gray-400 block text-[10px]">Daily Allowance</span>
+                            <span id="detData" class="font-bold text-white text-sm">2 GB / Day</span>
+                        </div>
+                        <div class="bg-[#0a0f24] p-4 rounded-xl border border-purple-950">
+                            <i class="fa-solid fa-phone-volume text-emerald-400 text-lg block mb-1"></i>
+                            <span class="text-gray-400 block text-[10px]">Voice Routing</span>
+                            <span class="font-bold text-white text-sm">Unlimited Local/STD</span>
+                        </div>
+                        <div class="bg-[#0a0f24] p-4 rounded-xl border border-purple-950">
+                            <i class="fa-solid fa-message text-amber-400 text-lg block mb-1"></i>
+                            <span class="text-gray-400 block text-[10px]">SMS Protocol Channels</span>
+                            <span class="font-bold text-white text-sm">100 SMS / Day</span>
+                        </div>
+                        <div class="bg-[#0a0f24] p-4 rounded-xl border border-purple-950">
+                            <i class="fa-solid fa-calendar-days text-purple-400 text-lg block mb-1"></i>
+                            <span class="text-gray-400 block text-[10px]">Validity Cycle</span>
+                            <span id="detValidity" class="font-bold text-white text-sm">28 Days Duration</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 space-y-4">
+                        <h4 class="text-sm font-bold tracking-wide text-gray-200">Pack Terms & Encapsulation Parameters</h4>
+                        <ul class="text-xs text-gray-400 space-y-2.5 list-inside list-disc">
+                            <li>Post daily structural allocation limits, terminal line speeds scale to 64 Kbps without active termination.</li>
+                            <li>Unlimited voice operations incorporate local routing loops, national STD, and roaming parameters across all national nodes.</li>
+                            <li>Integrated digital bundle access requires concurrent active profiles on JioCinema, JioTV, and localized cloud nodes.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-4 space-y-6">
+                <div class="glassmorphism p-6 rounded-3xl border border-cyan-500/30 space-y-6 text-center">
+                    <div>
+                        <span class="text-xs text-gray-400 block font-medium">Consolidated Gateway Pricing</span>
+                        <h3 id="detPriceSide" class="text-4xl font-black text-white tracking-tight my-1 glow-text-blue">₹299</h3>
+                        <span class="text-[10px] text-emerald-400 font-bold block"><i class="fa-solid fa-shield-check"></i> Encrypted Secure Settlement Link</span>
+                    </div>
+
+                    <div class="space-y-3 pt-2 text-xs">
+                        <div class="flex justify-between border-b border-purple-900/20 pb-2 text-gray-400"><span>Tariff Base Cost</span><span class="text-white font-medium" id="detBaseCost">₹299.00</span></div>
+                        <div class="flex justify-between border-b border-purple-900/20 pb-2 text-gray-400"><span>Regulatory Tax Processing</span><span class="text-white font-medium">₹0.00</span></div>
+                        <div class="flex justify-between text-sm font-bold text-gray-200 pt-1"><span>Total Premium Cost</span><span class="text-[#00c6ff]" id="detTotalCost">₹299</span></div>
+                    </div>
+
+                    <button onclick="triggerPaymentModal()" class="w-full py-4 bg-gradient-to-r from-[#00c6ff] to-[#7b2ff7] text-white font-bold rounded-xl tracking-wider uppercase text-xs shadow-lg shadow-purple-600/20 transform hover:-translate-y-0.5 transition-all">
+                        Initialize Recharge Transaction
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="w-full bg-[#030611] border-t border-purple-900/40 mt-20 text-xs text-gray-400">
+        <div class="max-w-7xl mx-auto px-4 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+            <div class="space-y-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#7b2ff7] to-[#00c6ff] flex items-center justify-center"><i class="fa-solid fa-satellite-dish text-white text-xs"></i></div>
+                    <span class="text-base font-bold text-white tracking-tight">Telecom Service Hub</span>
+                </div>
+                <p class="leading-relaxed text-gray-500">Your unified intelligence core for automated multi-network deployment operations, instant cellular configurations, and enterprise SLA leasing lines.</p>
+                <div class="flex items-center gap-3 text-sm text-gray-400">
+                    <i class="fa-brands fa-facebook hover:text-[#00c6ff] cursor-pointer"></i>
+                    <i class="fa-brands fa-x-twitter hover:text-[#00c6ff] cursor-pointer"></i>
+                    <i class="fa-brands fa-instagram hover:text-[#00c6ff] cursor-pointer"></i>
+                    <i class="fa-brands fa-linkedin hover:text-[#00c6ff] cursor-pointer"></i>
+                </div>
+            </div>
+            <div class="space-y-3">
+                <h4 class="text-sm font-bold text-white tracking-wide">Quick Navigation Links</h4>
+                <ul class="space-y-2 font-medium">
+                    <li><a href="javascript:void(0)" onclick="navigateTo('home')" class="hover:text-purple-400">Platform Cockpit Console</a></li>
+                    <li><a href="javascript:void(0)" onclick="scrollToSection('services-section')" class="hover:text-purple-400">Core Architecture Services</a></li>
+                    <li><a href="javascript:void(0)" onclick="navigateTo('company', 'Jio')" class="hover:text-purple-400">Corporate Provider Directory</a></li>
+                    <li><a href="javascript:void(0)" onclick="scrollToSection('forms-section')" class="hover:text-purple-400">Quick Recharge Center</a></li>
+                </ul>
+            </div>
+            <div class="space-y-3">
+                <h4 class="text-sm font-bold text-white tracking-wide">Core Ecosystem Services</h4>
+                <ul class="space-y-2">
+                    <li><a href="javascript:void(0)" class="hover:text-cyan-400">SIM Profile Activation</a></li>
+                    <li><a href="javascript:void(0)" class="hover:text-cyan-400">FTTH Laser Optics Mapping</a></li>
+                    <li><a href="javascript:void(0)" class="hover:text-cyan-400">Leased Trunk Lines Matrix</a></li>
+                    <li><a href="javascript:void(0)" class="hover:text-cyan-400">OTT Content Consolidation</a></li>
+                </ul>
+            </div>
+            <div class="space-y-3">
+                <h4 class="text-sm font-bold text-white tracking-wide">Operational Support Core</h4>
+                <ul class="space-y-2">
+                    <li><a href="javascript:void(0)" class="hover:text-purple-400">SLA Telemetry Ticket Help Center</a></li>
+                    <li><a href="javascript:void(0)" class="hover:text-purple-400">Real-time Transaction Tracker</a></li>
+                    <li><a href="javascript:void(0)" class="hover:text-purple-400">Dynamic Refund Protocols</a></li>
+                    <li><a href="javascript:void(0)" class="hover:text-purple-400">Security Encapsulation Guide</a></li>
+                </ul>
+            </div>
+            <div class="space-y-4">
+                <h4 class="text-sm font-bold text-white tracking-wide">Subscribe to Telemetry Updates</h4>
+                <p class="text-gray-500 text-[11px]">Get real-time notification alerts concerning local network upgrades, rate drops, and priority SLA channels.</p>
+                <form onsubmit="handleNewsletterSubmit(event)" class="space-y-2">
+                    <input type="email" required id="newsEmail" placeholder="Enter security corporate email" class="w-full bg-[#0a0f24] p-2.5 rounded-lg border border-purple-900/40 text-xs focus:outline-none focus:border-purple-500 text-white">
+                    <button type="submit" class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg transition-all text-[11px] tracking-wide uppercase">Subscribe to Updates</button>
+                </form>
+            </div>
+        </div>
+        <div class="w-full bg-[#02040c] py-4 border-t border-purple-900/10 px-4 lg:px-8 text-center text-[11px] text-gray-500 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p>&copy; 2026 Telecom Service Hub Infrastructure. All cryptographic rights reserved across global network nodes.</p>
+            <div class="flex items-center gap-4 text-xs">
+                <i class="fa-brands fa-cc-visa text-xl text-slate-400 hover:text-white transition-colors"></i>
+                <i class="fa-brands fa-cc-mastercard text-xl text-slate-400 hover:text-white transition-colors"></i>
+                <i class="fa-solid fa-money-check-dollar-to-slot text-xl text-slate-400 hover:text-white transition-colors"></i>
+            </div>
+        </div>
+    </footer>
+
+    <button onclick="scrollToTop()" class="fixed bottom-6 right-6 z-50 w-11 h-11 bg-gradient-to-tr from-[#7b2ff7] to-[#00c6ff] rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg hover:scale-110 transition-transform focus:outline-none">
+        <i class="fa-solid fa-circle-arrow-up text-lg"></i>
+    </button>
+
+    <div id="paymentModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-[#101635] rounded-2xl border border-cyan-500/30 p-6 space-y-6 relative text-center">
+            <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-xl text-gray-400 hover:text-white">&times;</button>
+            <div class="w-14 h-14 bg-cyan-500/10 rounded-full flex items-center justify-center text-[#00c6ff] text-2xl mx-auto border border-cyan-500/20"><i class="fa-solid fa-credit-card animate-pulse"></i></div>
+            <div class="space-y-1">
+                <h3 class="text-xl font-bold text-white tracking-tight">Process Secure Payment Gateway</h3>
+                <p class="text-xs text-gray-400">Pack Config Lock Amount Total: <span id="paymentModalPrice" class="text-white font-bold text-sm">₹299</span></p>
+            </div>
+            <div class="space-y-3 text-xs text-left">
+                <div class="space-y-1.5">
+                    <label class="text-gray-400 font-medium">Select Active Gateway Mode</label>
+                    <select id="payGatewayMode" class="w-full bg-[#0a0f24] p-3 rounded-lg border border-purple-900/40 text-white focus:outline-none">
+                        <option>Unified Payments Interface (UPI Network Loop)</option>
+                        <option>Credit Card / Encrypted Token Chip</option>
+                        <option>Corporate NetBanking Tunnel Channel</option>
+                    </select>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-gray-400 font-medium">Enter VPA String Address / Core Input Reference</label>
+                    <input type="text" id="payInputStr" value="user@okaxis" placeholder="username@upi-handle" class="w-full bg-[#0a0f24] p-3 rounded-lg border border-purple-900/40 text-white focus:outline-none focus:border-cyan-400">
+                </div>
+            </div>
+            <button onclick="executePaymentTransactionPipeline()" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl transition-all hover:brightness-110 shadow-md">
+                Authorize Gateway Settlement <i class="fa-solid fa-shield-halved ml-1"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="toastNotification" class="fixed top-24 right-6 z-50 glassmorphism px-5 py-4 rounded-xl shadow-2xl border border-emerald-500/30 flex items-center gap-3 transform translate-x-[400px] transition-transform duration-300 max-w-sm">
+        <div class="w-7 h-7 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-circle-check"></i></div>
+        <div>
+            <h5 id="toastTitle" class="font-bold text-xs text-white">System Signal Core Confirmed</h5>
+            <p id="toastMessage" class="text-[11px] text-gray-400 mt-0.5">Parameters processed successfully into database.</p>
+        </div>
+    </div>
+
+    <script>
+        // Dynamic Global Database Matrix Storage Profiles Configuration For Multi Companies Architecture
+        const globalCompaniesPlansDatabase = {
+            "Jio": [
+                { price: 199, data: "1.5 GB/Day", validity: "28 Days", features: "Unlimited Local/STD, 100 SMS/Day, JioCinema Premium Bundle" },
+                { price: 299, data: "2 GB/Day", validity: "28 Days", features: "Unlimited Local/STD, 100 SMS/Day, JioCinema Premium Core" },
+                { price: 349, data: "2.5 GB/Day", validity: "28 Days", features: "Unlimited Local/STD, 100 SMS/Day, Disney+ Hotstar Layer" },
+                { price: 399, data: "3 GB/Day", validity: "56 Days", features: "Unlimited Local/STD, 100 SMS/Day, JioCinema Premium Bundle" },
+                { price: 479, data: "1.5 GB/Day", validity: "84 Days", features: "Unlimited Local/STD, 100 SMS/Day, Amazon Prime Video Mini Tier" },
+                { price: 599, data: "2 GB/Day", validity: "84 Days", features: "Unlimited Local/STD, 100 SMS/Day, Unlimited True 5G Cluster Access" }
+            ],
+            "Airtel": [
+                { price: 179, data: "1 GB/Day", validity: "24 Days", features: "Unlimited Voice Loops, Wynk Music Encryption Active" },
+                { price: 299, data: "1.5 GB/Day", validity: "28 Days", features: "Unlimited Voice Loops, Apollo Circle 3-Month Pack Access" },
+                { price: 359, data: "2 GB/Day", validity: "28 Days", features: "Airtel Xstream Play Bundle Premium Open Access Matrix" },
+                { price: 499, data: "3 GB/Day", validity: "28 Days", features: "Disney+ Hotstar Mobile Integration Track Tier Core Level" }
+            ],
+            "Vi": [
+                { price: 179, data: "1 GB/Day", validity: "24 Days", features: "Unlimited Voice Calls, Vi Movies & TV Basic Channel Package" },
+                { price: 299, data: "1.5 GB/Day", validity: "28 Days", features: "Binge All Night Matrix (12 AM - 6 AM True Uncapped Data Loop)" },
+                { price: 479, data: "1.5 GB/Day", validity: "56 Days", features: "Weekend Data Rollover Architecture Allocation Logic System" },
+                { price: 699, data: "3 GB/Day", validity: "56 Days", features: "Hero Unlimited Data Matrix Grid, Data Delight Configuration Layers" }
+            ],
+            "BSNL": [
+                { price: 99, data: "Voice Only", validity: "22 Days", features: "Unlimited Local/STD Voice Routing Lines, National Roaming Loops" },
+                { price: 199, data: "2 GB/Day", validity: "30 Days", features: "BSNL Tunes Access Layer Channels, Local SMS Routing Configured" },
+                { price: 397, data: "2 GB/Day", validity: "150 Days", features: "Long Term Baseline Node Protection, Dynamic Data Throttle Allocation" }
+            ],
+            "Tata Play": [
+                { price: 149, data: "DTH Basic", validity: "30 Days", features: "Regional FTA Channel Bundles, HD Receiver Signal Map Validation" },
+                { price: 299, data: "DTH Value Packs", validity: "30 Days", features: "Sports Channel Matrix Lines, Entertainment Core Dynamic Packages" }
+            ]
+        };
+
+        // Current Config Global Application Active State Markers Track Layer
+        let currentActiveCompany = "Jio";
+        let currentSelectedPackPrice = 299;
+
+        // Lifecycle Hooks Matrix Initial System Fire Tunnels Activation
+        window.addEventListener('DOMContentLoaded', () => {
+            initializeTelecomChartEngine();
+            renderCompanyTariffsGridList("Jio");
+        });
+
+        // 8. CENTER LINE GRAPH CHART ENGINE IMPLEMENTATION CORE LOGIC (CHART.JS TUNNEL)
+        function initializeTelecomChartEngine() {
+            const ctx = document.getElementById('telecomChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['1 May', '5 May', '10 May', '15 May', '20 May', '25 May', '31 May'],
+                    datasets: [{
+                        label: 'Data Usage Throughput (TB)',
+                        data: [4.2, 6.8, 5.1, 9.4, 12.45, 8.2, 14.1],
+                        borderColor: '#00c6ff',
+                        backgroundColor: 'rgba(0, 198, 255, 0.1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#7b2ff7',
+                        pointBorderColor: '#fff',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: 'rgba(123, 47, 247, 0.05)' }, cookies: { text: { color: '#9ca3af' } } },
+                        y: { grid: { color: 'rgba(123, 47, 247, 0.05)' } }
+                    }
+                }
+            });
+        }
+
+        // VIEW ROUTING CONTROLLER LAYER STATE ROUTER LOGIC NAVIGATION
+        function navigateTo(targetViewId, metadataPayload = null) {
+            // Hide all sub-cockpit viewport pages panels blocks layouts
+            document.querySelectorAll('.page-view').forEach(panelBlock => {
+                panelBlock.classList.remove('active');
+            });
+
+            // Activate Target Specific Screen Node
+            if (targetViewId === 'home') {
+                document.getElementById('homeView').classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } 
+            else if (targetViewId === 'company') {
+                const targetCompany = metadataPayload || "Jio";
+                currentActiveCompany = targetCompany;
+                
+                // Redraw UI Branding Elements Dynamic Text Strings Injection
+                document.getElementById('companyTitle').innerText = `${targetCompany} Plans & Recharge Matrix`;
+                const logoContainer = document.getElementById('companyHeroLogo');
+                logoContainer.innerText = targetCompany;
+
+                // Adjust color layouts according to provider design profiles
+                if (targetCompany === 'Airtel') { logoContainer.className = "w-20 h-20 rounded-2xl bg-red-600 flex items-center justify-center text-2xl font-bold text-white shadow-xl"; }
+                else if (targetCompany === 'Vi') { logoContainer.className = "w-20 h-20 rounded-2xl bg-gradient-to-br from-red-600 to-yellow-500 flex items-center justify-center text-3xl font-black text-white shadow-xl"; }
+                else if (targetCompany === 'BSNL') { logoContainer.className = "w-20 h-20 rounded-2xl bg-blue-500 flex items-center justify-center text-xl font-bold text-white shadow-xl"; }
+                else { logoContainer.className = "w-20 h-20 rounded-2xl bg-blue-600 flex items-center justify-center text-3xl font-extrabold text-white shadow-xl"; }
+
+                renderCompanyTariffsGridList(targetCompany);
+                document.getElementById('companyView').classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } 
+            else if (targetViewId === 'details') {
+                const targetPackCost = metadataPayload || 299;
+                currentSelectedPackPrice = parseInt(targetPackCost);
+
+                // Fetch details from provider matrices
+                const providerPacksArray = globalCompaniesPlansDatabase[currentActiveCompany] || globalCompaniesPlansDatabase["Jio"];
+                const matchedPackObject = providerPacksArray.find(pack => pack.price === currentSelectedPackPrice) || providerPacksArray[0];
+
+                // Inject UI values fields blocks strings data layers
+                document.getElementById('detPackTitle').innerText = `₹${matchedPackObject.price} Core Deployment Configuration Package`;
+                document.getElementById('detPackProvider').innerText = `${currentActiveCompany} Integrated Network`;
+                document.getElementById('detData').innerText = matchedPackObject.data;
+                document.getElementById('detValidity').innerText = matchedPackObject.validity;
+                document.getElementById('detPriceSide').innerText = `₹${matchedPackObject.price}`;
+                document.getElementById('detBaseCost').innerText = `₹${matchedPackObject.price}.00`;
+                document.getElementById('detTotalCost').innerText = `₹${matchedPackObject.price}`;
+
+                document.getElementById('detailsView').classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // TARIFF LIST DYNAMIC RENDER GENERATOR LOOP LOOP
+        function renderCompanyTariffsGridList(companyKeyName) {
+            const containerNode = document.getElementById('tariffsContainer');
+            containerNode.innerHTML = ""; // Wipe active legacy view records nodes
+
+            const planDataset = globalCompaniesPlansDatabase[companyKeyName] || globalCompaniesPlansDatabase["Jio"];
+
+            planDataset.forEach(pack => {
+                const planCardMarkupElement = document.createElement('div');
+                planCardMarkupElement.className = "glassmorphism p-5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-purple-900/20 hover:border-purple-500/30 transition-all";
+                planCardMarkupElement.innerHTML = `
+                    <div class="space-y-2 flex-1">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl font-black text-white tracking-tight glow-text-blue">₹${pack.price}</span>
+                            <span class="bg-purple-500/10 text-purple-400 font-bold text-[10px] px-2 py-0.5 rounded border border-purple-500/20">${pack.validity} Cycle Validity</span>
+                        </div>
+                        <p class="text-xs text-gray-400 font-medium leading-relaxed">${pack.features}</p>
+                        <div class="flex items-center gap-4 text-[11px] text-gray-500 font-semibold pt-1">
+                            <span><i class="fa-solid fa-database text-cyan-400 mr-1"></i> Data: ${pack.data}</span>
+                            <span><i class="fa-solid fa-phone-flip text-emerald-400 mr-1"></i> Calls: True Unlimited</span>
+                        </div>
+                    </div>
+                    <div class="w-full sm:w-auto flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-3 border-t sm:border-t-0 border-purple-900/10 pt-3 sm:pt-0">
+                        <span class="text-[10px] bg-emerald-500/10 text-emerald-400 font-bold px-2 py-1 rounded">MOST POPULAR PACK</span>
+                        <button onclick="navigateTo('details', ${pack.price})" class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-indigo-600 hover:to-purple-600 text-white font-bold text-xs rounded-xl transition-all shadow-md tracking-wide">
+                            View Details <i class="fa-solid fa-circle-chevron-right ml-1"></i>
+                        </button>
+                    </div>
+                `;
+                containerNode.appendChild(planCardMarkupElement);
+            });
+        }
+
+        // VIEW ALL COLLAPSE HIDE SHOW REVEAL TOGGLES UTILITIES
+        function toggleAllCompanies() {
+            document.querySelectorAll('.extra-companies').forEach(item => item.classList.toggle('hidden'));
+            const currentButton = document.getElementById('btnViewAllCompanies');
+            currentButton.innerText = currentButton.innerText === "View All Companies" ? "Collapse Grid View" : "View All Companies";
+        }
+
+        function toggleAllServices() {
+            document.querySelectorAll('.extra-services').forEach(item => item.classList.toggle('hidden'));
+            const currentButton = document.getElementById('btnViewAllServices');
+            currentButton.innerText = currentButton.innerText === "View All Services" ? "Collapse Ecosystem Grid" : "View All Services";
+        }
+
+        function selectQuickAmount(numericalValue) {
+            document.getElementById('rechargeAmount').value = numericalValue;
+            triggerToastNotification("Recharge Config Altered", `Target pack value structural metric locked to: ₹${numericalValue}`);
+        }
+
+        // SCROLL SMOOTH LEVEL ACCESSORIES CALLS
+        function scrollToSection(elementTargetId) {
+            navigateTo('home');
+            setTimeout(() => {
+                const domNode = document.getElementById(elementTargetId);
+                if (domNode) domNode.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+
+        function toggleFaq(indexRowId) {
+            const answerElement = document.getElementById(`faqAns${indexRowId}`);
+            const iconElement = document.getElementById(`faqIcon${indexRowId}`);
+            answerElement.classList.toggle('hidden');
+            iconElement.classList.toggle('fa-plus');
+            iconElement.classList.toggle('fa-minus');
+        }
+
+        // RECHARGE SUBMIT HANDLER OPERATION
+        function handleQuickRechargeSubmit() {
+            const mobileInput = document.getElementById('rechargeMobile').value.trim();
+            const selectedCostAmount = document.getElementById('rechargeAmount').value;
+            
+            if (mobileInput.length < 10) {
+                alert("Validation Security Alert: Please entry a complete valid 10-digit link identifier consumer index link target.");
+                return;
+            }
+
+            currentSelectedPackPrice = parseInt(selectedCostAmount);
+            triggerPaymentModal();
+        }
+
+        // TRANSACTION CONTROL TICKET OPERATIONS ACTIONS MODALS 
+        function triggerPaymentModal() {
+            document.getElementById('paymentModalPrice').innerText = `₹${currentSelectedPackPrice}`;
+            document.getElementById('paymentModal').classList.remove('hidden');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        function executePaymentTransactionPipeline() {
+            const accountStringValue = document.getElementById('payInputStr').value.trim();
+            if(!accountStringValue) { alert("Enter proper billing address signature."); return; }
+
+            closePaymentModal();
+            triggerToastNotification("Settlement Succeeded", `Transaction parameters mapped securely. Profile active with cost factor: ₹${currentSelectedPackPrice}`);
+            
+            // Save transactional logs mock patterns history array values structure into LocalStorage
+            const paymentLogsHistoryDataArray = JSON.parse(localStorage.getItem('telecom_hub_recharges_logs_index')) || [];
+            paymentLogsHistoryDataArray.push({ timestamp: Date.now(), cost: currentSelectedPackPrice, route: accountStringValue });
+            localStorage.setItem('telecom_hub_recharges_logs_index', JSON.stringify(paymentLogsHistoryDataArray));
+
+            setTimeout(() => { navigateTo('home'); }, 1200);
+        }
+
+        // BOOK CONNECTION SYSTEM SUBMISSION SUBMIT CONTROLLER
+        function handleBookConnection(event) {
+            event.preventDefault();
+            const clientNameInput = document.getElementById('bookName').value;
+            const targetClientMobile = document.getElementById('bookMobile').value;
+            const selectedInfrastructureProvider = document.getElementById('bookCompany').value;
+
+            triggerToastNotification("Deployment Ticket Created", `Field structural layout routed matching client parameters allocation: ${clientNameInput}`);
+            
+            const internalBookingRecordsArray = JSON.parse(localStorage.getItem('telecom_hub_bookings_index')) || [];
+            internalBookingRecordsArray.push({ name: clientNameInput, mobile: targetClientMobile, targetedCoreNode: selectedInfrastructureProvider, timestamp: Date.now() });
+            localStorage.setItem('telecom_hub_bookings_index', JSON.stringify(internalBookingRecordsArray));
+
+            document.getElementById('formBookConnection').reset();
+        }
+
+        // COMPLAINT TICKET ENGINE INTERFACE DISPATCH
+        function handleComplaintSubmit(event) {
+            event.preventDefault();
+            const targetIssueSegment = document.getElementById('compType').value;
+            const simulatedTrackingTicketHexId = "TK-" + Math.floor(Math.random() * 900000 + 100000);
+
+            triggerToastNotification("SLA Ticket Locked", `Operational tracking ID generated safely: ${simulatedTrackingTicketHexId}`);
+            alert(`SLA Critical Support Dispatched safely into core telemetry arrays queue.\nGenerated Ticket Identifier: ${simulatedTrackingTicketHexId}\nTracking Status available on system panel logs index via storage.`);
+            
+            const systemicComplaintsIndexLogs = JSON.parse(localStorage.getItem('telecom_hub_complaints_index')) || [];
+            systemicComplaintsIndexLogs.push({ ticketHex: simulatedTrackingTicketHexId, classification: targetIssueSegment, timestamp: Date.now() });
+            localStorage.setItem('telecom_hub_complaints_index', JSON.stringify(systemicComplaintsIndexLogs));
+
+            event.target.reset();
+        }
+
+        // NEWSLETTER DISPATCH
+        function handleNewsletterSubmit(event) {
+            event.preventDefault();
+            const inputTargetMailStr = document.getElementById('newsEmail').value;
+            triggerToastNotification("Subscription Pipeline Secured", `Security mail mapped to ecosystem telemetry matrix updates: ${inputTargetMailStr}`);
+            event.target.reset();
+        }
+
+        // CONSOLE TOAST NOTIFICATION ALERTS DISPLAY PACK ENGINE
+        function triggerToastNotification(headerTitleText, descriptionBodyMessage) {
+            const toastNodeContainer = document.getElementById('toastNotification');
+            document.getElementById('toastTitle').innerText = headerTitleText;
+            document.getElementById('toastMessage').innerText = descriptionBodyMessage;
+
+            toastNodeContainer.style.transform = "translateX(0px)";
+            setTimeout(() => {
+                toastNodeContainer.style.transform = "translateX(400px)";
+            }, 4000);
+        }
+
+        // TRIGGER COMPACT GLOBAL SEARCH BOX ACCENTS
+        function triggerGlobalSearch() {
+            const inputSearchStrValue = document.getElementById('globalSearch').value.trim().toLowerCase();
+            if (!inputSearchStrValue) return;
+
+            if(inputSearchStrValue.includes("jio")) { navigateTo('company', 'Jio'); }
+            else if(inputSearchStrValue.includes("airtel")) { navigateTo('company', 'Airtel'); }
+            else if(inputSearchStrValue.includes("vi") || inputSearchStrValue.includes("vodafone")) { navigateTo('company', 'Vi'); }
+            else if(inputSearchStrValue.includes("bsnl")) { navigateTo('company', 'BSNL'); }
+            else if(inputSearchStrValue.includes("tata") || inputSearchStrValue.includes("dth")) { navigateTo('company', 'Tata Play'); }
+            else {
+                alert(`Search Query Result Array Index: Zero direct provider target matches mapped for string query value: "${inputSearchStrValue}". Directing to fallback standard Jio profile listing.`);
+                navigateTo('company', 'Jio');
+            }
+        }
+
+        function toggleNotificationBadge() {
+            const badge = document.getElementById('notifBadge');
+            badge.style.display = badge.style.display === 'none' ? 'flex' : 'none';
+            triggerToastNotification("Telemetry Buffer Flushed", "All system warning notifications cleared from current profile buffer session context.");
+        }
+    </script>
+    <div class="max-w-6xl mx-auto space-y-10 mt-20 border-t border-slate-800 pt-10">
+    
+    <div class="flex justify-between items-center bg-slate-900/80 p-6 rounded-2xl border border-slate-800">
+      <div>
+        <h1 class="text-3xl font-black text-white flex items-center gap-3">
+          <i class="fa-solid fa-tower-cell text-cyan-400"></i> Telecom Portal
+        </h1>
+        <p class="text-slate-400 text-sm mt-1">Instant Data Recharges & Fiber Configurations</p>
+      </div>
+      <a href="admin.html" class="bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-bold px-4 py-2.5 rounded-xl transition text-xs">
+        <i class="fa-solid fa-user-gear mr-2"></i> Open Control Admin
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="glass-box p-6 bg-slate-800/40 border border-slate-700/60 backdrop-blur-md rounded-2xl space-y-5 shadow-xl">
+        <h2 class="text-xl font-black text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-bolt"></i> Mobile Recharge Pack</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="text-xs text-slate-400 font-semibold block mb-1">Consumer Mobile Number</label>
+            <input type="tel" id="mobileNum" placeholder="Enter 10-digit number" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl p-3 focus:outline-none focus:border-cyan-400 text-sm font-mono tracking-widest">
+          </div>
+          <div>
+            <label class="text-xs text-slate-400 font-semibold block mb-1">Select Network Grid</label>
+            <select id="operator" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl p-3 focus:outline-none focus:border-cyan-400 text-sm">
+              <option value="Jio Infocomm">Jio Networks 5G</option>
+              <option value="Airtel India">Bharti Airtel SuperFast</option>
+              <option value="Vi India">Vodafone Idea Hub</option>
+              <option value="BSNL Core">BSNL National Network</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs text-slate-400 font-semibold block mb-1">Choose Premium Plan Pack</label>
+            <select id="plan" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl p-3 focus:outline-none focus:border-cyan-400 text-sm font-semibold text-emerald-400">
+              <option value="₹299 Unlimited (1.5GB/Day - 28 Days)" data-cost="299">₹299 - 1.5GB/Day - 28 Days</option>
+              <option value="₹666 SuperSaver (2GB/Day - 84 Days)" data-cost="666">₹666 - 2GB/Day - 84 Days</option>
+              <option value="₹3599 Enterprise (2.5GB/Day - 365 Days)" data-cost="3599">₹3,599 - Annual Pack - 365 Days</option>
+            </select>
+          </div>
+          <button onclick="processTelecomOrder('Recharge')" class="w-full bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-black p-4 rounded-xl transition uppercase tracking-wider text-xs">Execute Instant Recharge Sequence</button>
+        </div>
+      </div>
+
+      <div class="glass-box p-6 bg-slate-800/40 border border-slate-700/60 backdrop-blur-md rounded-2xl space-y-5 shadow-xl">
+        <h2 class="text-xl font-black text-amber-400 flex items-center gap-2"><i class="fa-solid fa-network-wired"></i> New High-Speed Fiber Setup</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="text-xs text-slate-400 font-semibold block mb-1">Contact Reference Number</label>
+            <input type="tel" id="fiberMobile" placeholder="Enter mobile for router logs" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl p-3 focus:outline-none focus:border-amber-400 text-sm font-mono tracking-widest">
+          </div>
+          <div>
+            <label class="text-xs text-slate-400 font-semibold block mb-1">Fiber Plan Speed Infrastructure</label>
+            <select id="fiberPlan" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl p-3 focus:outline-none focus:border-amber-400 text-sm font-semibold text-emerald-400">
+              <option value="100 Mbps Unlimited GigaPlan" data-cost="799">₹799/Month - 100 Mbps Unlimited</option>
+              <option value="300 Mbps Premium Streaming Hub" data-cost="1499">₹1499/Month - 300 Mbps + OTT Perks</option>
+              <option value="1 Gbps Ultra Pipeline Enterprise" data-cost="3999">₹3999/Month - 1 Gbps Dedicated Link</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs text-slate-400 font-semibold block mb-1">Installation Address Coordinates</label>
+            <textarea id="fiberAddress" placeholder="Enter absolute residential or company address data" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl p-3 focus:outline-none focus:border-amber-400 text-sm h-20 resize-none"></textarea>
+          </div>
+          <button onclick="processTelecomOrder('Fiber')" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-black p-4 rounded-xl transition uppercase tracking-wider text-xs">Request Router Connection Node</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6">
+      <h3 class="text-lg font-bold text-white mb-4 uppercase text-slate-300">Your Terminal Session Logs</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="text-slate-500 border-b border-slate-800 uppercase font-bold">
+              <th class="pb-3">Order Code</th>
+              <th class="pb-3">Mobile Target</th>
+              <th class="pb-3">Matrix Type</th>
+              <th class="pb-3">Plan Specs</th>
+              <th class="pb-3">Paid Net</th>
+              <th class="pb-3">Allocation Status</th>
+            </tr>
+          </thead>
+          <tbody id="userLogs" class="divide-y divide-slate-800/50 text-slate-300"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function processTelecomOrder(modeType) {
+      let mobile, operatorName, planText, planCost;
+
+      if(modeType === 'Recharge') {
+        mobile = document.getElementById("mobileNum").value.trim();
+        operatorName = document.getElementById("operator").value;
+        let pSelect = document.getElementById("plan");
+        planText = pSelect.value;
+        planCost = pSelect.options[pSelect.selectedIndex].getAttribute("data-cost");
+      } else {
+        mobile = document.getElementById("fiberMobile").value.trim();
+        operatorName = "SevaSetu GigaFiber Service";
+        let fSelect = document.getElementById("fiberPlan");
+        planText = fSelect.value;
+        planCost = fSelect.options[fSelect.selectedIndex].getAttribute("data-cost");
+        let address = document.getElementById("fiberAddress").value.trim();
+        if(!address) { alert("Please provide coordinates for installation!"); return; }
+      }
+
+      if(mobile.length < 10) { alert("Please enter valid 10-digit credentials."); return; }
+
+      let telecomPayload = {
+        id: Math.floor(100000 + Math.random() * 900000),
+        mobile: mobile,
+        operator: operatorName,
+        type: modeType,
+        plan: planText,
+        cost: parseInt(planCost),
+        status: "Approved"
+      };
+
+      let currentDB = JSON.parse(localStorage.getItem("telecomOrders")) || [];
+      currentDB.unshift(telecomPayload);
+      localStorage.setItem("telecomOrders", JSON.stringify(currentDB));
+
+      alert("Transaction success! Document synchronized with MongoDB Atlas.");
+      renderTelecomUserLogs();
+    }
+
+    function renderTelecomUserLogs() {
+      let currentDB = JSON.parse(localStorage.getItem("telecomOrders")) || [];
+      let rows = "";
+      currentDB.forEach(item => {
+        rows += `<tr class="hover:bg-slate-900/20">
+          <td class="py-3 font-mono text-pink-400">#TEL-${item.id}</td>
+          <td class="py-3 font-mono font-bold text-white">${item.mobile}</td>
+          <td class="py-3"><span class="px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-slate-800 text-cyan-400">${item.type}</span></td>
+          <td class="py-3 text-slate-400">${item.plan}</td>
+          <td class="py-3 font-bold text-emerald-400 font-mono">₹${item.cost}</td>
+          <td class="py-3 text-emerald-400 font-bold uppercase text-[10px]">${item.status}</td>
+        </tr>`;
+      });
+      document.getElementById("userLogs").innerHTML = rows || `<tr><td colspan="6" class="text-center py-4 text-slate-600 italic">No operations recorded inside this workspace session.</td></tr>`;
+    }
+    renderTelecomUserLogs();
+  </script>
+</body>
+</html>

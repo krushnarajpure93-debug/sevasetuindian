@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+  content="width=device-width, initial-scale=1.0">
+
+  <title>Premium Dashboard | Seva Setu</title>
+
+  <!-- TAILWIND CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- FONT AWESOME -->
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- GOOGLE FONT -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Orbitron:wght@500;700&display=swap"
+  rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
+    }
+
+    body{
+      background:
+      radial-gradient(circle at top left,#312e81,#020617 40%),
+      radial-gradient(circle at bottom right,#831843,#020617 40%);
+      color:white;
+      overflow-x:hidden;
+    }
+
+    /* BACKGROUND */
+    .bg-blur1{
+      position:fixed;
+      width:500px;
+      height:500px;
+      background:#4f46e5;
+      filter:blur(140px);
+      opacity:.20;
+      border-radius:50%;
+      top:-150px;
+      left:-150px;
+      z-index:-1;
+    }
+
+    .bg-blur2{
+      position:fixed;
+      width:500px;
+      height:500px;
+      background:#ec4899;
+      filter:blur(140px);
+      opacity:.20;
+      border-radius:50%;
+      bottom:-150px;
+      right:-150px;
+      z-index:-1;
+    }
+
+    /* SIDEBAR */
+    .sidebar{
+      width:290px;
+      background:rgba(15,23,42,.75);
+      backdrop-filter:blur(20px);
+      border-right:1px solid rgba(255,255,255,.08);
+      box-shadow:0 0 30px rgba(99,102,241,.2);
+    }
+
+    /* GLASS */
+    .glass{
+      background:rgba(255,255,255,.05);
+      backdrop-filter:blur(18px);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    /* MENU */
+    .menu-link{
+      transition:.3s;
+    }
+
+    .menu-link:hover{
+      background:#6366f1;
+      transform:translateX(5px);
+    }
+
+    /* CARD */
+    .stat-card{
+      background:rgba(255,255,255,.06);
+      backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:22px;
+      padding:25px;
+      transition:.4s;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .stat-card:hover{
+      transform:translateY(-10px) scale(1.03);
+      box-shadow:
+      0 20px 40px rgba(99,102,241,.3),
+      0 0 30px rgba(236,72,153,.2);
+    }
+
+    /* NAVBAR */
+    .glass-navbar{
+      height:80px;
+      background:rgba(255,255,255,.06);
+      backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:22px;
+      padding:0 30px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:35px;
+    }
+
+    .left-nav h2{
+      font-size:28px;
+      font-family:'Orbitron',sans-serif;
+    }
+
+    .right-nav{
+      display:flex;
+      align-items:center;
+      gap:25px;
+      font-size:22px;
+    }
+
+    .profile-img{
+      width:50px;
+      height:50px;
+      border-radius:50%;
+      border:3px solid #6366f1;
+    }
+
+    /* ANALYTICS */
+    .analytics-box{
+      margin-top:40px;
+      background:rgba(255,255,255,.05);
+      padding:30px;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .bars{
+      display:flex;
+      align-items:flex-end;
+      gap:20px;
+      height:250px;
+      margin-top:30px;
+    }
+
+    .bar{
+      width:60px;
+      border-radius:14px 14px 0 0;
+      background:linear-gradient(to top,#6366f1,#ec4899);
+      animation:updown 2s infinite alternate;
+    }
+
+    .bar1{height:120px;}
+    .bar2{height:180px;}
+    .bar3{height:90px;}
+    .bar4{height:220px;}
+    .bar5{height:150px;}
+
+    @keyframes updown{
+
+      from{
+        transform:scaleY(.8);
+      }
+
+      to{
+        transform:scaleY(1);
+      }
+
+    }
+
+    /* TABLE */
+    table{
+      width:100%;
+      border-collapse:collapse;
+    }
+
+    th,td{
+      padding:18px;
+      text-align:left;
+    }
+
+    th{
+      color:#94a3b8;
+    }
+
+    tr{
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <!-- BACKGROUND -->
+  <div class="bg-blur1"></div>
+
+  <div class="bg-blur2"></div>
+
+  <div class="flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar hidden lg:block p-8">
+
+      <!-- LOGO -->
+      <div>
+
+        <h1 class="text-4xl font-extrabold">
+
+          Seva
+          <span class="text-indigo-500">
+            Setu
+          </span>
+
+        </h1>
+
+        <p class="text-slate-400 mt-3">
+          Premium Dashboard
+        </p>
+
+      </div>
+
+      <!-- MENU -->
+      <div class="mt-14 space-y-5">
+
+        <a href="dashboard.html"
+        class="menu-link flex items-center gap-4 px-5 py-4 rounded-2xl glass">
+
+          <i class="fa-solid fa-chart-line text-xl"></i>
+
+          Dashboard
+
+        </a>
+
+        <a href="#"
+        class="menu-link flex items-center gap-4 px-5 py-4 rounded-2xl glass">
+
+          <i class="fa-solid fa-users text-xl"></i>
+
+          Users
+
+        </a>
+
+        <a href="#"
+        class="menu-link flex items-center gap-4 px-5 py-4 rounded-2xl glass">
+
+          <i class="fa-solid fa-calendar-check text-xl"></i>
+
+          Bookings
+
+        </a>
+
+        <a href="emergency.html"
+        class="menu-link flex items-center gap-4 px-5 py-4 rounded-2xl glass">
+
+          <i class="fa-solid fa-truck-medical text-xl"></i>
+
+          Emergency
+
+        </a>
+
+        <a href="settings.html"
+        class="menu-link flex items-center gap-4 px-5 py-4 rounded-2xl glass">
+
+          <i class="fa-solid fa-gear text-xl"></i>
+
+          Settings
+
+        </a>
+
+      </div>
+
+      <!-- LOGOUT -->
+      <div class="mt-16">
+
+        <a href="login.html"
+        class="bg-red-600 hover:bg-red-700 transition px-8 py-4 rounded-2xl font-bold inline-block">
+
+          Logout
+
+        </a>
+
+      </div>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="flex-1 p-8 lg:p-12">
+
+      <!-- NAVBAR -->
+      <div class="glass-navbar">
+
+        <div class="left-nav">
+
+          <h2>
+            Seva Setu Dashboard
+          </h2>
+
+        </div>
+
+        <div class="right-nav">
+
+          <i class="fa-solid fa-bell"></i>
+
+          <i class="fa-solid fa-message"></i>
+
+          <img src="https://i.pravatar.cc/100"
+          class="profile-img">
+
+        </div>
+
+      </div>
+
+      <!-- TITLE -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+
+        <div>
+
+          <h1 class="text-5xl font-extrabold">
+            Welcome Admin 👋
+          </h1>
+
+          <p class="text-slate-400 mt-3 text-lg">
+            Manage your Seva Setu platform easily.
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- STATS -->
+      <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-8 mt-14">
+
+        <!-- USERS -->
+        <div class="stat-card">
+
+          <div class="flex items-center justify-between">
+
+            <div>
+
+              <p class="text-slate-400">
+                Total Users
+              </p>
+
+              <h2 class="text-5xl font-extrabold mt-4">
+                12K
+              </h2>
+
+            </div>
+
+            <div class="h-20 w-20 rounded-2xl bg-indigo-600 flex items-center justify-center text-3xl shadow-2xl">
+
+              <i class="fa-solid fa-users"></i>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- BOOKINGS -->
+        <div class="stat-card">
+
+          <div class="flex items-center justify-between">
+
+            <div>
+
+              <p class="text-slate-400">
+                Bookings
+              </p>
+
+              <h2 class="text-5xl font-extrabold mt-4">
+                8K
+              </h2>
+
+            </div>
+
+            <div class="h-20 w-20 rounded-2xl bg-pink-500 flex items-center justify-center text-3xl shadow-2xl">
+
+              <i class="fa-solid fa-calendar-check"></i>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- EMERGENCY -->
+        <div class="stat-card">
+
+          <div class="flex items-center justify-between">
+
+            <div>
+
+              <p class="text-slate-400">
+                Emergency Calls
+              </p>
+
+              <h2 class="text-5xl font-extrabold mt-4">
+                1.2K
+              </h2>
+
+            </div>
+
+            <div class="h-20 w-20 rounded-2xl bg-red-600 flex items-center justify-center text-3xl shadow-2xl">
+
+              <i class="fa-solid fa-truck-medical"></i>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- REVENUE -->
+        <div class="stat-card">
+
+          <div class="flex items-center justify-between">
+
+            <div>
+
+              <p class="text-slate-400">
+                Revenue
+              </p>
+
+              <h2 class="text-5xl font-extrabold mt-4">
+                ₹95K
+              </h2>
+
+            </div>
+
+            <div class="h-20 w-20 rounded-2xl bg-green-600 flex items-center justify-center text-3xl shadow-2xl">
+
+              <i class="fa-solid fa-indian-rupee-sign"></i>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- TABLE -->
+      <div class="glass rounded-[35px] p-8 mt-16 overflow-x-auto">
+
+        <div class="flex items-center justify-between">
+
+          <h2 class="text-4xl font-extrabold">
+            Recent Users
+          </h2>
+
+          <button class="bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-2xl font-bold transition">
+
+            View All
+
+          </button>
+
+        </div>
+
+        <table class="mt-10">
+
+          <thead>
+
+            <tr>
+
+              <th>Name</th>
+
+              <th>Email</th>
+
+              <th>Role</th>
+
+              <th>Status</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <tr>
+
+              <td>Rahul Patil</td>
+
+              <td>rahul@gmail.com</td>
+
+              <td>User</td>
+
+              <td class="text-green-400">
+                Active
+              </td>
+
+            </tr>
+
+            <tr>
+
+              <td>Priya Sharma</td>
+
+              <td>priya@gmail.com</td>
+
+              <td>Business</td>
+
+              <td class="text-green-400">
+                Active
+              </td>
+
+            </tr>
+
+            <tr>
+
+              <td>Amit Kumar</td>
+
+              <td>amit@gmail.com</td>
+
+              <td>Company</td>
+
+              <td class="text-yellow-400">
+                Pending
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <!-- ANALYTICS -->
+      <div class="analytics-box">
+
+        <h2 class="text-4xl font-extrabold">
+          Live Analytics
+        </h2>
+
+        <div class="bars">
+
+          <div class="bar bar1"></div>
+
+          <div class="bar bar2"></div>
+
+          <div class="bar bar3"></div>
+
+          <div class="bar bar4"></div>
+
+          <div class="bar bar5"></div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+</body>
+</html>

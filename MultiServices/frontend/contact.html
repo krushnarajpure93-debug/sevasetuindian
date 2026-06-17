@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Seva Setu - Advanced Digital Portal</title>
+
+  <!-- TAILWIND CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- FONT AWESOME ICONS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- GOOGLE FONTS (Poppins & Orbitron for High-Tech Aesthetic) -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* Global Typography Configuration */
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .tech-font {
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    body {
+      background: #030712;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.1) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.08) 0px, transparent 50%);
+      overflow-x: hidden;
+    }
+
+    /* Advanced Glassmorphic UI Layering */
+    .cyber-glass {
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .cyber-glass:hover {
+      border-color: rgba(99, 102, 241, 0.2);
+    }
+
+    /* Animated Dynamic Glowing Effects */
+    .glow-indigo:hover {
+      box-shadow: 0 0 30px rgba(99, 102, 241, 0.25);
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+
+    .glow-pink:hover {
+      box-shadow: 0 0 30px rgba(236, 72, 153, 0.25);
+      border-color: rgba(236, 72, 153, 0.4);
+    }
+
+    .glow-cyan:hover {
+      box-shadow: 0 0 30px rgba(6, 182, 212, 0.25);
+      border-color: rgba(6, 182, 212, 0.4);
+    }
+
+    .glow-green:hover {
+      box-shadow: 0 0 30px rgba(34, 197, 94, 0.25);
+      border-color: rgba(34, 197, 94, 0.4);
+    }
+
+    /* Sleek Webkit Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #030712;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(99, 102, 241, 0.3);
+      border-radius: 5px;
+      border: 2px solid #030712;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(99, 102, 241, 0.6);
+    }
+
+    /* Accordion Dynamic Transitions */
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 200px;
+      opacity: 1;
+      padding-top: 1rem;
+    }
+
+    .faq-item.active .faq-icon {
+      transform: rotate(180deg);
+      color: #818cf8;
+    }
+  </style>
+</head>
+
+<body class="text-slate-100 antialiased min-h-screen flex flex-col justify-between">
+
+  <!-- FLOATING MATRIX AMBIENT ATMOSPHERE ELEMENTS -->
+  <div class="absolute top-12 left-12 w-[600px] h-[600px] bg-indigo-600/10 blur-[150px] rounded-full pointer-events-none -z-10 animate-pulse"></div>
+  <div class="absolute top-[40%] right-12 w-[500px] h-[500px] bg-pink-600/10 blur-[130px] rounded-full pointer-events-none -z-10"></div>
+  <div class="absolute bottom-24 left-1/3 w-[700px] h-[700px] bg-cyan-500/10 blur-[160px] rounded-full pointer-events-none -z-10 animate-pulse"></div>
+
+  <!-- FLOATING APPLET TOAST SYSTEM NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed top-5 right-5 z-50 space-y-3 pointer-events-none"></div>
+
+  <!-- NAVIGATION HUD BRANDING -->
+  <header class="w-full max-w-7xl mx-auto px-6 py-6 flex justify-between items-center relative z-20">
+    <div class="flex items-center gap-3">
+      <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-pink-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+        <i class="fa-solid fa-server text-white text-sm"></i>
+      </div>
+      <div>
+        <span class="tech-font text-lg font-black tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-200 to-slate-400">SEVA SETU</span>
+        <p class="text-[10px] uppercase text-indigo-400 tracking-widest font-bold">Digital Desk</p>
+      </div>
+    </div>
+    <div class="hidden md:flex items-center gap-6 text-sm text-slate-400 font-medium">
+      <a href="#services" class="hover:text-indigo-400 transition-colors">Our Services</a>
+      <a href="#connect" class="hover:text-indigo-400 transition-colors">Direct Contact</a>
+      <a href="#contact-form" class="hover:text-indigo-400 transition-colors">Messaging Node</a>
+      <a href="#faq" class="hover:text-indigo-400 transition-colors">FAQ Database</a>
+    </div>
+    <div>
+      <span class="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/30 text-green-400 text-xs px-3 py-1.5 rounded-full font-semibold">
+        <span class="h-2 w-2 rounded-full bg-green-400 animate-ping"></span> Live Support Active
+      </span>
+    </div>
+  </header>
+
+  <!-- MAIN MAIN CONTAINER WRAPPER -->
+  <main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow space-y-24 relative z-10">
+
+    <!-- HERO INTRODUCTION SUMMARY INTERACTIVE HERO -->
+    <section class="text-center max-w-4xl mx-auto space-y-6">
+      <div class="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-500/10 to-pink-500/10 border border-indigo-500/20 px-4 py-1.5 rounded-full">
+        <i class="fa-solid fa-bolt text-indigo-400 text-xs animate-bounce"></i>
+        <span class="text-xs font-bold text-indigo-300 uppercase tracking-widest">Advanced Digital Portal v3.0</span>
+      </div>
+      <h1 class="text-5xl sm:text-7xl font-extrabold tracking-tight leading-none bg-clip-text text-transparent bg-gradient-to-b from-white via-slate-200 to-slate-500 py-2">
+        Let's Connect Together
+      </h1>
+      <p class="text-slate-400 text-base sm:text-xl max-w-3xl mx-auto leading-relaxed font-light">
+        Do you require technical alignment regarding <span class="text-indigo-400 font-medium">Seva Setu Digital Platforms</span> or need custom applications processed? Securely reach our node 24/7 through the integrated channels below.
+      </p>
+    </section>
+
+    <!-- INTERACTIVE SERVICE MATRIX SHOWCASE -->
+    <section id="services" class="space-y-8">
+      <div class="text-center space-y-2">
+        <h2 class="tech-font text-2xl font-bold tracking-wider text-slate-300">CORE ARCHITECTURE</h2>
+        <p class="text-sm text-slate-500">Overview of available specialized digital operations</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- SERVICE CARD 1 -->
+        <div class="cyber-glass p-6 rounded-2xl border border-white/5 group hover:bg-slate-900/40 transition-all duration-300">
+          <div class="h-12 w-12 rounded-xl bg-indigo-600/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 text-xl mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+            <i class="fa-solid fa-file-invoice"></i>
+          </div>
+          <h3 class="text-lg font-bold mb-2 text-slate-200">Government Certificates</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Processing operations for Income, Caste, Domicile, and allied core statutory documentation.</p>
+        </div>
+
+        <!-- SERVICE CARD 2 -->
+        <div class="cyber-glass p-6 rounded-2xl border border-white/5 group hover:bg-slate-900/40 transition-all duration-300">
+          <div class="h-12 w-12 rounded-xl bg-pink-600/10 border border-pink-500/20 flex items-center justify-center text-pink-400 text-xl mb-4 group-hover:bg-pink-600 group-hover:text-white transition-all duration-300">
+            <i class="fa-solid fa-address-card"></i>
+          </div>
+          <h3 class="text-lg font-bold mb-2 text-slate-200">Aadhaar & PAN Sync</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Data updating protocols, link operations, new generation PAN nodes, and biometric consultation.</p>
+        </div>
+
+        <!-- SERVICE CARD 3 -->
+        <div class="cyber-glass p-6 rounded-2xl border border-white/5 group hover:bg-slate-900/40 transition-all duration-300">
+          <div class="h-12 w-12 rounded-xl bg-cyan-600/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 text-xl mb-4 group-hover:bg-cyan-600 group-hover:text-white transition-all duration-300">
+            <i class="fa-solid fa-hand-holding-dollar"></i>
+          </div>
+          <h3 class="text-lg font-bold mb-2 text-slate-200">DBT & Subsidies</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Direct Benefit Transfer verification pathways, agricultural scheme management, and pension pipelines.</p>
+        </div>
+
+        <!-- SERVICE CARD 4 -->
+        <div class="cyber-glass p-6 rounded-2xl border border-white/5 group hover:bg-slate-900/40 transition-all duration-300">
+          <div class="h-12 w-12 rounded-xl bg-green-600/10 border border-green-500/20 flex items-center justify-center text-green-400 text-xl mb-4 group-hover:bg-green-600 group-hover:text-white transition-all duration-300">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <h3 class="text-lg font-bold mb-2 text-slate-200">Scholarship Systems</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">End-to-end configuration and submittal for student portals including advanced MahaDBT tracking.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TWO COLUMN: CONNECTIVITY CHANNELS & DATA TRANSMISSION NODE -->
+    <section id="connect" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- LEFT 5 COLUMNS: PROFESSIONAL SOCIAL TILES MATRIX -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <div class="p-2">
+          <h2 class="tech-font text-2xl font-black uppercase tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">Communication Channels</h2>
+          <p class="text-xs text-slate-400 mt-1">Engage with any node icon below to initiate instantaneous digital correspondence.</p>
+        </div>
+
+        <div class="space-y-4">
+
+          <!-- PHONE TILE -->
+          <a href="tel:+919860894960" class="cyber-glass p-5 rounded-2xl border border-white/5 flex items-center gap-5 group transition-all duration-300 glow-indigo">
+            <div class="h-14 w-14 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-2xl shadow-lg shrink-0 group-hover:scale-105 transition-transform">
+              <i class="fa-solid fa-phone"></i>
+            </div>
+            <div class="w-full">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Direct Voice Line</span>
+                <span class="h-2 w-2 rounded-full bg-green-400 shadow-glow"></span>
+              </div>
+              <h3 class="text-xl font-bold tracking-wide text-white mt-0.5 group-hover:text-indigo-400 transition-colors">+91 9860894960</h3>
+              <p class="text-[11px] text-slate-500 mt-0.5">Tap to dial (Operational 09:00 AM - 06:00 PM)</p>
+            </div>
+          </a>
+
+          <!-- EMAIL TILE -->
+          <a href="mailto:krushnarajpure93@gmail.com" class="cyber-glass p-5 rounded-2xl border border-white/5 flex items-center gap-5 group transition-all duration-300 glow-pink">
+            <div class="h-14 w-14 rounded-xl bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center text-2xl shadow-lg shrink-0 group-hover:scale-105 transition-transform">
+              <i class="fa-solid fa-envelope"></i>
+            </div>
+            <div class="overflow-hidden w-full">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Official Ingest Node</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-500"></i>
+              </div>
+              <h3 class="text-lg font-bold tracking-wide text-white mt-0.5 group-hover:text-pink-400 transition-colors truncate">krushnarajpure93@gmail.com</h3>
+              <p class="text-[11px] text-slate-500 mt-0.5">24-hour response matrix for secure documentation</p>
+            </div>
+          </a>
+
+          <!-- WHATSAPP INTEGRATION -->
+          <a href="https://wa.me/919860894960?text=Hello%20Seva%20Setu%20Team" target="_blank" class="cyber-glass p-5 rounded-2xl border border-white/5 flex items-center gap-5 group transition-all duration-300 glow-green">
+            <div class="h-14 w-14 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-2xl shadow-lg shrink-0 group-hover:scale-105 transition-transform">
+              <i class="fa-brands fa-whatsapp"></i>
+            </div>
+            <div class="w-full">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Instant WhatsApp Link</span>
+                <span class="text-[10px] text-green-400 font-semibold bg-green-500/10 px-2 py-0.5 rounded-full">Fastest Response</span>
+              </div>
+              <h3 class="text-xl font-bold tracking-wide text-white mt-0.5 group-hover:text-green-400 transition-colors">Chat Securely</h3>
+              <p class="text-[11px] text-slate-500 mt-0.5">Click to initialize high-speed WhatsApp data stream</p>
+            </div>
+          </a>
+
+          <!-- INSTAGRAM TILE -->
+          <a href="https://instagram.com/krushna_rajpure" target="_blank" class="cyber-glass p-5 rounded-2xl border border-white/5 flex items-center gap-5 group transition-all duration-300 glow-pink">
+            <div class="h-14 w-14 rounded-xl bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 flex items-center justify-center text-2xl shadow-lg shrink-0 group-hover:scale-105 transition-transform">
+              <i class="fa-brands fa-instagram"></i>
+            </div>
+            <div class="w-full">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Social Feed Node</span>
+                <i class="fa-solid fa-up-right-from-square text-[10px] text-slate-500"></i>
+              </div>
+              <h3 class="text-xl font-bold tracking-wide text-white mt-0.5 group-hover:text-pink-400 transition-colors">@krushna_rajpure</h3>
+              <p class="text-[11px] text-slate-500 mt-0.5">Follow for system architecture announcements</p>
+            </div>
+          </a>
+
+          <!-- LINKEDIN TILE -->
+          <a href="https://linkedin.com/in/krushna-rajpure-397b34394" target="_blank" class="cyber-glass p-5 rounded-2xl border border-white/5 flex items-center gap-5 group transition-all duration-300 glow-cyan">
+            <div class="h-14 w-14 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-2xl shadow-lg shrink-0 group-hover:scale-105 transition-transform">
+              <i class="fa-brands fa-linkedin text-white"></i>
+            </div>
+            <div class="w-full">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Professional Network</span>
+                <i class="fa-solid fa-link text-[10px] text-indigo-400"></i>
+              </div>
+              <h3 class="text-xl font-bold tracking-wide text-white mt-0.5 group-hover:text-cyan-400 transition-colors">LinkedIn Node</h3>
+              <p class="text-[11px] text-slate-500 mt-0.5">Connect on our primary executive corporate network</p>
+            </div>
+          </a>
+
+          <!-- GEOGRAPHIC DATA PLATFORM -->
+          <div class="cyber-glass p-5 rounded-2xl border border-white/5 flex items-center gap-5 glow-cyan">
+            <div class="h-14 w-14 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-2xl shadow-lg shrink-0">
+              <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">HQ Sector Location</span>
+              <h3 class="text-xl font-bold text-slate-200 mt-0.5">Beed, Maharashtra, India</h3>
+              <p class="text-[11px] text-slate-500 mt-0.5">Central processing terminal near main government district</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SYSTEM OPERATION TIMING MATRIX -->
+        <div class="cyber-glass p-6 rounded-2xl border border-white/5 space-y-4">
+          <h3 class="text-sm font-bold tracking-widest uppercase text-indigo-400 flex items-center gap-2">
+            <i class="fa-regular fa-clock"></i> TIMING SCHEDULING MATRIX
+          </h3>
+          <div class="space-y-2.5 text-xs text-slate-300">
+            <div class="flex justify-between items-center border-b border-white/5 pb-2">
+              <span class="text-slate-400 font-medium">Monday - Friday</span>
+              <span class="font-bold text-white bg-indigo-500/10 px-2 py-0.5 rounded-md">09:00 AM - 06:00 PM</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-white/5 pb-2">
+              <span class="text-slate-400 font-medium">Saturday Terminal</span>
+              <span class="font-bold text-white bg-indigo-500/10 px-2 py-0.5 rounded-md">10:00 AM - 04:00 PM</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400 font-medium">Sunday Protocol</span>
+              <span class="font-bold text-red-400 bg-red-500/10 px-2 py-0.5 rounded-md uppercase tracking-wider">Offline Node</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT 7 COLUMNS: SECURE WEB3FORMS INGEST ARCHITECTURE -->
+      <div id="contact-form" class="lg:col-span-7 cyber-glass p-6 sm:p-10 rounded-[30px] border border-white/10 relative overflow-hidden">
+        
+        <!-- GLOWING TOP ACCENT BAR -->
+        <div class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-indigo-500 via-pink-500 to-cyan-500"></div>
+
+        <div class="mb-8 space-y-2">
+          <h2 class="text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300">Secure Messaging Ingest</h2>
+          <p class="text-slate-400 text-xs sm:text-sm">Transmission packages are fully routed, validated, and logged to our central matrix.</p>
+        </div>
+
+        <form action="https://api.web3forms.com/submit" method="POST" id="cyberContactForm" class="space-y-5">
+
+          <!-- Web3Forms Security Ingestion Key Token -->
+          <input type="hidden" name="access_key" value="a5a85978-a376-4679-a958-088082e7ceb6">
+          
+          <!-- Web3Forms Native Redirection Interceptor Option -->
+          <input type="hidden" name="redirect" value="https://web3forms.com/success">
+          
+          <!-- Anti-Spam Bot Filter Honeypot -->
+          <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+
+          <!-- Subject Line Identification Payload -->
+          <input type="hidden" name="subject" value="Secure Web Submission Detected - Seva Setu Ingest">
+
+          <!-- NAME VALUE STRUCT -->
+          <div class="space-y-2">
+            <label class="text-xs font-semibold text-slate-300 uppercase tracking-widest flex justify-between">
+              <span>Full Name Identity</span>
+              <span class="text-indigo-400 font-bold">*</span>
+            </label>
+            <div class="relative group">
+              <span class="absolute inset-y-0 left-0 flex items-center left-5 text-slate-500 group-focus-within:text-indigo-400 transition-colors">
+                <i class="fa-regular fa-user text-base"></i>
+              </span>
+              <input type="text" name="name" id="form-name" placeholder="e.g., Krushna Rajpure" required
+                class="w-full bg-slate-950/70 border border-white/10 pl-12 pr-5 py-4 rounded-xl outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-base transition-all duration-200 placeholder:text-slate-600">
+            </div>
+            <p id="err-name" class="text-[11px] text-red-400 font-medium hidden">Identity parsing failure: Input configuration too brief.</p>
+          </div>
+
+          <!-- EMAIL VALUE STRUCT -->
+          <div class="space-y-2">
+            <label class="text-xs font-semibold text-slate-300 uppercase tracking-widest flex justify-between">
+              <span>Email Destination Node</span>
+              <span class="text-indigo-400 font-bold">*</span>
+            </label>
+            <div class="relative group">
+              <span class="absolute inset-y-0 left-0 flex items-center left-5 text-slate-500 group-focus-within:text-pink-400 transition-colors">
+                <i class="fa-regular fa-envelope text-base"></i>
+              </span>
+              <input type="email" name="email" id="form-email" placeholder="username@domain.com" required
+                class="w-full bg-slate-950/70 border border-white/10 pl-12 pr-5 py-4 rounded-xl outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 text-base transition-all duration-200 placeholder:text-slate-600">
+            </div>
+            <p id="err-email" class="text-[11px] text-red-400 font-medium hidden">Syntax fault: Please specify a valid email syntax node.</p>
+          </div>
+
+          <!-- OPTIONAL SYSTEM SERVICE SELECT DROPDOWN -->
+          <div class="space-y-2">
+            <label class="text-xs font-semibold text-slate-300 uppercase tracking-widest">Inquiry Category Assignment</label>
+            <div class="relative">
+              <select name="category" 
+                class="w-full bg-slate-950/70 border border-white/10 px-5 py-4 rounded-xl outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-base transition-all duration-200 text-slate-300 appearance-none cursor-pointer">
+                <option value="General Consultation" selected>General Consultation Matrix</option>
+                <option value="Document Service">New Certification File Processing</option>
+                <option value="Technical Error">System Interface / Portal Bugs</option>
+                <option value="Business Alliance">Corporate Partnership Alignment</option>
+              </select>
+              <span class="absolute inset-y-0 right-5 flex items-center pointer-events-none text-slate-500">
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+              </span>
+            </div>
+          </div>
+
+          <!-- MESSAGE BLOCKS MEMO STRUCT -->
+          <div class="space-y-2">
+            <label class="text-xs font-semibold text-slate-300 uppercase tracking-widest flex justify-between">
+              <span>Message Payload Details</span>
+              <span class="text-indigo-400 font-bold">*</span>
+            </label>
+            <textarea name="message" id="form-msg" rows="5" placeholder="Elaborate on your documentation requirements or specify technical difficulties..." required
+              class="w-full bg-slate-950/70 border border-white/10 p-5 rounded-xl outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-base transition-all duration-200 resize-none placeholder:text-slate-600 leading-relaxed"></textarea>
+            <p id="err-msg" class="text-[11px] text-red-400 font-medium hidden">Ingest failure: Message stream cannot remain empty.</p>
+          </div>
+
+          <!-- DATA PROCESSING REGULATION AGREEMENT -->
+          <div class="flex items-start gap-3 p-3 bg-indigo-500/5 rounded-xl border border-indigo-500/10">
+            <input type="checkbox" id="policy-check" required checked
+              class="mt-1 h-4 w-4 rounded bg-slate-950 border-white/10 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+            <label for="policy-check" class="text-[11px] text-slate-400 leading-normal cursor-pointer select-none">
+              I acknowledge that Seva Setu operators may store, log, and parse this transmission data to process my inquiry across digital nodes under privacy frameworks.
+            </label>
+          </div>
+
+          <!-- SUBMIT CTA BUTTON TRANSMIT NODE -->
+          <button type="submit" id="cyberSubmitBtn"
+            class="w-full bg-gradient-to-r from-indigo-600 to-pink-600 hover:from-indigo-700 hover:to-pink-700 active:scale-[0.99] text-white py-4 sm:py-5 rounded-xl font-bold text-lg shadow-2xl shadow-indigo-500/10 transition-all duration-300 flex items-center justify-center gap-3 group">
+            <span>Transmit Message Node</span>
+            <i class="fa-solid fa-paper-plane text-base group-hover:translate-x-1.5 group-hover:-translate-y-1.5 transition-transform duration-300"></i>
+          </button>
+
+        </form>
+
+      </div>
+
+    </section>
+
+    <!-- LIVE HIGH-VOLUME INTERACTIVE FAQ SYSTEM DATABASE -->
+    <section id="faq" class="space-y-8 max-w-4xl mx-auto">
+      
+      <div class="text-center space-y-2">
+        <span class="text-xs uppercase text-indigo-400 font-extrabold tracking-widest tech-font">KNOWLEDGE BASE</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Frequently Asked Questions</h2>
+        <p class="text-slate-400 text-sm">Automated lookups into the Seva Setu digital operations database</p>
+      </div>
+
+      <!-- FAQ INTERACTIVE UNlTS ACCORDION GRID -->
+      <div class="space-y-4">
+        
+        <!-- FAQ UNIT 1 -->
+        <div class="faq-item cyber-glass rounded-2xl border border-white/5 p-5 cursor-pointer transition-all duration-300" onclick="toggleFaq(this)">
+          <div class="flex justify-between items-center gap-4">
+            <h3 class="font-bold text-base sm:text-lg text-slate-200 transition-colors">1. What is the standard response time threshold for transmissions?</h3>
+            <span class="faq-icon h-7 w-7 rounded-full bg-white/5 flex items-center justify-center text-xs text-slate-400 transition-transform duration-300 shrink-0">
+              <i class="fa-solid fa-chevron-down"></i>
+            </span>
+          </div>
+          <div class="faq-answer text-sm sm:text-base text-slate-400 leading-relaxed">
+            All submitted payloads undergo automated processing. A support architect will follow up via your destination email node within 24 operational business hours. For immediate technical triage, establish a WhatsApp chat link.
+          </div>
+        </div>
+
+        <!-- FAQ UNIT 2 -->
+        <div class="faq-item cyber-glass rounded-2xl border border-white/5 p-5 cursor-pointer transition-all duration-300" onclick="toggleFaq(this)">
+          <div class="flex justify-between items-center gap-4">
+            <h3 class="font-bold text-base sm:text-lg text-slate-200 transition-colors">2. How are gateway processing fees and certification tariffs managed?</h3>
+            <span class="faq-icon h-7 w-7 rounded-full bg-white/5 flex items-center justify-center text-xs text-slate-400 transition-transform duration-300 shrink-0">
+              <i class="fa-solid fa-chevron-down"></i>
+            </span>
+          </div>
+          <div class="faq-answer text-sm sm:text-base text-slate-400 leading-relaxed">
+            Once original records complete parsing verification, you will receive an official digital invoice containing an embedded high-security UPI QR configuration code. All operations include formal regulatory state system receipt copies.
+          </div>
+        </div>
+
+        <!-- FAQ UNIT 3 -->
+        <div class="faq-item cyber-glass rounded-2xl border border-white/5 p-5 cursor-pointer transition-all duration-300" onclick="toggleFaq(this)">
+          <div class="flex justify-between items-center gap-4">
+            <h3 class="font-bold text-base sm:text-lg text-slate-200 transition-colors">3. Can applications be provisioned if I reside outside Beed district?</h3>
+            <span class="faq-icon h-7 w-7 rounded-full bg-white/5 flex items-center justify-center text-xs text-slate-400 transition-transform duration-300 shrink-0">
+              <i class="fa-solid fa-chevron-down"></i>
+            </span>
+          </div>
+          <div class="faq-answer text-sm sm:text-base text-slate-400 leading-relaxed">
+            Absolutely. Our software infrastructure operates completely cloud-native. Regardless of geographic allocation throughout Maharashtra state lines, data blocks can be ingested securely online, generating instant deliverables to your workspace.
+          </div>
+        </div>
+
+        <!-- FAQ UNIT 4 -->
+        <div class="faq-item cyber-glass rounded-2xl border border-white/5 p-5 cursor-pointer transition-all duration-300" onclick="toggleFaq(this)">
+          <div class="flex justify-between items-center gap-4">
+            <h3 class="font-bold text-base sm:text-lg text-slate-200 transition-colors">4. What security protocols govern my private identity documents?</h3>
+            <span class="faq-icon h-7 w-7 rounded-full bg-white/5 flex items-center justify-center text-xs text-slate-400 transition-transform duration-300 shrink-0">
+              <i class="fa-solid fa-chevron-down"></i>
+            </span>
+          </div>
+          <div class="faq-answer text-sm sm:text-base text-slate-400 leading-relaxed">
+            User confidentiality is our highest architecture priority. Documents (Aadhaar/PAN assets) undergo absolute encryption inside a closed, non-indexed repository. Once statutory validation completes, historical traces are archived securely. No third-party monetization pipelines exist.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- REAL HIGH-VOLUME DIGITAL NEWSLETTER MODULE -->
+    <section class="max-w-4xl mx-auto cyber-glass p-8 sm:p-12 rounded-[30px] border border-white/10 relative overflow-hidden text-center space-y-6">
+      <div class="absolute -top-10 -right-10 h-32 w-32 bg-pink-500/10 blur-2xl rounded-full"></div>
+      <h3 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Subscribe to Digital System Alerts</h3>
+      <p class="text-slate-400 text-sm max-w-xl mx-auto">
+        Receive regular technical briefings, regulatory policy notifications, state government document deadlines, and live operational updates.
+      </p>
+      <div class="max-w-md mx-auto flex flex-col sm:flex-row gap-3">
+        <input type="email" id="newsletter-email" placeholder="Enter system email node..." 
+          class="flex-grow bg-slate-950/80 border border-white/10 px-5 py-3.5 rounded-xl outline-none focus:border-indigo-500 text-sm transition-all text-slate-200">
+        <button onclick="handleSubscribe()" 
+          class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm px-6 py-3.5 rounded-xl transition-all duration-200 shrink-0">
+          Subscribe Terminal
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- INTEGRATED SYSTEM FOOTER METRICS -->
+  <footer class="w-full border-t border-white/5 mt-20 bg-slate-950/40 backdrop-blur-md relative z-20">
+    <div class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-8 items-center text-center md:text-left text-xs text-slate-500">
+      <div class="space-y-2">
+        <p class="tech-font text-sm font-bold text-slate-400 tracking-widest">SEVA SETU LOGISTICS</p>
+        <p class="leading-relaxed">Official high-volume technical support office localized in Beed, Maharashtra. Active telemetry and data pipes monitoring inbound requests continuously.</p>
+      </div>
+      <div class="flex justify-center gap-6 text-sm text-slate-400">
+        <a href="https://instagram.com/krushna_rajpure" target="_blank" class="hover:text-pink-400 transition-colors"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://linkedin.com/in/krushna-rajpure-397b34394" target="_blank" class="hover:text-blue-400 transition-colors"><i class="fa-brands fa-linkedin"></i></a>
+        <a href="tel:+919860894960" class="hover:text-green-400 transition-colors"><i class="fa-solid fa-phone"></i></a>
+      </div>
+      <div class="md:text-right space-y-1">
+        <p>&copy; 2026 Seva Setu Infrastructure Portal. All Rights Reserved.</p>
+        <p class="text-[10px] uppercase text-indigo-500/60 font-semibold tracking-widest">Routed via Web3Forms API Pipeline</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ADVANCED INTEGRATED JAVASCRIPT SYSTEM ENGINE -->
+  <script>
+    // FAQ Accordion Toggle Interaction Matrix
+    function toggleFaq(element) {
+      const items = document.querySelectorAll('.faq-item');
+      const isActive = element.classList.contains('active');
+      
+      items.forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      if (!isActive) {
+        element.classList.add('active');
+        showToast('Info', 'Database cluster node expanded.');
+      }
+    }
+
+    // Dynamic Micro-Applet Toast Alert Engine
+    function showToast(type, text) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'cyber-glass px-5 py-3.5 rounded-xl border border-white/10 text-xs font-semibold flex items-center gap-3 shadow-2xl pointer-events-auto transform translate-y-2 opacity-0 transition-all duration-300';
+      
+      let iconColor = 'text-indigo-400';
+      if(type === 'Success') iconColor = 'text-green-400';
+      if(type === 'Error') iconColor = 'text-red-400';
+
+      toast.innerHTML = `
+        <i class="fa-solid fa-circle-info ${iconColor} text-sm"></i>
+        <div>
+          <span class="text-slate-200 block">${text}</span>
+        </div>
+      `;
+      
+      container.appendChild(toast);
+      
+      // Animate Injection 
+      setTimeout(() => {
+        toast.style.transform = 'translateY(0)';
+        toast.style.opacity = '1';
+      }, 50);
+
+      // Automated Disconnect Pipeline
+      setTimeout(() => {
+        toast.style.transform = 'translateY(-10px)';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    // Secure Pipeline Form Validation Logic
+    const contactForm = document.getElementById('cyberContactForm');
+    const submitBtn = document.getElementById('cyberSubmitBtn');
+
+    contactForm.addEventListener('submit', function(e) {
+      const nameInput = document.getElementById('form-name').value.trim();
+      const emailInput = document.getElementById('form-email').value.trim();
+      const msgInput = document.getElementById('form-msg').value.trim();
+      let hasError = false;
+
+      // Flush Errors Status Visibility
+      document.getElementById('err-name').classList.add('hidden');
+      document.getElementById('err-email').classList.add('hidden');
+      document.getElementById('err-msg').classList.add('hidden');
+
+      if (nameInput.length < 2) {
+        document.getElementById('err-name').classList.remove('hidden');
+        hasError = true;
+      }
+      
+      if (!emailInput.includes('@') || !emailInput.includes('.')) {
+        document.getElementById('err-email').classList.remove('hidden');
+        hasError = true;
+      }
+
+      if (msgInput.length < 5) {
+        document.getElementById('err-msg').classList.remove('hidden');
+        hasError = true;
+      }
+
+      if (hasError) {
+        e.preventDefault();
+        showToast('Error', 'Validation compilation error. Verify parameters.');
+        return;
+      }
+
+      // Engage UI System Loader Lock
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `
+        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>Encrypting Package Stream...</span>
+      `;
+      showToast('Success', 'Data packet safely routed into Web3Forms pipeline.');
+    });
+
+    // Newsletter Validation Processing
+    function handleSubscribe() {
+      const email = document.getElementById('newsletter-email').value;
+      if(email.includes('@') && email.includes('.')) {
+        showToast('Success', 'Email destination node paired successfully.');
+        document.getElementById('newsletter-email').value = '';
+      } else {
+        showToast('Error', 'Invalid criteria specified for data node email.');
+      }
+    }
+
+    // System Startup Greeting
+    window.addEventListener('DOMContentLoaded', () => {
+      showToast('Success', 'Seva Setu secure core network initialized successfully.');
+    });
+  </script>
+</body>
+</html>
