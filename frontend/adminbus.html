@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEVA SETU - Super Admin Enterprise Panel</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+        
+        :root {
+            --bg-dark: #020617;
+            --bg-panel: #0f172a;
+            --primary: #dc2626; /* RedBus style Red */
+            --primary-hover: #b91c1c;
+            --accent: #f59e0b; /* Amber/Yellow for Primo/Alerts */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #1e293b;
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-dark); 
+            color: var(--text-main); 
+            overflow: hidden; 
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        .hide-scroll::-webkit-scrollbar { display: none; }
+
+        /* Glassmorphism Panels */
+        .glass-panel { 
+            background: rgba(15, 23, 42, 0.7); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255,255,255,0.05); 
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sidebar Links */
+        .nav-header {
+            font-size: 10px; font-weight: 900; color: #475569; text-transform: uppercase;
+            letter-spacing: 0.1em; padding: 1.5rem 1rem 0.5rem 1rem;
+        }
+        .nav-link { 
+            cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; 
+            padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
+            color: var(--text-muted); margin-bottom: 2px; border-left: 3px solid transparent;
+        }
+        .nav-link:hover { background: rgba(220, 38, 38, 0.1); color: white; border-left-color: var(--primary); }
+        .nav-link.active { 
+            background: linear-gradient(90deg, rgba(220, 38, 38, 0.15) 0%, transparent 100%); 
+            border-left-color: var(--primary); color: white; 
+        }
+        .nav-link i { width: 24px; text-align: center; margin-right: 10px; font-size: 14px; }
+
+        /* Dynamic Views */
+        .section-view { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .section-view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Tables */
+        table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        th { background: #1e293b; color: var(--text-muted); font-size: 11px; text-transform: uppercase; padding: 16px; text-align: left; letter-spacing: 1px; border-bottom: 1px solid var(--border-color); }
+        td { padding: 16px; font-size: 13px; border-bottom: 1px solid var(--border-color); color: #cbd5e1; vertical-align: middle; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+
+        /* Forms & Inputs */
+        .input-group { margin-bottom: 1rem; }
+        .input-label { display: block; font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.05em; }
+        .input-field { 
+            width: 100%; background: #020617; border: 1px solid #334155; color: white; 
+            padding: 12px 16px; border-radius: 8px; font-size: 14px; outline: none; transition: 0.3s; 
+        }
+        .input-field:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2); }
+
+        /* Modals */
+        .modal-overlay { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100000; 
+            display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); 
+        }
+        .modal-content { 
+            background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 20px; 
+            width: 100%; max-width: 1000px; max-height: 90vh; overflow-y: auto; 
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); 
+            animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes scaleUp { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* Status Badges */
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; }
+        .badge-success { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-warning { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge-danger { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .badge-info { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+
+        /* Dashboard Metric Card */
+        .metric-card { position: relative; overflow: hidden; transition: 0.3s; }
+        .metric-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .metric-icon { position: absolute; right: -10px; bottom: -10px; font-size: 100px; opacity: 0.05; transition: 0.3s; }
+        .metric-card:hover .metric-icon { transform: scale(1.1) rotate(-10deg); opacity: 0.1; color: var(--primary); }
+        
+        .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 999999; display: flex; flex-direction: column; gap: 10px; }
+    </style>
+</head>
+<body class="flex h-screen w-full">
+
+    <div class="toast-container" id="toastHub"></div>
+
+    <aside class="w-[300px] glass-panel flex flex-col h-full z-20 border-r border-slate-800 flex-shrink-0">
+        <div class="h-20 flex items-center px-6 border-b border-slate-800 bg-[#0b1120] shrink-0">
+            <div class="w-10 h-10 rounded bg-gradient-to-br from-red-600 to-red-900 flex items-center justify-center text-white mr-3 shadow-[0_0_15px_rgba(220,38,38,0.5)]">
+                <i class="fa-solid fa-bus-simple text-xl"></i>
+            </div>
+            <div>
+                <h1 class="orbitron text-lg font-black tracking-widest text-white">SEVA SETU</h1>
+                <p class="text-[9px] text-red-500 font-black uppercase tracking-widest">Enterprise Panel</p>
+            </div>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-2 px-3 pb-20 custom-scrollbar">
+            
+            <div class="nav-header">Dashboard Center</div>
+            <a onclick="switchSection('dashboard')" id="nav-dashboard" class="nav-link active"><i class="fa-solid fa-chart-pie text-blue-400"></i> Main Analytics</a>
+            <a onclick="switchSection('live-gps')" id="nav-live-gps" class="nav-link"><i class="fa-solid fa-satellite-dish text-red-400"></i> Live GPS Command</a>
+            <a onclick="switchSection('ai-smart')" id="nav-ai-smart" class="nav-link"><i class="fa-solid fa-brain text-purple-400"></i> AI Smart Control</a>
+
+            <div class="nav-header">Bus Master Management</div>
+            <a onclick="switchSection('bus-master')" id="nav-bus-master" class="nav-link"><i class="fa-solid fa-bus text-emerald-400"></i> Bus Fleet Registry</a>
+            <a onclick="alert('Feature under maintenance')" class="nav-link"><i class="fa-solid fa-images text-slate-400"></i> Bus Gallery & Media</a>
+            <a onclick="alert('Feature under maintenance')" class="nav-link"><i class="fa-solid fa-file-contract text-slate-400"></i> Documents & Permits</a>
+            
+            <div class="nav-header">Route Master Management</div>
+            <a onclick="alert('Routing Engine Active')" class="nav-link"><i class="fa-solid fa-route text-amber-400"></i> Route Map & Pricing</a>
+            <a onclick="alert('Boarding Engine Active')" class="nav-link"><i class="fa-solid fa-location-crosshairs text-sky-400"></i> Boarding & Dropping</a>
+
+            <div class="nav-header">Seat Management Center</div>
+            <a onclick="alert('Opening Seat Builder...')" class="nav-link"><i class="fa-solid fa-couch text-indigo-400"></i> Layout Builder (2+1/2+2)</a>
+            <a onclick="alert('Dynamic Pricing Engine Active')" class="nav-link"><i class="fa-solid fa-indian-rupee-sign text-green-400"></i> Dynamic Seat Pricing</a>
+
+            <div class="nav-header">Booking Management Center</div>
+            <a onclick="switchSection('bookings')" id="nav-bookings" class="nav-link"><i class="fa-solid fa-ticket text-pink-400"></i> All Bookings Ledger</a>
+            <a onclick="alert('Opening Refunds...')" class="nav-link"><i class="fa-solid fa-rotate-left text-rose-400"></i> Cancellations & Refunds</a>
+
+            <div class="nav-header">User & Operator Center</div>
+            <a onclick="switchSection('users')" id="nav-users" class="nav-link"><i class="fa-solid fa-users text-cyan-400"></i> User Management</a>
+            <a onclick="alert('Loading Operators...')" class="nav-link"><i class="fa-solid fa-user-tie text-orange-400"></i> Bus Operators Network</a>
+
+            <div class="nav-header">Payment & Finance Center</div>
+            <a onclick="alert('Payment Gateway Logs')" class="nav-link"><i class="fa-solid fa-credit-card text-teal-400"></i> Payment Gateway Logs</a>
+            <a onclick="alert('GST Reports Generating')" class="nav-link"><i class="fa-solid fa-file-invoice text-lime-400"></i> GST & Tax Reports</a>
+
+            <div class="nav-header">Support & CMS</div>
+            <a onclick="alert('Opening Helpdesk')" class="nav-link"><i class="fa-solid fa-headset text-fuchsia-400"></i> Customer Support Desk</a>
+            <a onclick="alert('Opening CMS')" class="nav-link"><i class="fa-solid fa-pen-to-square text-yellow-400"></i> Content Management (CMS)</a>
+            <a onclick="alert('Opening Ad Manager')" class="nav-link"><i class="fa-solid fa-ad text-blue-500"></i> Advertisement Manager</a>
+
+            <div class="nav-header">System & Security</div>
+            <a onclick="switchSection('database')" id="nav-database" class="nav-link"><i class="fa-solid fa-database text-emerald-500"></i> Database Center (MongoDB)</a>
+            <a onclick="alert('API Keys Manager')" class="nav-link"><i class="fa-solid fa-code text-slate-400"></i> API Management</a>
+            <a onclick="alert('Security Logs')" class="nav-link"><i class="fa-solid fa-shield-halved text-red-500"></i> Security & Role Management</a>
+            <a onclick="alert('Super Admin Options')" class="nav-link"><i class="fa-solid fa-gear text-slate-500"></i> Website Settings</a>
+            
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-screen relative bg-[#020617]">
+        
+        <header class="h-20 glass-panel border-b border-slate-800 flex items-center justify-between px-8 z-10 flex-shrink-0">
+            <div class="flex-1 flex items-center">
+                <div class="bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 flex items-center w-full max-w-md focus-within:border-red-500 transition">
+                    <i class="fa-solid fa-magnifying-glass text-slate-500 mr-3"></i>
+                    <input type="text" placeholder="Global Search (PNR, Bus, User, Operator)..." class="bg-transparent border-none outline-none text-sm text-white w-full font-bold">
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="flex items-center bg-emerald-500/10 border border-emerald-500/30 px-4 py-2 rounded-lg text-xs gap-2 shadow-inner">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                    <span class="text-slate-300 font-bold">MongoDB Cluster:</span>
+                    <span class="text-emerald-400 font-black tracking-widest" id="channelStatus">CONNECTED</span>
+                </div>
+                <button onclick="refreshAllData()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-rotate text-lg"></i></button>
+                <div class="relative cursor-pointer">
+                    <i class="fa-regular fa-bell text-xl text-slate-300 hover:text-white transition"></i>
+                    <span class="absolute -top-1 -right-1 bg-red-600 w-3 h-3 rounded-full border-2 border-[#020617]"></span>
+                </div>
+                <div class="flex items-center gap-3 pl-6 border-l border-slate-800 cursor-pointer">
+                    <div class="text-right hidden md:block">
+                        <p class="text-xs font-black text-white">Super Admin</p>
+                        <p class="text-[10px] font-bold text-red-500 uppercase tracking-widest">Enterprise Access</p>
+                    </div>
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=dc2626&color=fff" class="w-10 h-10 rounded-xl border-2 border-slate-700">
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-6 md:p-8" id="main-workspace">
+            
+            <section id="sec-dashboard" class="section-view active">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-2xl font-black text-white tracking-tight">Enterprise Overview</h2>
+                        <p class="text-sm text-slate-400 font-semibold mt-1">Real-time statistics from MongoDB Aggregation Pipeline</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-lg p-1 flex text-xs font-bold text-slate-400">
+                        <button class="px-4 py-1.5 bg-slate-800 text-white rounded shadow-sm">Today</button>
+                        <button class="px-4 py-1.5 hover:text-white transition">Week</button>
+                        <button class="px-4 py-1.5 hover:text-white transition">Month</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+                    <div class="glass-panel p-5 rounded-2xl metric-card border-l-4 border-l-amber-500">
+                        <i class="fa-solid fa-indian-rupee-sign metric-icon text-amber-500"></i>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Today's Revenue</p>
+                        <h3 class="orbitron text-2xl font-black text-white" id="dash-rev-today">₹0</h3>
+                        <p class="text-[10px] text-emerald-400 font-bold mt-2"><i class="fa-solid fa-arrow-trend-up"></i> +14.5% vs yesterday</p>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl metric-card">
+                        <i class="fa-solid fa-wallet metric-icon"></i>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Monthly Revenue</p>
+                        <h3 class="orbitron text-2xl font-black text-white" id="dash-rev-month">₹0</h3>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl metric-card">
+                        <i class="fa-solid fa-vault metric-icon"></i>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Yearly Revenue</p>
+                        <h3 class="orbitron text-2xl font-black text-white" id="dash-rev-year">₹0</h3>
+                    </div>
+                    
+                    <div class="glass-panel p-5 rounded-2xl metric-card border-l-4 border-l-blue-500">
+                        <i class="fa-solid fa-ticket metric-icon text-blue-500"></i>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Total Bookings</p>
+                        <h3 class="orbitron text-2xl font-black text-white" id="dash-total-bookings">0</h3>
+                        <p class="text-[10px] text-emerald-400 font-bold mt-2"><i class="fa-solid fa-check-double"></i> Verified</p>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl metric-card border-l-4 border-l-red-500">
+                        <i class="fa-solid fa-rotate-left metric-icon text-red-500"></i>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Refund Requests</p>
+                        <h3 class="orbitron text-2xl font-black text-white" id="dash-refunds">0</h3>
+                        <p class="text-[10px] text-red-400 font-bold mt-2"><i class="fa-solid fa-circle-exclamation"></i> Action Required</p>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-2xl metric-card border-l-4 border-l-emerald-500">
+                        <i class="fa-solid fa-bus metric-icon text-emerald-500"></i>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Total Fleet Buses</p>
+                        <h3 class="orbitron text-2xl font-black text-white" id="dash-total-buses">0</h3>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl metric-card">
+                        <i class="fa-solid fa-bus-simple metric-icon"></i>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Active / Running</p>
+                        <h3 class="orbitron text-2xl font-black text-emerald-400" id="dash-active-buses">0</h3>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl metric-card">
+                        <i class="fa-solid fa-triangle-exclamation metric-icon"></i>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Delayed / Cancelled</p>
+                        <h3 class="orbitron text-2xl font-black text-amber-500">0</h3>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-2xl metric-card border-l-4 border-l-fuchsia-500">
+                        <i class="fa-solid fa-route metric-icon text-fuchsia-500"></i>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Total Routes</p>
+                        <h3 class="orbitron text-2xl font-black text-white">36</h3>
+                        <p class="text-[10px] text-slate-500 font-bold mt-2">All Maharashtra Covered</p>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl metric-card border-l-4 border-l-cyan-500">
+                        <i class="fa-solid fa-satellite-dish metric-icon text-cyan-500"></i>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Live GPS Tracking</p>
+                        <h3 class="orbitron text-2xl font-black text-white" id="dash-live-gps">0</h3>
+                        <p class="text-[10px] text-cyan-400 font-bold mt-2 animate-pulse"><i class="fa-solid fa-signal"></i> Streaming Data...</p>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-2xl metric-card border-l-4 border-l-indigo-500">
+                        <i class="fa-solid fa-users metric-icon text-indigo-500"></i>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Total Users</p>
+                        <h3 class="orbitron text-2xl font-black text-white" id="dash-total-users">0</h3>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl metric-card">
+                        <i class="fa-solid fa-user-plus metric-icon"></i>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">New Users (Today)</p>
+                        <h3 class="orbitron text-2xl font-black text-white">0</h3>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl metric-card">
+                        <i class="fa-solid fa-user-tie metric-icon"></i>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Bus Operators</p>
+                        <h3 class="orbitron text-2xl font-black text-white">15</h3>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl metric-card">
+                        <i class="fa-solid fa-headset metric-icon"></i>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Open Tickets</p>
+                        <h3 class="orbitron text-2xl font-black text-white">0</h3>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl metric-card">
+                        <i class="fa-solid fa-bell metric-icon"></i>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Notifications Sent</p>
+                        <h3 class="orbitron text-2xl font-black text-white">0</h3>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="glass-panel p-6 rounded-2xl">
+                        <h3 class="text-sm font-black text-white mb-4 uppercase tracking-widest flex items-center gap-2 border-b border-slate-700 pb-3"><i class="fa-solid fa-bolt text-yellow-400"></i> Recent Bookings</h3>
+                        <div class="overflow-x-auto"><table id="dashboard-recent-bookings"><tbody></tbody></table></div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl">
+                        <h3 class="text-sm font-black text-white mb-4 uppercase tracking-widest flex items-center gap-2 border-b border-slate-700 pb-3"><i class="fa-solid fa-bus text-emerald-400"></i> Recently Added Fleet</h3>
+                        <div class="overflow-x-auto"><table id="dashboard-recent-buses"><tbody></tbody></table></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-bus-master" class="section-view">
+                <div class="glass-panel rounded-2xl overflow-hidden flex flex-col h-full border border-slate-800">
+                    <div class="p-6 border-b border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-900/50">
+                        <div>
+                            <h2 class="text-xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-bus text-emerald-500"></i> Bus Master Management</h2>
+                            <p class="text-xs text-slate-400 font-semibold mt-1">Add, Edit, Clone, Delete and Manage Entire Bus Fleet Inventory</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button class="bg-slate-800 hover:bg-slate-700 px-4 py-2.5 rounded-lg text-xs font-bold text-white transition border border-slate-700"><i class="fa-solid fa-file-export mr-2"></i> Export Data</button>
+                            <button onclick="openBusModal()" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 px-5 py-2.5 rounded-lg text-sm font-black text-white transition shadow-[0_5px_15px_rgba(220,38,38,0.4)] flex items-center gap-2">
+                                <i class="fa-solid fa-plus"></i> ADD NEW BUS
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-[#0b1120] border-b border-slate-800 flex gap-4">
+                        <input type="text" placeholder="Search by Bus Name, Operator, Route..." class="input-field max-w-md">
+                        <select class="input-field max-w-[200px]"><option>All Operators</option><option>Government (MSRTC)</option><option>Private Travels</option></select>
+                        <select class="input-field max-w-[150px]"><option>All Status</option><option>Active</option><option>Inactive</option></select>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr>
+                                    <th>Bus Information</th>
+                                    <th>Operator Details</th>
+                                    <th>Route & Schedule</th>
+                                    <th>Configuration</th>
+                                    <th>Pricing</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bus-master-table">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-live-gps" class="section-view">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 glass-panel p-6 rounded-2xl border border-slate-800">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-satellite-dish text-red-500 animate-pulse"></i> Live GPS Command Center</h2>
+                            <span class="badge badge-success flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-green-500 animate-ping"></span> TRACKING 142 BUSES LIVE</span>
+                        </div>
+                        <div id="live-tracking-map" class="shadow-inner"></div>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="glass-panel p-6 rounded-2xl border border-slate-800">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Live Alerts & Geo-Fencing</h3>
+                            <div class="space-y-3">
+                                <div class="bg-red-500/10 border border-red-500/20 p-3 rounded-lg">
+                                    <p class="text-[10px] text-red-400 font-bold uppercase"><i class="fa-solid fa-triangle-exclamation"></i> Overspeeding Alert</p>
+                                    <p class="text-sm font-black text-white mt-1">VRL Travels (MH12AB1234) • 105 km/h on Pune-ExpWay</p>
+                                </div>
+                                <div class="bg-amber-500/10 border border-amber-500/20 p-3 rounded-lg">
+                                    <p class="text-[10px] text-amber-400 font-bold uppercase"><i class="fa-solid fa-route"></i> Route Deviation</p>
+                                    <p class="text-sm font-black text-white mt-1">MSRTC Shivneri • Missed Lonavala Bypass checkpost</p>
+                                </div>
+                                <div class="bg-blue-500/10 border border-blue-500/20 p-3 rounded-lg">
+                                    <p class="text-[10px] text-blue-400 font-bold uppercase"><i class="fa-solid fa-gas-pump"></i> Fuel Level Critical</p>
+                                    <p class="text-sm font-black text-white mt-1">Khurana Travels • 15% remaining near Jalna</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="glass-panel p-6 rounded-2xl border border-slate-800">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">ETA Prediction Engine (AI)</h3>
+                            <div class="flex justify-between items-center bg-[#0b1120] p-3 rounded-xl border border-slate-700 mb-2">
+                                <div><p class="text-[10px] text-slate-500 font-bold">Pune ➔ Nagpur</p><p class="text-sm font-bold text-white">Maharaja Tours</p></div>
+                                <div class="text-right"><p class="text-[10px] text-emerald-500 font-bold">On Time</p><p class="text-sm font-black text-white">06:30 AM</p></div>
+                            </div>
+                            <div class="flex justify-between items-center bg-[#0b1120] p-3 rounded-xl border border-slate-700">
+                                <div><p class="text-[10px] text-slate-500 font-bold">Mumbai ➔ Goa</p><p class="text-sm font-bold text-white">Neeta Travels</p></div>
+                                <div class="text-right"><p class="text-[10px] text-red-500 font-bold">Delayed (+45m)</p><p class="text-sm font-black text-white">08:15 AM</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-ai-smart" class="section-view">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-brain text-purple-500"></i> AI Smart Control Center</h2>
+                    <p class="text-sm text-slate-400 font-semibold mt-1">Machine Learning models for Demand Prediction, Dynamic Pricing & Fraud Detection</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800">
+                        <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 flex justify-between">Demand Prediction (Next 7 Days) <span class="badge badge-info">AI Model Active</span></h3>
+                        <canvas id="demandChart" height="250"></canvas>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800">
+                        <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 flex justify-between">Dynamic Pricing Revenue Lift <span class="badge badge-success">Optimized</span></h3>
+                        <canvas id="pricingChart" height="250"></canvas>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 border-t-4 border-t-red-500">
+                        <i class="fa-solid fa-user-secret text-3xl text-red-500 mb-4 block"></i>
+                        <h3 class="font-black text-white text-lg">Fraud Detection</h3>
+                        <p class="text-xs text-slate-400 mt-2">AI blocked 12 fake booking attempts and suspicious IP anomalies in the last 24 hours.</p>
+                        <button class="mt-4 text-xs font-bold text-red-400 hover:underline">View Security Logs</button>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 border-t-4 border-t-emerald-500">
+                        <i class="fa-solid fa-route text-3xl text-emerald-500 mb-4 block"></i>
+                        <h3 class="font-black text-white text-lg">Route Recommendation</h3>
+                        <p class="text-xs text-slate-400 mt-2">High search volume detected for 'Nashik to Pune'. Suggesting addition of 2 new buses for this weekend.</p>
+                        <button class="mt-4 text-xs font-bold text-emerald-400 hover:underline">Deploy Fleet</button>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 border-t-4 border-t-blue-500">
+                        <i class="fa-solid fa-chair text-3xl text-blue-500 mb-4 block"></i>
+                        <h3 class="font-black text-white text-lg">Seat Recommendation</h3>
+                        <p class="text-xs text-slate-400 mt-2">Smart algorithm is auto-locking single window seats for female passengers based on booking patterns.</p>
+                        <button class="mt-4 text-xs font-bold text-blue-400 hover:underline">Edit Policy</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-database" class="section-view">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-database text-emerald-500"></i> Database Center (MongoDB Manager)</h2>
+                    <p class="text-sm text-slate-400 font-semibold mt-1">Manage Connections, Backups, Restoration and Schema Health</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 text-center">
+                        <i class="fa-solid fa-server text-4xl text-emerald-500 mb-3"></i>
+                        <h3 class="font-black text-white text-lg">Cluster 0</h3>
+                        <p class="text-xs text-emerald-400 font-bold uppercase tracking-widest mt-1">Primary Node • Healthy</p>
+                        <p class="text-[10px] text-slate-500 mt-2">mongodb://127.0.0.1:27017</p>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 text-center">
+                        <i class="fa-solid fa-hdd text-4xl text-blue-500 mb-3"></i>
+                        <h3 class="font-black text-white text-lg">Storage Used</h3>
+                        <p class="text-xs text-blue-400 font-bold uppercase tracking-widest mt-1">2.4 GB / 50 GB</p>
+                        <div class="w-full bg-slate-800 h-2 rounded-full mt-3 overflow-hidden"><div class="bg-blue-500 h-full w-[5%]"></div></div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 text-center">
+                        <i class="fa-solid fa-table-list text-4xl text-purple-500 mb-3"></i>
+                        <h3 class="font-black text-white text-lg">Collections</h3>
+                        <p class="text-xs text-purple-400 font-bold uppercase tracking-widest mt-1">12 Active Schemas</p>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 text-center cursor-pointer hover:bg-slate-800 transition" onclick="simulateBackup()">
+                        <i class="fa-solid fa-cloud-arrow-up text-4xl text-amber-500 mb-3"></i>
+                        <h3 class="font-black text-white text-lg">Manual Backup</h3>
+                        <p class="text-xs text-amber-400 font-bold uppercase tracking-widest mt-1">Generate BSON Dump</p>
+                        <div id="backup-progress" class="w-full bg-slate-800 h-2 rounded-full mt-3 overflow-hidden hidden"><div class="bg-amber-500 h-full w-0 transition-all duration-1000" id="backup-bar"></div></div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-black text-white uppercase tracking-widest"><i class="fa-solid fa-folder-tree text-slate-400 mr-2"></i> Collection Explorer</h3>
+                        <div class="flex gap-2">
+                            <button class="bg-slate-800 px-4 py-2 rounded text-xs font-bold text-white border border-slate-700 hover:bg-slate-700"><i class="fa-solid fa-download mr-1"></i> Export JSON</button>
+                            <button class="bg-slate-800 px-4 py-2 rounded text-xs font-bold text-white border border-slate-700 hover:bg-slate-700"><i class="fa-solid fa-upload mr-1"></i> Import CSV</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="mongoCollectionLedger">
+                        </div>
+                </div>
+            </section>
+
+            <section id="sec-bookings" class="section-view">
+                <div class="glass-panel rounded-2xl overflow-hidden flex flex-col h-full border border-slate-800">
+                    <div class="p-6 border-b border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-900/50">
+                        <div>
+                            <h2 class="text-xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-ticket text-pink-500"></i> Booking Management Center</h2>
+                            <p class="text-xs text-slate-400 font-semibold mt-1">Monitor, Confirm, Cancel and Refund all incoming transactions</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button class="bg-slate-800 hover:bg-slate-700 px-4 py-2.5 rounded-lg text-xs font-bold text-white transition border border-slate-700"><i class="fa-solid fa-filter mr-2"></i> Filters</button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto p-4">
+                        <table class="w-full">
+                            <thead>
+                                <tr><th>PNR / Booking ID</th><th>Passenger Details</th><th>Route & Date</th><th>Fare</th><th>Payment Status</th><th>Action</th></tr>
+                            </thead>
+                            <tbody id="bookings-master-table">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-users" class="section-view">
+                <div class="glass-panel rounded-2xl overflow-hidden flex flex-col h-full border border-slate-800">
+                    <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                        <div>
+                            <h2 class="text-xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-users text-cyan-500"></i> User Management Center</h2>
+                            <p class="text-xs text-slate-400 font-semibold mt-1">Manage registered users, wallets, KYC and roles</p>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto p-4">
+                        <table class="w-full">
+                            <thead>
+                                <tr><th>User ID</th><th>Personal Info</th><th>Contact Context</th><th>Region</th><th>Joined Date</th><th>Security Action</th></tr>
+                            </thead>
+                            <tbody id="table-users">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <div id="hugeFormModal" class="modal-overlay">
+        <div class="modal-content relative bg-gradient-to-b from-slate-900 to-[#020617] border border-slate-700">
+            <div class="p-6 border-b border-slate-800 flex justify-between items-center sticky top-0 z-50 bg-slate-900/95 backdrop-blur">
+                <div>
+                    <h2 class="text-2xl font-black text-white uppercase tracking-wider flex items-center gap-3" id="modalTitle"><i class="fa-solid fa-bus text-red-500"></i> Add New Bus Fleet</h2>
+                    <p class="text-xs text-slate-400 font-bold mt-1">Bus Master Management Module</p>
+                </div>
+                <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-slate-800 text-slate-400 hover:text-white hover:bg-red-600 transition flex items-center justify-center text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <form id="massiveForm" onsubmit="saveBus(event)" class="p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <input type="hidden" id="edit_id">
+                
+                <div class="lg:col-span-8 space-y-8">
+                    
+                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 shadow-inner">
+                        <h3 class="text-xs font-black text-red-400 uppercase tracking-widest mb-5 flex items-center gap-2 border-b border-slate-800 pb-3"><i class="fa-solid fa-building"></i> 1. Operator & Identity</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="input-group">
+                                <label class="input-label">Bus Operator / Company Name</label>
+                                <input type="text" id="f_company" class="input-field bg-slate-950" required placeholder="e.g. VRL Travels, MSRTC">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Bus Name / Model</label>
+                                <input type="text" id="f_name" class="input-field bg-slate-950" required placeholder="e.g. Volvo Multi-Axle, Shivneri">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Vehicle Registration Number</label>
+                                <input type="text" id="f_regno" class="input-field bg-slate-950 uppercase font-mono" placeholder="MH-12-AB-1234">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Driver Contact (Assigned)</label>
+                                <input type="tel" id="f_contact" class="input-field bg-slate-950" placeholder="+91 00000 00000">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 shadow-inner">
+                        <h3 class="text-xs font-black text-blue-400 uppercase tracking-widest mb-5 flex items-center gap-2 border-b border-slate-800 pb-3"><i class="fa-solid fa-gears"></i> 2. Configuration & Routing</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <div class="input-group">
+                                <label class="input-label">Coach Type</label>
+                                <select id="f_type" class="input-field bg-slate-950" required>
+                                    <option value="AC Sleeper (2+1)">AC Sleeper (2+1)</option>
+                                    <option value="Non-AC Sleeper (2+1)">Non-AC Sleeper (2+1)</option>
+                                    <option value="AC Seater (2+2)">AC Seater (2+2)</option>
+                                    <option value="Non-AC Seater (2+2)">Non-AC Seater (2+2)</option>
+                                    <option value="Volvo AC Semi-Sleeper">Volvo AC Semi-Sleeper</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Total Seats Capacity</label>
+                                <input type="number" id="f_seats" class="input-field bg-slate-950" required value="30">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Base Ticket Fare (₹)</label>
+                                <input type="number" id="f_price" class="input-field bg-slate-950 border-emerald-500/50 focus:border-emerald-500 text-emerald-400 font-black text-lg" required placeholder="1200">
+                            </div>
+                            
+                            <div class="input-group md:col-span-3">
+                                <label class="input-label text-amber-400">Route Definition (Origin ➔ Destination)</label>
+                                <input type="text" id="f_district" class="input-field bg-slate-950 border-amber-500/50 focus:border-amber-500" required placeholder="e.g. PUNE ➔ NAGPUR">
+                                <p class="text-[10px] text-slate-500 font-bold mt-2">Use exact city names separated by '➔' or '-' for smart search matching.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 shadow-inner">
+                        <h3 class="text-xs font-black text-fuchsia-400 uppercase tracking-widest mb-5 flex items-center gap-2 border-b border-slate-800 pb-3"><i class="fa-solid fa-list-check"></i> 3. Bus Features & Amenities</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <label class="flex items-center gap-2 text-xs font-bold text-slate-300 cursor-pointer"><input type="checkbox" checked class="w-4 h-4 accent-red-600"> GPS Tracking</label>
+                            <label class="flex items-center gap-2 text-xs font-bold text-slate-300 cursor-pointer"><input type="checkbox" checked class="w-4 h-4 accent-red-600"> Charging Point</label>
+                            <label class="flex items-center gap-2 text-xs font-bold text-slate-300 cursor-pointer"><input type="checkbox" checked class="w-4 h-4 accent-red-600"> Water Bottle</label>
+                            <label class="flex items-center gap-2 text-xs font-bold text-slate-300 cursor-pointer"><input type="checkbox" class="w-4 h-4 accent-red-600"> Blankets</label>
+                            <label class="flex items-center gap-2 text-xs font-bold text-slate-300 cursor-pointer"><input type="checkbox" class="w-4 h-4 accent-red-600"> WIFI Available</label>
+                            <label class="flex items-center gap-2 text-xs font-bold text-slate-300 cursor-pointer"><input type="checkbox" checked class="w-4 h-4 accent-red-600"> Emergency Exit</label>
+                            <label class="flex items-center gap-2 text-xs font-bold text-slate-300 cursor-pointer"><input type="checkbox" class="w-4 h-4 accent-red-600"> Reading Light</label>
+                            <label class="flex items-center gap-2 text-xs font-bold text-slate-300 cursor-pointer"><input type="checkbox" checked class="w-4 h-4 accent-red-600"> Fire Extinguisher</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-4 space-y-8">
+                    
+                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 shadow-inner">
+                        <h3 class="text-xs font-black text-emerald-400 uppercase tracking-widest mb-5 flex items-center gap-2 border-b border-slate-800 pb-3"><i class="fa-solid fa-camera"></i> Media Gallery</h3>
+                        
+                        <div class="w-full relative border-2 border-dashed border-slate-600 bg-slate-950 rounded-xl p-8 text-center transition cursor-pointer hover:border-emerald-500 hover:bg-emerald-500/5 flex flex-col items-center justify-center group overflow-hidden h-48">
+                            <input type="file" id="f_image" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" accept="image/*">
+                            <img id="image-preview" class="absolute inset-0 w-full h-full object-cover hidden z-10 opacity-80" alt="Preview">
+                            
+                            <div id="upload-placeholder" class="z-20 relative pointer-events-none">
+                                <div class="w-14 h-14 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition duration-300">
+                                    <i class="fa-solid fa-cloud-arrow-up text-2xl text-emerald-400"></i>
+                                </div>
+                                <p class="text-xs font-bold text-white">Upload Bus Photo</p>
+                                <p class="text-[9px] text-slate-500 mt-1">Main Cover Image (JPG/PNG)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 shadow-inner">
+                        <h3 class="text-xs font-black text-orange-400 uppercase tracking-widest mb-5 flex items-center gap-2 border-b border-slate-800 pb-3"><i class="fa-solid fa-file-shield"></i> Compliance Check</h3>
+                        <div class="space-y-4">
+                            <label class="flex justify-between items-center text-xs font-bold text-slate-300 bg-slate-950 p-3 rounded-lg border border-slate-800">
+                                Insurance Valid <input type="checkbox" checked class="w-4 h-4 accent-emerald-500">
+                            </label>
+                            <label class="flex justify-between items-center text-xs font-bold text-slate-300 bg-slate-950 p-3 rounded-lg border border-slate-800">
+                                PUC Certificate <input type="checkbox" checked class="w-4 h-4 accent-emerald-500">
+                            </label>
+                            <label class="flex justify-between items-center text-xs font-bold text-slate-300 bg-slate-950 p-3 rounded-lg border border-slate-800">
+                                Fitness Certificate <input type="checkbox" checked class="w-4 h-4 accent-emerald-500">
+                            </label>
+                            <label class="flex justify-between items-center text-xs font-bold text-slate-300 bg-slate-950 p-3 rounded-lg border border-slate-800">
+                                All India Permit <input type="checkbox" class="w-4 h-4 accent-emerald-500">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-12 pt-6 flex justify-end gap-4 border-t border-slate-800 mt-4 bg-slate-900/90 p-4 rounded-xl sticky bottom-0 z-50 backdrop-blur">
+                    <button type="button" onclick="closeModal()" class="px-8 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm uppercase tracking-widest transition">Cancel Action</button>
+                    <button type="submit" class="px-10 py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-black text-sm uppercase tracking-widest shadow-[0_10px_25px_rgba(220,38,38,0.4)] transition transform hover:-translate-y-1 flex items-center gap-2">
+                        <i class="fa-solid fa-server"></i> Commit to MongoDB
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+        let DB = { users: [], bookings: [], requests: [], listings: [] };
+        let uploadedImageBase64 = "";
+
+        // UI Routing Logic
+        function switchSection(secId) {
+            document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            
+            const targetSec = document.getElementById('sec-' + secId);
+            if(targetSec) targetSec.classList.add('active');
+            
+            const targetNav = document.getElementById('nav-' + secId);
+            if(targetNav) targetNav.classList.add('active');
+            
+            // Map fixing if GPS section opened
+            if(secId === 'live-gps') {
+                setTimeout(initGPSMap, 200);
+            }
+        }
+
+        // Modals & Toasts
+        function openBusModal() {
+            document.getElementById('edit_id').value = "";
+            document.getElementById('massiveForm').reset();
+            document.getElementById('modalTitle').innerHTML = `<i class="fa-solid fa-bus text-red-500"></i> Add New Bus Fleet`;
+            
+            uploadedImageBase64 = "";
+            document.getElementById('image-preview').src = "";
+            document.getElementById('image-preview').classList.add('hidden');
+            document.getElementById('upload-placeholder').classList.remove('hidden');
+
+            document.getElementById('hugeFormModal').style.display = 'flex';
+        }
+        function closeModal() { document.getElementById('hugeFormModal').style.display = 'none'; }
+
+        function fireToast(msg, type = 'info') {
+            const hub = document.getElementById('toastHub');
+            const toast = document.createElement('div');
+            let colorClass = type === 'success' ? 'badge-success' : (type === 'danger' ? 'badge-danger' : 'badge-info');
+            toast.className = `glass-panel p-4 rounded-xl shadow-2xl animate-fadeIn border-l-4 border-slate-500 flex items-center gap-3`;
+            if(type === 'success') toast.style.borderLeftColor = '#34d399';
+            if(type === 'danger') toast.style.borderLeftColor = '#f87171';
+            
+            toast.innerHTML = `<div class="text-sm font-bold text-white">${msg}</div>`;
+            hub.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3500);
+        }
+
+        // Image Handling
+        document.getElementById('f_image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(event) { 
+                    uploadedImageBase64 = event.target.result;
+                    document.getElementById('image-preview').src = uploadedImageBase64;
+                    document.getElementById('image-preview').classList.remove('hidden');
+                    document.getElementById('upload-placeholder').classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // ==========================================
+        // MONGODB FETCH & RENDER ENGINE
+        // ==========================================
+        async function refreshAllData() {
+            document.getElementById('channelStatus').innerText = "SYNCING MONGODB...";
+            document.getElementById('channelStatus').classList.add("animate-pulse");
+
+            try {
+                const response = await fetch(API_BASE + '/data');
+                if(!response.ok) throw new Error("Server disconnected");
+                
+                DB = await response.json();
+
+                // 1. Dashboard Metrics Update
+                let totalRev = DB.bookings.reduce((sum, b) => sum + Number(b.amount || 0), 0);
+                document.getElementById('dash-rev-today').innerText = "₹" + totalRev.toLocaleString('en-IN');
+                document.getElementById('dash-rev-month').innerText = "₹" + (totalRev * 12).toLocaleString('en-IN');
+                document.getElementById('dash-rev-year').innerText = "₹" + (totalRev * 150).toLocaleString('en-IN');
+                
+                document.getElementById('dash-total-bookings').innerText = DB.bookings.length;
+                document.getElementById('dash-total-users').innerText = DB.users.length;
+                
+                let busListings = DB.listings.filter(l => l.module === 'buses' || l.module === 'bus');
+                document.getElementById('dash-total-buses').innerText = busListings.length;
+                document.getElementById('dash-active-buses').innerText = busListings.length;
+                document.getElementById('dash-live-gps').innerText = busListings.length;
+
+                // 2. Collection Ledger Update
+                const ledger = document.getElementById('mongoCollectionLedger');
+                if(ledger) {
+                    ledger.innerHTML = `
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-center"><h4 class="text-2xl font-black text-indigo-500">${DB.users.length}</h4><p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Users</p></div>
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-center"><h4 class="text-2xl font-black text-pink-500">${DB.bookings.length}</h4><p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Bookings</p></div>
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-center"><h4 class="text-2xl font-black text-emerald-500">${busListings.length}</h4><p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Buses</p></div>
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-center"><h4 class="text-2xl font-black text-amber-500">${DB.requests.length}</h4><p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Requests</p></div>
+                    `;
+                }
+
+                // 3. Mini Dashboard Tables
+                let recentBusesHTML = busListings.slice(-3).reverse().map(b => `<tr><td class="font-bold">${b.name}</td><td class="text-xs text-slate-400">${b.type}</td><td class="text-emerald-400 font-bold">₹${b.price}</td></tr>`).join('');
+                document.getElementById('dashboard-recent-buses').innerHTML = recentBusesHTML || "<tr><td colspan='3' class='text-center text-slate-500 text-xs py-4'>No buses yet</td></tr>";
+
+                let recentBookingsHTML = DB.bookings.slice(-3).reverse().map(b => `<tr><td class="font-mono text-xs text-cyan-400">${b.id}</td><td class="font-bold text-sm">${b.userName}</td><td><span class="badge ${b.status==='active'?'badge-success':'badge-warning'}">${b.status}</span></td></tr>`).join('');
+                document.getElementById('dashboard-recent-bookings').innerHTML = recentBookingsHTML || "<tr><td colspan='3' class='text-center text-slate-500 text-xs py-4'>No bookings yet</td></tr>";
+
+                // 4. Booking Management Center (Full Ledger)
+                const tBook = document.getElementById('bookings-master-table');
+                if(tBook) {
+                    tBook.innerHTML = DB.bookings.reverse().map(b => {
+                        let actionBtns = (b.status === 'pending' || b.status === 'Pending Check') ? `
+                            <button onclick="mutateBookingStatus('${b.id || b._id}', 'active')" class="bg-emerald-600 hover:bg-emerald-500 px-3 py-1.5 rounded-lg text-white text-[10px] font-black mr-1 shadow">Confirm</button>
+                            <button onclick="mutateBookingStatus('${b.id || b._id}', 'rejected')" class="bg-amber-600 hover:bg-amber-500 px-3 py-1.5 rounded-lg text-white text-[10px] font-black shadow">Reject</button>
+                        ` : ``;
+                        let badgeClass = b.status === 'active' ? 'badge-success' : (b.status === 'rejected' ? 'badge-danger' : 'badge-warning');
+                        
+                        return `<tr>
+                            <td><div class="font-mono font-bold text-cyan-400 text-sm">${b.id || b._id}</div><div class="text-[10px] text-slate-500 font-bold uppercase mt-1">${b.date || 'Today'}</div></td>
+                            <td><div class="text-white font-black text-sm">${b.userName}</div><div class="text-[11px] text-slate-400 font-mono mt-0.5"><i class="fa-solid fa-phone text-[9px] mr-1"></i> ${b.contact}</div></td>
+                            <td><div class="text-slate-300 font-bold text-xs bg-slate-800 inline-block px-2 py-1 rounded border border-slate-700">${b.district}</div></td>
+                            <td><div class="font-black text-emerald-400 text-lg">₹${b.amount}</div></td>
+                            <td><span class="badge ${badgeClass}">${b.status === 'active' ? 'CONFIRMED' : b.status}</span></td>
+                            <td><div class="flex items-center gap-2">${actionBtns}<button onclick="deleteNode('bookings','${b.id || b._id}')" class="text-red-500 hover:text-red-400 transition bg-red-500/10 w-8 h-8 rounded-lg flex items-center justify-center ml-2"><i class="fa-solid fa-trash"></i></button></div></td>
+                        </tr>`;
+                    }).join('') || `<tr><td colspan="6" class="text-center py-10 text-slate-500"><i class="fa-solid fa-folder-open text-4xl mb-3 block"></i> No records found</td></tr>`;
+                }
+
+                // 5. Bus Master Center
+                const tBus = document.getElementById('bus-master-table');
+                if(tBus) {
+                    tBus.innerHTML = busListings.reverse().map(l => {
+                        let badgeState = l.status === 'active' ? 'badge-success' : 'badge-danger';
+                        let compName = l.owner && l.owner.includes("Company:") ? l.owner.split('Company:')[1].trim() : "Private Operator";
+                        let imagePreview = l.image ? `<img src="${l.image}" class="w-16 h-12 rounded-lg object-cover border border-slate-700 shadow">` : `<div class="w-16 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-slate-500"><i class="fa-solid fa-bus text-xl"></i></div>`;
+
+                        return `<tr>
+                            <td><div class="flex items-center gap-4">${imagePreview}<div><p class="font-black text-white text-base">${l.name}</p><p class="text-[10px] text-emerald-400 font-bold uppercase tracking-widest mt-0.5"><i class="fa-solid fa-shield-check"></i> VERIFIED</p></div></div></td>
+                            <td><p class="text-sm font-black text-slate-300">${compName}</p><p class="text-[10px] text-slate-500 font-mono mt-1">${l.contact || 'Reg: Pending'}</p></td>
+                            <td><div class="bg-[#0b1120] border border-slate-800 px-3 py-1.5 rounded-lg inline-block text-xs font-bold text-slate-300 uppercase"><i class="fa-solid fa-route text-amber-500 mr-1"></i> ${l.district}</div></td>
+                            <td><div class="text-xs font-bold text-slate-400">${l.type}</div><div class="text-[10px] text-slate-500 mt-1">30 Seats</div></td>
+                            <td><p class="font-black text-emerald-400 text-xl tracking-tight">₹${l.price}</p></td>
+                            <td><span class="badge ${badgeState}">${l.status === 'active' ? 'ACTIVE / RUNNING' : 'SUSPENDED'}</span></td>
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="editAssetMetadata('${l.id || l._id}')" class="bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white transition w-8 h-8 rounded-lg flex items-center justify-center" title="Edit Bus"><i class="fa-solid fa-pen"></i></button>
+                                    <button onclick="toggleAssetStatus('${l.id || l._id}')" class="bg-amber-500/10 text-amber-400 hover:bg-amber-500 hover:text-white transition w-8 h-8 rounded-lg flex items-center justify-center" title="Toggle Status"><i class="fa-solid fa-power-off"></i></button>
+                                    <button onclick="deleteNode('listings','${l.id || l._id}')" class="bg-red-500/10 text-red-500 hover:bg-red-600 hover:text-white transition w-8 h-8 rounded-lg flex items-center justify-center" title="Delete Bus"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>`;
+                    }).join('') || `<tr><td colspan="7" class="text-center py-10 text-slate-500"><i class="fa-solid fa-bus-slash text-4xl mb-3 block"></i> Fleet Empty. Add Buses.</td></tr>`;
+                }
+
+                // 6. User Center
+                const tUser = document.getElementById('table-users');
+                if(tUser) {
+                    tUser.innerHTML = DB.users.map(u => `<tr><td class="font-mono text-cyan-500 text-[11px] font-bold">${u.id || u._id}</td><td class="font-bold text-white text-sm">${u.name}</td><td><div class="text-slate-300 font-mono text-xs"><i class="fa-solid fa-phone text-[10px] text-slate-500 mr-1"></i> ${u.phone || u.contact || ''}</div><div class="text-[10px] text-slate-500 mt-1"><i class="fa-solid fa-envelope text-[10px] mr-1"></i> ${u.email || ''}</div></td><td class="font-bold text-slate-300 uppercase text-xs"><i class="fa-solid fa-location-dot text-red-500 mr-1"></i> ${u.district || 'India'}</td><td class="text-xs text-slate-400 font-bold">${new Date(u.createdAt || Date.now()).toLocaleDateString()}</td><td><button class="bg-slate-800 text-slate-400 px-3 py-1.5 rounded-lg text-xs font-bold mr-2 hover:text-white">Block</button><button onclick="deleteNode('users','${u.id || u._id}')" class="text-red-500 hover:text-red-400 transition bg-red-500/10 w-8 h-8 rounded-lg flex items-center justify-center inline-flex"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('') || `<tr><td colspan="6" class="text-center py-10 text-slate-500">No users found.</td></tr>`;
+                }
+
+                document.getElementById('channelStatus').innerText = "CONNECTED";
+                document.getElementById('channelStatus').classList.remove("animate-pulse");
+
+            } catch (err) {
+                document.getElementById('channelStatus').innerText = "DISCONNECTED";
+                document.getElementById('channelStatus').classList.replace("text-emerald-400", "text-red-500");
+                fireToast("Lost Connection to MongoDB API (Port 3000)", "danger");
+            }
+        }
+
+        // ==========================================
+        // MONGODB DATA MODIFICATION ENGINE
+        // ==========================================
+        async function saveBus(e) {
+            e.preventDefault();
+            
+            let editId = document.getElementById('edit_id').value;
+            let companyValue = document.getElementById('f_company').value;
+            let ownerValue = document.getElementById('f_owner').value || "Admin Verified";
+            let finalizedOwner = companyValue ? `${ownerValue} | Company: ${companyValue}` : ownerValue;
+
+            const newItem = {
+                module: "buses",
+                name: document.getElementById('f_name').value,
+                type: document.getElementById('f_type').value,
+                district: document.getElementById('f_district').value,
+                price: document.getElementById('f_price').value,
+                owner: finalizedOwner,
+                contact: document.getElementById('f_contact').value || "N/A",
+                gst: document.getElementById('f_regno').value || document.getElementById('f_gst').value || "",
+                license: document.getElementById('f_license').value || "MH-PERMIT-123",
+                image: uploadedImageBase64,
+                status: 'active',
+                featured: true
+            };
+
+            // If Editing, delete old record first (Simulated Update for this structure)
+            if(editId) {
+                try { await fetch(API_BASE + '/nodes/listings/' + editId, { method: 'DELETE' }); } catch(e) {}
+            }
+            
+            try {
+                const res = await fetch(API_BASE + '/listings', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newItem)
+                });
+                
+                if(res.ok) {
+                    closeModal();
+                    refreshAllData();
+                    fireToast(`Bus Data Secured in MongoDB: ${newItem.name}`, 'success');
+                } else { fireToast('API Error: Cannot Save', 'danger'); }
+            } catch (err) { fireToast('Server Offline! Ensure server.js is running.', 'danger'); }
+        }
+
+        async function mutateBookingStatus(id, newStatus) {
+            try {
+                await fetch(API_BASE + '/bookings/' + id + '/status', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: newStatus }) });
+                refreshAllData();
+                fireToast(`Booking Status: ${newStatus.toUpperCase()}`, 'success');
+            } catch(e) { fireToast('Update failed', 'danger'); }
+        }
+
+        async function toggleAssetStatus(id) {
+            let target = DB.listings.find(l => (l.id === id || l._id === id));
+            if (target) {
+                let newStatus = target.status === 'active' ? 'suspended' : 'active';
+                try {
+                    await fetch(API_BASE + '/listings/' + id + '/toggle', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: newStatus }) });
+                    refreshAllData();
+                    fireToast(`Bus is now ${newStatus.toUpperCase()}`, 'info');
+                } catch(e) { fireToast('Toggle Failed', 'danger'); }
+            }
+        }
+
+        function editAssetMetadata(id) {
+            let target = DB.listings.find(l => (l.id === id || l._id === id));
+            if (!target) return;
+            
+            openBusModal();
+            document.getElementById('modalTitle').innerHTML = `<i class="fa-solid fa-pen text-blue-500"></i> EDIT BUS RECORD: ${target.name}`;
+            document.getElementById('edit_id').value = id; 
+            
+            let compName = ""; let ownerName = target.owner || "";
+            if(ownerName.includes(" | Company: ")) {
+                let parts = ownerName.split(" | Company: ");
+                ownerName = parts[0]; compName = parts[1];
+            }
+
+            document.getElementById('f_company').value = compName;
+            document.getElementById('f_name').value = target.name;
+            document.getElementById('f_type').value = target.type;
+            document.getElementById('f_district').value = target.district;
+            document.getElementById('f_price').value = parseInt(target.price) || 0;
+            document.getElementById('f_owner').value = ownerName;
+            document.getElementById('f_contact').value = target.contact || "";
+            document.getElementById('f_regno').value = target.gst || "";
+
+            if(target.image) {
+                uploadedImageBase64 = target.image;
+                document.getElementById('image-preview').src = uploadedImageBase64;
+                document.getElementById('image-preview').classList.remove('hidden');
+                document.getElementById('upload-placeholder').classList.add('hidden');
+            }
+        }
+
+        async function deleteNode(table, id) {
+            if(confirm(`⚠️ WARNING: Permanently delete this record from MongoDB?`)) {
+                try {
+                    await fetch(API_BASE + '/nodes/' + table + '/' + id, { method: 'DELETE' });
+                    refreshAllData();
+                    fireToast(`Record Purged from Database`, 'danger');
+                } catch(e) { fireToast('Delete Action Failed', 'danger'); }
+            }
+        }
+
+        // ==========================================
+        // EXTERNAL APIS & INITIALIZATION
+        // ==========================================
+        
+        let mapInstance;
+        function initGPSMap() {
+            if(mapInstance) return; // Prevent recreation
+            mapInstance = L.map('live-tracking-map', { zoomControl: false }).setView([19.75, 75.71], 6);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: 'Seva Setu Admin' }).addTo(mapInstance);
+            
+            // Plot mock active buses across Maharashtra
+            const buses = [
+                { lat: 18.52, lng: 73.85, name: "Shivneri (Pune)" },
+                { lat: 19.07, lng: 72.87, name: "VRL Travels (Mumbai)" },
+                { lat: 21.14, lng: 79.08, name: "Khurana (Nagpur)" },
+                { lat: 19.87, lng: 75.34, name: "Humsafar (Aurangabad)" },
+                { lat: 17.65, lng: 75.90, name: "Pooja Travels (Solapur)" }
+            ];
+
+            const busIcon = L.divIcon({ html: '<div class="bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow-xl shadow-red-600/50 text-[10px]"><i class="fa-solid fa-bus"></i></div>', className: '' });
+            
+            buses.forEach(b => { L.marker([b.lat, b.lng], {icon: busIcon}).addTo(mapInstance).bindPopup(b.name); });
+        }
+
+        function initCharts() {
+            // Chart.js - Demand Prediction
+            const ctxDemand = document.getElementById('demandChart').getContext('2d');
+            new Chart(ctxDemand, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Predicted Ticket Demand',
+                        data: [120, 150, 180, 140, 280, 450, 390],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderWidth: 3, tension: 0.4, fill: true
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { color: '#1e293b' } } } }
+            });
+
+            // Chart.js - Dynamic Pricing
+            const ctxPricing = document.getElementById('pricingChart').getContext('2d');
+            new Chart(ctxPricing, {
+                type: 'bar',
+                data: {
+                    labels: ['Standard', 'Weekend', 'Holiday', 'Surge (AI)'],
+                    datasets: [{
+                        label: 'Revenue Yield %',
+                        data: [100, 125, 140, 165],
+                        backgroundColor: ['#64748b', '#f59e0b', '#10b981', '#dc2626'],
+                        borderRadius: 6
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false } } } }
+            });
+        }
+
+        function simulateBackup() {
+            const bar = document.getElementById('backup-bar');
+            document.getElementById('backup-progress').classList.remove('hidden');
+            bar.style.width = '0%';
+            setTimeout(() => { bar.style.width = '100%'; }, 100);
+            setTimeout(() => { fireToast('MongoDB Backup Snapshot Generated Successfully!', 'success'); document.getElementById('backup-progress').classList.add('hidden'); }, 1200);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            switchSection('dashboard');
+            refreshAllData();
+            initCharts();
+            setInterval(refreshAllData, 10000); // Auto sync every 10s
+        });
+    </script>
+</body>
+</html>

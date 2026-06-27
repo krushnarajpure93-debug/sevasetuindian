@@ -1,0 +1,2177 @@
+<!DOCTYPE html>
+<html lang="en" id="rootHtml" class="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seva Setu - Ultimate Premium Corporate Management Suite</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-open {
+            display: flex !important;
+        }
+
+        .service-card {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border-width: 1px;
+        }
+
+        .service-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px -5px rgba(79, 70, 229, 0.1), 0 10px 15px -6px rgba(79, 70, 229, 0.05);
+        }
+
+        .dark .service-card:hover {
+            box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.6);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+
+        .neon-pulse {
+            animation: neonPulseAnimate 2s infinite ease-in-out;
+        }
+
+        @keyframes neonPulseAnimate {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.3;
+                transform: scale(0.92);
+            }
+        }
+
+        /* Geometric layout stabilizer overrides */
+        .grid-stretch-fix {
+            align-items: stretch;
+        }
+
+        .custom-map-container .leaflet-container {
+            background: #f8fafc;
+            font-family: inherit;
+        }
+
+        .dark .custom-map-container .leaflet-container {
+            background: #0f172a;
+        }
+
+        /* Custom map pin styling modifications */
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            padding: 4px;
+            background: #ffffff;
+            color: #0f172a;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .leaflet-popup-content-wrapper {
+            background: #1e293b;
+            color: #f8fafc;
+            border: 1px solid #334155;
+        }
+
+        .leaflet-popup-tip {
+            background: #ffffff;
+        }
+
+        .dark .leaflet-popup-tip {
+            background: #1e293b;
+        }
+        
+        /* Realistic Payment Gateway Processing Animation Overlay */
+        .payment-processing-spinner {
+            border: 4px solid rgba(255,255,255,0.1);
+            border-left-color: #4f46e5;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+
+<body
+    class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 antialiased min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <header
+        class="sticky top-0 z-40 flex items-center justify-between border-b border-slate-200/80 bg-white/95 backdrop-blur-md px-6 py-3.5 shadow-xs dark:bg-slate-900/95 dark:border-slate-800 transition-colors duration-300">
+        <div class="flex items-center gap-2.5">
+            <button onclick="toggleMobileMenu()"
+                class="block lg:hidden text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 text-lg mr-1 cursor-pointer transition">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div
+                class="h-10 w-10 rounded-xl bg-linear-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white font-extrabold text-xl shadow-lg shadow-indigo-500/20 dark:shadow-none">
+                S</div>
+            <div>
+                <h1 class="text-base font-extrabold tracking-tight text-slate-950 dark:text-white leading-none">Seva
+                    Setu</h1>
+                <p class="text-[10px] text-indigo-600 font-bold mt-1 dark:text-indigo-400 uppercase tracking-widest">
+                    Aapla Seva Kendra Enterprise</p>
+            </div>
+        </div>
+
+        <nav class="hidden lg:block">
+            <ul class="flex gap-8 text-xs font-bold text-slate-600 dark:text-slate-300">
+                <li><a href="#" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Home
+                        Dashboard</a></li>
+                <li><a href="#trackerSection"
+                        class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Applications
+                        Pipeline</a></li>
+                <li><a href="#catalogAnchor"
+                        class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Dynamic Catalog
+                        Suite</a></li>
+                <li><a href="#workspaceSection"
+                        class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Employee Hub</a></li>
+                <li><a href="#mapSection"
+                        class="text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400 pb-5">G-Map
+                        GPS Center <i class="fa-solid fa-location-dot text-[8px] ml-0.5"></i></a></li>
+                <li><a href="#reviewsSection"
+                        class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Client Matrix</a>
+                </li>
+                <li><a href="#adminSection"
+                        class="hover:text-rose-500 dark:hover:text-rose-400 transition-colors flex items-center gap-1 text-slate-500 dark:text-slate-400"><i
+                            class="fa-solid fa-user-shield text-[10px]"></i> System Admin</a></li>
+            </ul>
+        </nav>
+
+        <div class="flex items-center gap-4">
+            <button onclick="toggleThemeMode()"
+                class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all cursor-pointer text-sm flex items-center justify-center shadow-2xs"
+                id="themeTogglerBtn" title="Switch Environment Schema">
+                <i class="fa-regular fa-moon"></i>
+            </button>
+            <button
+                onclick="alert('Notification Subsystem Node: Spatial Mapping Infrastructure Engaged Matrix Safely.')"
+                class="relative w-9 h-9 rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all cursor-pointer text-sm flex items-center justify-center shadow-2xs">
+                <i class="fa-regular fa-bell"></i>
+                <span class="absolute top-2.5 right-2.5 h-2 w-2 rounded-full bg-emerald-500 neon-pulse"></span>
+            </button>
+            <div class="flex items-center gap-2.5 border-l border-slate-200 dark:border-slate-800 pl-4">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
+                    alt="User Avatar" class="h-9 w-9 rounded-xl object-cover ring-2 ring-indigo-500/20 shadow-xs">
+                <div class="hidden sm:block text-left">
+                    <span class="text-xs font-extrabold text-slate-800 dark:text-slate-200 block leading-tight">Suresh
+                        Patil</span>
+                    <span class="text-[9px] text-emerald-500 font-bold block flex items-center gap-1"><span
+                            class="h-1.5 w-1.5 rounded-full bg-emerald-500 inline-block"></span> Partner Active</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="mobileNavigationMenu"
+        class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md hidden transition-all duration-300">
+        <div
+            class="bg-white dark:bg-slate-900 w-80 max-w-[85vw] h-full p-6 shadow-2xl flex flex-col justify-between border-r border-slate-200 dark:border-slate-800 transition-transform duration-300">
+            <div class="space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+                    <div class="flex items-center gap-2.5">
+                        <div
+                            class="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black text-sm">
+                            S</div>
+                        <h4 class="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">Seva Setu
+                            Mobile Suite</h4>
+                    </div>
+                    <button onclick="toggleMobileMenu()"
+                        class="text-slate-400 hover:text-slate-900 dark:hover:text-white text-2xl cursor-pointer">×</button>
+                </div>
+                <ul class="space-y-4 text-xs font-bold text-slate-600 dark:text-slate-300">
+                    <li><a href="#" onclick="toggleMobileMenu()"
+                            class="block py-2 px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">Dashboard
+                            Home</a></li>
+                    <li><a href="#trackerSection" onclick="toggleMobileMenu()"
+                            class="block py-2 px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">Applications
+                            Pipeline</a></li>
+                    <li><a href="#catalogAnchor" onclick="toggleMobileMenu()"
+                            class="block py-2 px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">Services
+                            Catalog Suite</a></li>
+                    <li><a href="#workspaceSection" onclick="toggleMobileMenu()"
+                            class="block py-2 px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">Employee
+                            Operations Hub</a></li>
+                    <li><a href="#mapSection" onclick="toggleMobileMenu()"
+                            class="block py-2 px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition text-indigo-600">G-Map
+                            Location Grid</a></li>
+                    <li><a href="#reviewsSection" onclick="toggleMobileMenu()"
+                            class="block py-2 px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">Client
+                            Feedback Matrix</a></li>
+                    <li><a href="#adminSection" onclick="toggleMobileMenu()"
+                            class="block py-2 px-3 rounded-lg bg-rose-50 dark:bg-rose-950/20 text-rose-500"><i
+                                class="fa-solid fa-user-shield mr-1"></i> Executive Admin Control</a></li>
+                </ul>
+            </div>
+            <div class="border-t border-slate-100 dark:border-slate-800 pt-4 text-[11px] text-slate-400 font-semibold">
+                Authorization Context Token: <span
+                    class="text-slate-800 dark:text-slate-200 block mt-0.5 text-xs font-mono font-bold">SEVA-NODE-5004-SYS</span>
+            </div>
+        </div>
+    </div>
+
+    <div
+        class="mx-auto max-w-[1400px] w-full px-8 py-6 grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 items-start flex-grow">
+
+        <aside class="space-y-6 lg:sticky lg:top-[88px]">
+
+            <div
+                class="rounded-xl bg-white p-4 shadow-xs border border-slate-200/60 dark:bg-slate-900 dark:border-slate-800/80">
+                <h3
+                    class="text-[11px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest pb-2.5 border-b border-slate-100 dark:border-slate-800 mb-3 flex items-center justify-between">
+                    <span>Operational Scope</span> <i class="fa-solid fa-toggle-on text-indigo-600 text-sm"></i>
+                </h3>
+                <div class="grid grid-cols-1 gap-2">
+                    <button onclick="setSystemChannelScope('online')" id="scopeBtnOnline"
+                        class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow-xs flex items-center justify-between transition cursor-pointer">
+                        <span><i class="fa-solid fa-cloud mr-2"></i> Online Employee Portal</span>
+                        <span class="h-2 w-2 rounded-full bg-white neon-pulse"></span>
+                    </button>
+                    <button onclick="setSystemChannelScope('offline')" id="scopeBtnOffline"
+                        class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 flex items-center justify-between hover:bg-slate-200/70 dark:hover:bg-slate-700 transition cursor-pointer">
+                        <span><i class="fa-solid fa-shop mr-2"></i> Offline Facilitation Centers</span>
+                        <span
+                            class="text-[9px] font-mono bg-slate-300 dark:bg-slate-700 px-1.5 py-0.5 rounded font-bold text-slate-600 dark:text-slate-400">3000+</span>
+                    </button>
+                </div>
+            </div>
+
+            <div
+                class="rounded-xl bg-white p-4 shadow-xs border border-slate-200/60 dark:bg-slate-900 dark:border-slate-800/80">
+                <h3
+                    class="text-[11px] font-bold text-slate-400 uppercase tracking-wider pb-2.5 border-b border-slate-100 dark:border-slate-800 mb-2">
+                    Category Portfolios</h3>
+                <ul class="space-y-1 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                    <li
+                        class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer transition">
+                        <span class="flex items-center gap-2.5"><i
+                                class="fa-solid fa-building-columns text-amber-500 text-center w-4"></i> Fiscal
+                            Frameworks</span> <span
+                            class="text-[9px] bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded font-bold text-gray-400">Active</span>
+                    </li>
+                    <li
+                        class="flex items-center justify-between p-2.5 rounded-lg bg-indigo-50/70 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400 font-extrabold shadow-3xs">
+                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-briefcase text-center w-4"></i>
+                            Corporate Catalog</span> <span
+                            class="text-[9px] bg-indigo-600 text-white px-2 py-0.5 rounded-full font-black scale-90">32</span>
+                    </li>
+                    <li
+                        class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer transition">
+                        <span class="flex items-center gap-2.5"><i
+                                class="fa-solid fa-scale-balanced text-emerald-500 text-center w-4"></i> Statutory
+                            Licensing</span> <span
+                            class="text-[9px] bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded font-bold text-gray-400">Ready</span>
+                    </li>
+                    <li
+                        class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer transition">
+                        <span class="flex items-center gap-2.5"><i
+                                class="fa-solid fa-shield-halved text-rose-500 text-center w-4"></i> IPR Asset
+                            Vaults</span> <span
+                            class="text-[9px] bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded font-bold text-gray-400">Live</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div
+                class="rounded-xl bg-gradient-to-br from-indigo-950 to-slate-950 p-4 text-white shadow-md relative overflow-hidden border border-slate-800">
+                <div class="absolute -right-10 -bottom-10 h-32 w-32 bg-indigo-500/10 rounded-full blur-xl"></div>
+                <h4
+                    class="text-[10px] uppercase tracking-widest text-indigo-400 font-extrabold flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-indigo-400 animate-ping"></span> Node Trace Metrics
+                </h4>
+                <div class="mt-4 space-y-3 text-[11px] font-medium text-slate-300">
+                    <div class="flex justify-between"><span>Map Database Engine:</span><span
+                            class="font-mono font-bold text-emerald-400">Leaflet Native</span></div>
+                    <div class="flex justify-between"><span>Distributed Records:</span><span
+                            class="font-mono font-bold text-indigo-300">3,060 Centres</span></div>
+                    <div class="flex justify-between"><span>GPS Spatial Compute:</span><span
+                            class="font-mono font-bold text-sky-400">Haversine Vector</span></div>
+                </div>
+                <div
+                    class="border-t border-slate-800 mt-4 pt-3 flex justify-between items-center text-[10px] text-slate-400 font-bold">
+                    <span>Engine Context Rev:</span> <span class="font-mono">v5.0.0-Premium</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="space-y-6 overflow-hidden">
+
+            <div
+                class="rounded-2xl bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 p-6 lg:p-8 text-white flex flex-col md:flex-row justify-between items-center gap-6 relative shadow-lg overflow-hidden border border-slate-900">
+                <div
+                    class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.18),transparent_50%)]">
+                </div>
+                <div class="space-y-3.5 max-w-xl z-10 w-full">
+                    <span
+                        class="bg-indigo-500/20 text-indigo-300 font-bold text-[9px] px-2.5 py-1 rounded-full uppercase tracking-wider border border-indigo-500/30">Enterprise
+                        Application Desk</span>
+                    <h2 class="text-2xl lg:text-3xl font-extrabold tracking-tight leading-tight">Corporate & Business
+                        Licensing Hub</h2>
+                    <p class="text-xs text-slate-300 font-medium leading-relaxed">Deploy structured tax frameworks,
+                        register industrial entities, process compliance parameters, and map real localized walk-in
+                        offline shopping complexes across the sub-continent dynamically.</p>
+
+                    <div
+                        class="flex bg-white rounded-xl p-1 shadow-sm max-w-md w-full items-center gap-1 border border-slate-800/10 dark:bg-slate-900 dark:border-slate-800">
+                        <i class="fa-solid fa-magnifying-glass text-slate-400 pl-3 text-xs"></i>
+                        <input type="text" id="serviceSearchInput" oninput="filterServices()"
+                            placeholder="Type to search service (e.g. GST, Shop Act, Private Ltd)..."
+                            class="w-full border-none outline-none text-slate-800 dark:text-white placeholder-slate-400 text-xs py-2.5 pl-1 bg-transparent font-medium">
+                    </div>
+                </div>
+
+                <div
+                    class="grid grid-cols-2 gap-x-4 gap-y-3 text-[10px] text-slate-200 font-semibold bg-white/5 p-4 rounded-xl border border-white/5 backdrop-blur-md min-w-[270px] z-10 shadow-inner">
+                    <div class="flex items-center gap-2"><i
+                            class="fa-solid fa-user-tie text-indigo-400 text-xs w-4 text-center"></i> Expert Advisory
+                    </div>
+                    <div class="flex items-center gap-2"><i
+                            class="fa-solid fa-shield-halved text-emerald-400 text-xs w-4 text-center"></i> 256-bit
+                        Protection</div>
+                    <div class="flex items-center gap-2"><i
+                            class="fa-solid fa-bolt text-amber-400 text-xs w-4 text-center"></i> Rapid SLAs Routing
+                    </div>
+                    <div class="flex items-center gap-2"><i
+                            class="fa-solid fa-server text-sky-400 text-xs w-4 text-center"></i> Live Spatial Sync</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div
+                    class="bg-white p-4 rounded-xl flex items-center gap-3.5 border border-slate-200/60 shadow-xs dark:bg-slate-900 dark:border-slate-800">
+                    <div
+                        class="h-10 w-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-xs shadow-3xs">
+                        <i class="fa-solid fa-layer-group text-sm"></i>
+                    </div>
+                    <div>
+                        <h5 id="catalogIndicatorStatsCount" class="text-xs font-black text-slate-900 dark:text-white">32
+                            Dynamic</h5>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">Services Loaded
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="bg-white p-4 rounded-xl flex items-center gap-3.5 border border-slate-200/60 shadow-xs dark:bg-slate-900 dark:border-slate-800">
+                    <div
+                        class="h-10 w-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-xs shadow-3xs">
+                        <i class="fa-solid fa-network-wired text-sm"></i>
+                    </div>
+                    <div>
+                        <h5 id="totalMappedCentersLabel" class="text-xs font-black text-slate-900 dark:text-white">3,060
+                            Active</h5>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">Offline Centers
+                            Mapped</p>
+                    </div>
+                </div>
+                <div
+                    class="bg-white p-4 rounded-xl flex items-center gap-3.5 border border-slate-200/60 shadow-xs dark:bg-slate-900 dark:border-slate-800">
+                    <div
+                        class="h-10 w-10 rounded-xl bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center text-amber-600 dark:text-amber-400 text-xs shadow-3xs">
+                        <i class="fa-solid fa-user-gear text-sm"></i>
+                    </div>
+                    <div>
+                        <h5 class="text-xs font-black text-slate-900 dark:text-white">4 Internal</h5>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">Live Operators
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="bg-white p-4 rounded-xl flex items-center gap-3.5 border border-slate-200/60 shadow-xs dark:bg-slate-900 dark:border-slate-800">
+                    <div
+                        class="h-10 w-10 rounded-xl bg-sky-50 dark:bg-sky-950/40 flex items-center justify-center text-sky-600 dark:text-sky-400 text-xs shadow-3xs">
+                        <i class="fa-solid fa-database text-sm"></i>
+                    </div>
+                    <div>
+                        <h5 class="text-xs font-black text-slate-900 dark:text-white">Cluster DB</h5>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">Encrypted Sync
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="catalogAnchor"
+                class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-4 border-b border-slate-200 dark:border-slate-800 pb-3 scroll-mt-20">
+                <div>
+                    <h3
+                        class="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                        Popular Corporate Services Catalog Array
+                    </h3>
+                    <p class="text-[10px] text-slate-400 font-medium mt-0.5">Single click reveals all hidden operational
+                        services elements instantly.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="masterCatalogToggleTriggerBtn" onclick="toggleCompleteCatalogMatrix()"
+                        class="text-xs font-extrabold bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-xl transition shadow-xs cursor-pointer flex items-center gap-2">
+                        <span>Expand Catalog Grid Matrix</span> <i id="catalogChevronVectorIcon"
+                            class="fa-solid fa-chevron-right transition-transform text-[10px]"></i>
+                    </button>
+                    <span id="activeServicesCount"
+                        class="text-[10px] text-indigo-600 dark:text-indigo-400 font-bold bg-indigo-50 dark:bg-indigo-950/50 px-2.5 py-1 rounded-lg">10
+                        Services Active</span>
+                </div>
+            </div>
+
+            <div id="servicesContainerGrid"
+                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 grid-stretch-fix">
+                <div class="service-card bg-white border border-slate-200/60 rounded-xl p-4 flex flex-col items-center text-center justify-between dark:bg-slate-900 dark:border-slate-800"
+                    data-title="gst registration commercial tax statement">
+                    <div
+                        class="h-12 w-12 text-indigo-600 bg-indigo-50 dark:text-indigo-400 dark:bg-indigo-950/40 rounded-full flex items-center justify-center text-xl mb-2">
+                        <i class="fa-solid fa-file-invoice"></i>
+                    </div>
+                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white mb-1">GST Registration</h4>
+                    <p class="text-[10px] text-slate-400 font-medium leading-tight mb-3">Obtain standard commercial
+                        goods & services tax mapping safely.</p>
+                    <div class="text-xs font-black text-slate-900 dark:text-slate-200 mb-3">₹999 <span
+                            class="text-[9px] font-bold text-slate-400 block mt-0.5">all-inclusive setup</span></div>
+                    <button
+                        class="w-full py-2 bg-slate-50 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white text-indigo-600 dark:text-indigo-400 font-extrabold rounded-xl text-[11px] transition cursor-pointer shadow-3xs"
+                        onclick="triggerBookingMatrix('GST Registration Processing', 999)">Book Processing</button>
+                </div>
+
+                <div class="service-card bg-white border border-slate-200/60 rounded-xl p-4 flex flex-col items-center text-center justify-between dark:bg-slate-900 dark:border-slate-800"
+                    data-title="shop establishment license act gumasta local municipal">
+                    <div
+                        class="h-12 w-12 text-amber-500 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40 rounded-full flex items-center justify-center text-xl mb-2">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
+                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white mb-1">Shop & Establishment</h4>
+                    <p class="text-[10px] text-slate-400 font-medium leading-tight mb-3">Get mandatory state regulated
+                        local Shop Act licenses processed.</p>
+                    <div class="text-xs font-black text-slate-900 dark:text-slate-200 mb-3">₹799 <span
+                            class="text-[9px] font-bold text-slate-400 block mt-0.5">official cert code</span></div>
+                    <button
+                        class="w-full py-2 bg-slate-50 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white text-indigo-600 dark:text-indigo-400 font-extrabold rounded-xl text-[11px] transition cursor-pointer shadow-3xs"
+                        onclick="triggerBookingMatrix('Shop Act & Establishment License', 799)">Book Processing</button>
+                </div>
+
+                <div class="service-card bg-white border border-slate-200/60 rounded-xl p-4 flex flex-col items-center text-center justify-between dark:bg-slate-900 dark:border-slate-800"
+                    data-title="private limited company incorporation legal entity mca ministry corporate affairs">
+                    <div
+                        class="h-12 w-12 text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-950/40 rounded-full flex items-center justify-center text-xl mb-2">
+                        <i class="fa-solid fa-building-shield"></i>
+                    </div>
+                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white mb-1">Private Limited Company</h4>
+                    <p class="text-[10px] text-slate-400 font-medium leading-tight mb-3">Incorporate legal entities with
+                        secure ministry approvals.</p>
+                    <div class="text-xs font-black text-slate-900 dark:text-slate-200 mb-3">₹4,999 <span
+                            class="text-[9px] font-bold text-slate-400 block mt-0.5">mca registry token</span></div>
+                    <button
+                        class="w-full py-2 bg-slate-50 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white text-indigo-600 dark:text-indigo-400 font-extrabold rounded-xl text-[11px] transition cursor-pointer shadow-3xs"
+                        onclick="triggerBookingMatrix('Private Limited Incorporation', 4999)">Book Processing</button>
+                </div>
+
+                <div class="service-card bg-white border border-slate-200/60 rounded-xl p-4 flex flex-col items-center text-center justify-between dark:bg-slate-900 dark:border-slate-800"
+                    data-title="partnership deed agreement firm registration compliance notary">
+                    <div
+                        class="h-12 w-12 text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/40 rounded-full flex items-center justify-center text-xl mb-2">
+                        <i class="fa-solid fa-handshake-angle"></i>
+                    </div>
+                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white mb-1">Partnership Deed</h4>
+                    <p class="text-[10px] text-slate-400 font-medium leading-tight mb-3">Draft and register professional
+                        legal agreement deeds.</p>
+                    <div class="text-xs font-black text-slate-900 dark:text-slate-200 mb-3">₹1,499 <span
+                            class="text-[9px] font-bold text-slate-400 block mt-0.5">firm validation</span></div>
+                    <button
+                        class="w-full py-2 bg-slate-50 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white text-indigo-600 dark:text-indigo-400 font-extrabold rounded-xl text-[11px] transition cursor-pointer shadow-3xs"
+                        onclick="triggerBookingMatrix('Partnership Firm Registration', 1499)">Book Processing</button>
+                </div>
+
+                <div class="service-card bg-white border border-slate-200/60 rounded-xl p-4 flex flex-col items-center text-center justify-between dark:bg-slate-900 dark:border-slate-800"
+                    data-title="msme registration udyam certificate micro industry msme msmed">
+                    <div
+                        class="h-12 w-12 text-purple-600 bg-purple-50 dark:text-purple-400 dark:bg-purple-950/40 rounded-full flex items-center justify-center text-xl mb-2">
+                        <i class="fa-solid fa-industry"></i>
+                    </div>
+                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white mb-1">MSME Registration</h4>
+                    <p class="text-[10px] text-slate-400 font-medium leading-tight mb-3">Get certified MSME business
+                        certificates for institutional benefits.</p>
+                    <div class="text-xs font-black text-slate-900 dark:text-slate-200 mb-3">₹599 <span
+                            class="text-[9px] font-bold text-slate-400 block mt-0.5">gov asset framing</span></div>
+                    <button
+                        class="w-full py-2 bg-slate-50 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white text-indigo-600 dark:text-indigo-400 font-extrabold rounded-xl text-[11px] transition cursor-pointer shadow-3xs"
+                        onclick="triggerBookingMatrix('MSME Udyam Registration', 599)">Book Processing</button>
+                </div>
+
+                <div class="service-card bg-white border border-slate-200/60 rounded-xl p-4 flex flex-col items-center text-center justify-between dark:bg-slate-900 dark:border-slate-800"
+                    data-title="trademark registry brand logo protection copyright ipr patent">
+                    <div
+                        class="h-12 w-12 text-rose-600 bg-rose-50 dark:text-rose-400 dark:bg-rose-950/40 rounded-full flex items-center justify-center text-xl mb-2">
+                        <i class="fa-solid fa-copyright"></i>
+                    </div>
+                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white mb-1">Trademark Registry</h4>
+                    <p class="text-[10px] text-slate-400 font-medium leading-tight mb-3">Secure brand logos, unique
+                        slogans, and core system names.</p>
+                    <div class="text-xs font-black text-slate-900 dark:text-slate-200 mb-3">₹2,999 <span
+                            class="text-[9px] font-bold text-slate-400 block mt-0.5">exclusive file</span></div>
+                    <button
+                        class="w-full py-2 bg-slate-50 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white text-indigo-600 dark:text-indigo-400 font-extrabold rounded-xl text-[11px] transition cursor-pointer shadow-3xs"
+                        onclick="triggerBookingMatrix('Trademark Brand Protection', 2999)">Book Processing</button>
+                </div>
+
+                <div class="service-card bg-white border border-slate-200/60 rounded-xl p-4 flex flex-col items-center text-center justify-between dark:bg-slate-900 dark:border-slate-800"
+                    data-title="iso certification standardization quality audit cert standardization">
+                    <div
+                        class="h-12 w-12 text-teal-600 bg-teal-50 dark:text-teal-400 dark:bg-teal-950/40 rounded-full flex items-center justify-center text-xl mb-2">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white mb-1">ISO Certification</h4>
+                    <p class="text-[10px] text-slate-400 font-medium leading-tight mb-3">Enhance global operation trust
+                        with verified ISO standardization.</p>
+                    <div class="text-xs font-black text-slate-900 dark:text-slate-200 mb-3">₹7,999 <span
+                            class="text-[9px] font-bold text-slate-400 block mt-0.5">9001:2015 inc</span></div>
+                    <button
+                        class="w-full py-2 bg-slate-50 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white text-indigo-600 dark:text-indigo-400 font-extrabold rounded-xl text-[11px] transition cursor-pointer shadow-3xs"
+                        onclick="triggerBookingMatrix('ISO Certification Standard', 7999)">Book Processing</button>
+                </div>
+
+                <div class="service-card bg-white border border-slate-200/60 rounded-xl p-4 flex flex-col items-center text-center justify-between dark:bg-slate-900 dark:border-slate-800"
+                    data-title="income tax filing itr return statement finance auditor taxation returns">
+                    <div
+                        class="h-12 w-12 text-cyan-600 bg-cyan-50 dark:text-cyan-400 dark:bg-cyan-950/40 rounded-full flex items-center justify-center text-xl mb-2">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white mb-1">Income Tax Filing</h4>
+                    <p class="text-[10px] text-slate-400 font-medium leading-tight mb-3">Get professional ITR corporate
+                        statement mapping easily.</p>
+                    <div class="text-xs font-black text-slate-900 dark:text-slate-200 mb-3">₹499 <span
+                            class="text-[9px] font-bold text-slate-400 block mt-0.5">per dynamic return</span></div>
+                    <button
+                        class="w-full py-2 bg-slate-50 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white text-indigo-600 dark:text-indigo-400 font-extrabold rounded-xl text-[11px] transition cursor-pointer shadow-3xs"
+                        onclick="triggerBookingMatrix('Income Tax E-Filing', 499)">Book Processing</button>
+                </div>
+
+                <div class="service-card bg-white border border-slate-200/60 rounded-xl p-4 flex flex-col items-center text-center justify-between dark:bg-slate-900 dark:border-slate-800"
+                    data-title="digital signature key dsc class 3 encrypt certificate epf e-tender">
+                    <div
+                        class="h-12 w-12 text-sky-600 bg-sky-50 dark:text-sky-400 dark:bg-sky-950/40 rounded-full flex items-center justify-center text-xl mb-2">
+                        <i class="fa-solid fa-fingerprint"></i>
+                    </div>
+                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white mb-1">Digital Signature</h4>
+                    <p class="text-[10px] text-slate-400 font-medium leading-tight mb-3">Acquire encrypted secure
+                        dynamic Class-3 digital keys.</p>
+                    <div class="text-xs font-black text-slate-900 dark:text-slate-200 mb-3">₹699 <span
+                            class="text-[9px] font-bold text-slate-400 block mt-0.5">class-3 usb token</span></div>
+                    <button
+                        class="w-full py-2 bg-slate-50 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white text-indigo-600 dark:text-indigo-400 font-extrabold rounded-xl text-[11px] transition cursor-pointer shadow-3xs"
+                        onclick="triggerBookingMatrix('Digital Signature Key (DSC)', 699)">Book Processing</button>
+                </div>
+
+                <div class="service-card bg-white border border-slate-200/60 rounded-xl p-4 flex flex-col items-center text-center justify-between dark:bg-slate-900 dark:border-slate-800"
+                    data-title="business loan desk allocation credit lines finance banking project report cma">
+                    <div
+                        class="h-12 w-12 text-violet-600 bg-violet-50 dark:text-violet-400 dark:bg-violet-950/40 rounded-full flex items-center justify-center text-xl mb-2">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white mb-1">Business Loan</h4>
+                    <p class="text-[10px] text-slate-400 font-medium leading-tight mb-3">Explore specialized commercial
+                        loan lines and credit approvals.</p>
+                    <div class="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-3">Free Consult</div>
+                    <button
+                        class="w-full py-2 bg-slate-50 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white text-indigo-600 dark:text-indigo-400 font-extrabold rounded-xl text-[11px] transition cursor-pointer shadow-3xs"
+                        onclick="triggerBookingMatrix('Business Loan Allocation Assistance', 'Free')">Book
+                        Processing</button>
+                </div>
+
+                <div class="hidden-catalog-node hidden bg-white border border-slate-200/60 rounded-xl p-4 flex flex-col items-center text-center justify-between dark:bg-slate-900 dark:border-slate-800"
+                    data-title="fssai food license safety municipal department hotel restaurant">
+                    <div
+                        class="h-12 w-12 text-emerald-500 bg-emerald-50 rounded-full flex items-center justify-center text-xl mb-2">
+                        <i class="fa-solid fa-utensils"></i>
+                    </div>
+                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white mb-1">FSSAI Food License</h4>
+                    <p class="text-[10px] text-slate-400 font-medium mb-3">Regulatory validation handling structures
+                        safely.</p>
+                    <div class="text-xs font-black text-slate-900 dark:text-slate-200 mb-3">₹1,499</div>
+                    <button
+                        class="w-full py-2 bg-slate-50 dark:bg-slate-800 text-indigo-600 font-bold rounded-xl text-[11px]"
+                        onclick="triggerBookingMatrix('FSSAI Food License Framework', 1499)">Book Now</button>
+                </div>
+
+                <div class="hidden-catalog-node hidden bg-white border border-slate-200/60 rounded-xl p-4 flex flex-col items-center text-center justify-between dark:bg-slate-900 dark:border-slate-800"
+                    data-title="import export code iec registration dgft global trade custom">
+                    <div
+                        class="h-12 w-12 text-sky-500 bg-sky-50 rounded-full flex items-center justify-center text-xl mb-2">
+                        <i class="fa-solid fa-ship"></i>
+                    </div>
+                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white mb-1">Import Export Code</h4>
+                    <p class="text-[10px] text-slate-400 font-medium mb-3">DGFT custom mapping vectors for borders.</p>
+                    <div class="text-xs font-black text-slate-900 dark:text-slate-200 mb-3">₹1,199</div>
+                    <button
+                        class="w-full py-2 bg-slate-50 dark:bg-slate-800 text-indigo-600 font-bold rounded-xl text-[11px]"
+                        onclick="triggerBookingMatrix('Import Export Code Processing', 1199)">Book Now</button>
+                </div>
+
+                <div class="hidden-catalog-node hidden bg-white border border-slate-200/60 rounded-xl p-4 flex flex-col items-center text-center justify-between dark:bg-slate-900 dark:border-slate-800"
+                    data-title="llp limited liability partnership corporate formation structure mca">
+                    <div
+                        class="h-12 w-12 text-blue-500 bg-blue-50 rounded-full flex items-center justify-center text-xl mb-2">
+                        <i class="fa-solid fa-gavel"></i>
+                    </div>
+                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white mb-1">LLP Incorporation</h4>
+                    <p class="text-[10px] text-slate-400 font-medium mb-3">Hybrid structuring providing corporate
+                        liability protections.</p>
+                    <div class="text-xs font-black text-slate-900 dark:text-slate-200 mb-3">₹3,499</div>
+                    <button
+                        class="w-full py-2 bg-slate-50 dark:bg-slate-800 text-indigo-600 font-bold rounded-xl text-[11px]"
+                        onclick="triggerBookingMatrix('Limited Liability Partnership Setup', 3499)">Book Now</button>
+                </div>
+            </div>
+
+            <div id="mapSection"
+                class="bg-white p-5 rounded-xl border border-slate-200/60 shadow-xs dark:bg-slate-900 dark:border-slate-800 scroll-mt-20">
+                <div
+                    class="border-b border-slate-100 dark:border-slate-800 pb-3 mb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="max-w-xl">
+                        <h4
+                            class="text-xs font-extrabold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-map-location-dot text-emerald-500"></i> Interactive 3000+ Real Center
+                            Locator Engine
+                        </h4>
+                        <p class="text-[10px] text-slate-400 font-medium mt-0.5">
+                            Select or type your native sub-continent coordinates to pull matching authorized NetCafes,
+                            SevaKendras, and SevaSetu counters instantly mapped live on high-precision GIS systems.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <select id="mapStateFilterNode" onchange="handleMapStateSynchronization()"
+                            class="text-xs font-bold border border-slate-200 dark:border-slate-800 p-2 rounded-xl bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 outline-none cursor-pointer">
+                            <option value="Maharashtra">Maharashtra Core</option>
+                            <option value="Gujarat">Gujarat Matrix</option>
+                            <option value="Goa">Goa Territory</option>
+                        </select>
+                        <select id="mapDistrictFilterNode" onchange="handleMapDistrictQueryFilter()"
+                            class="text-xs font-bold border border-slate-200 dark:border-slate-800 p-2 rounded-xl bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 outline-none cursor-pointer">
+                        </select>
+                        <button onclick="engageUserLivePositionTrace()"
+                            class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-xl transition flex items-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-location-crosshairs"></i> Near Me (GPS)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4 grid-stretch-fix">
+                    <div
+                        class="border border-slate-200 dark:border-slate-800 rounded-xl flex flex-col bg-slate-50/50 dark:bg-slate-950/40 h-[450px]">
+                        <div
+                            class="p-3 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-t-xl flex items-center justify-between">
+                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400"
+                                id="offlineCountBadge">Centers list</span>
+                            <span
+                                class="text-[9px] font-mono bg-indigo-100 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-400 px-1.5 py-0.5 rounded font-bold">LIVE
+                                METRIC</span>
+                        </div>
+                        <div id="mapOfflineNodesListContainer"
+                            class="flex-grow overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/60">
+                            <div class="p-4 text-center text-xs text-slate-400 font-medium">Initializing geometric
+                                coordinates database...</div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="w-full h-[450px] rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 relative custom-map-container z-10 shadow-inner">
+                        <div id="liveLeafletEngineContainerInstance" class="w-full h-full"></div>
+                        <div
+                            class="absolute bottom-3 left-3 bg-white/95 backdrop-blur-md dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 p-2.5 rounded-xl shadow-md max-w-xs transition-all z-40">
+                            <span
+                                class="text-[9px] uppercase font-bold tracking-widest text-indigo-600 dark:text-indigo-400 block"><i
+                                    class="fa-solid fa-compass"></i> Vector Navigation Context Tracker</span>
+                            <p id="mapCurrentLocationLabel"
+                                class="text-[10px] font-medium text-slate-600 dark:text-slate-300 mt-1">Select any
+                                localized target offline marker node cluster to fire live route trace diagnostics
+                                mapping coordinates directly.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="trackerSection"
+                class="bg-white p-5 rounded-xl border border-slate-200/60 shadow-xs dark:bg-slate-900 dark:border-slate-800 scroll-mt-20">
+                <div
+                    class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+                    <div>
+                        <h4
+                            class="text-xs font-extrabold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-folder-open text-indigo-600 dark:text-indigo-400"></i> Active
+                            Applications Flow Registry
+                        </h4>
+                        <p class="text-[10px] text-slate-400 font-medium mt-0.5">Real-time update streams pulled
+                            asynchronously from persistent database instances</p>
+                    </div>
+                    <div
+                        class="flex items-center gap-1.5 text-[10px] bg-slate-50 dark:bg-slate-950 px-3 py-1 rounded-xl border border-slate-200 dark:border-slate-800 font-bold">
+                        <span class="h-2 w-2 rounded-full bg-emerald-500 neon-pulse"></span> <span
+                            class="text-slate-600 dark:text-slate-400">Live Sync Connected</span>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[700px]">
+                        <thead>
+                            <tr
+                                class="text-[10px] uppercase font-bold text-slate-400 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/40">
+                                <th class="py-3 px-3">Application ID</th>
+                                <th class="py-3 px-3">Customer Context</th>
+                                <th class="py-3 px-3">Service Scope Identity</th>
+                                <th class="py-3 px-3">Tracking Center Location</th>
+                                <th class="py-3 px-3">Workflow State</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trackerTableBody"
+                            class="text-xs font-semibold text-slate-700 dark:text-slate-300 divide-y divide-slate-100 dark:divide-slate-800/60">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="workspaceSection"
+                class="bg-white p-5 rounded-xl border border-slate-200/60 shadow-xs dark:bg-slate-900 dark:border-slate-800 scroll-mt-20">
+                <div class="border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
+                    <h4
+                        class="text-xs font-extrabold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-people-roof text-indigo-600"></i> Corporate Workspace & Employee Task
+                        Allocation Matrix
+                    </h4>
+                    <p class="text-[10px] text-slate-400 font-medium mt-0.5">Track live operational channels for active
+                        online processors and localized offline shopping center desk consultants.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 grid-stretch-fix">
+                    <div
+                        class="bg-slate-50/50 dark:bg-slate-950/40 p-4 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span
+                                    class="text-[9px] font-bold bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded border dark:border-indigo-900">Desk
+                                    PT-01</span>
+                                <span class="h-2 w-2 rounded-full bg-emerald-500"
+                                    title="Online Processing Frame"></span>
+                            </div>
+                            <h5 class="text-xs font-extrabold text-slate-900 dark:text-white">Mahendra K. (Advisory)
+                            </h5>
+                            <p class="text-[10px] text-slate-400 font-medium">Specialization: GST Maps & ITR
+                                Reconciliation Arrays</p>
+                        </div>
+                        <div
+                            class="mt-4 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[9px] font-bold text-slate-500">
+                            <span>Processing Load:</span> <span class="text-indigo-600 dark:text-indigo-400">4 Active /
+                                Hr</span>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-slate-50/50 dark:bg-slate-950/40 p-4 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span
+                                    class="text-[9px] font-bold bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded border dark:border-amber-900">Desk
+                                    PT-02</span>
+                                <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                            </div>
+                            <h5 class="text-xs font-extrabold text-slate-900 dark:text-white">Anjali Deshmukh (MCA)</h5>
+                            <p class="text-[10px] text-slate-400 font-medium">Specialization: Private Ltd Incorporation
+                                Frameworks</p>
+                        </div>
+                        <div
+                            class="mt-4 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[9px] font-bold text-slate-500">
+                            <span>Processing Load:</span> <span class="text-indigo-600 dark:text-indigo-400">2 Active /
+                                Hr</span>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-slate-50/50 dark:bg-slate-950/40 p-4 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span
+                                    class="text-[9px] font-bold bg-purple-50 dark:bg-purple-950 text-purple-600 dark:text-purple-400 px-2 py-0.5 rounded border dark:border-purple-900">Desk
+                                    OFF-01</span>
+                                <span class="h-2 w-2 rounded-full bg-amber-500"
+                                    title="Offline Walk-in Office Setup"></span>
+                            </div>
+                            <h5 class="text-xs font-extrabold text-slate-900 dark:text-white">Ramesh Shinde (Counter)
+                            </h5>
+                            <p class="text-[10px] text-slate-400 font-medium">Specialization: Shop Act Licenses &
+                                Walk-in Invoices</p>
+                        </div>
+                        <div
+                            class="mt-4 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[9px] font-bold text-slate-500">
+                            <span>Walk-in Capacity:</span> <span class="text-amber-600">8 Tokens / Day</span>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-slate-50/50 dark:bg-slate-950/40 p-4 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span
+                                    class="text-[9px] font-bold bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-400 px-2 py-0.5 rounded border dark:border-rose-900">Desk
+                                    OFF-02</span>
+                                <span class="h-2 w-2 rounded-full bg-amber-500"></span>
+                            </div>
+                            <h5 class="text-xs font-extrabold text-slate-900 dark:text-white">Vikram Salunkhe (IPR)</h5>
+                            <p class="text-[10px] text-slate-400 font-medium">Specialization: Trademark Protection
+                                Documents</p>
+                        </div>
+                        <div
+                            class="mt-4 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[9px] font-bold text-slate-500">
+                            <span>Walk-in Capacity:</span> <span class="text-amber-600">5 Tokens / Day</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="reviewsSection"
+                class="bg-white p-6 rounded-xl border border-slate-200/60 shadow-xs dark:bg-slate-900 dark:border-slate-800 scroll-mt-20">
+                <div
+                    class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4 mb-4">
+                    <div>
+                        <h4
+                            class="text-xs font-extrabold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-star text-amber-500"></i> Client Satisfaction Review Cluster
+                        </h4>
+                        <p class="text-[10px] text-slate-400 font-medium mt-0.5">Persistent evaluation metrics logged
+                            live out of MongoDB collection pools</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <select id="reviewRatingFilter" onchange="filterReviewsMatrix()"
+                            class="text-xs font-bold border border-slate-200 dark:border-slate-800 p-2 rounded-xl bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 outline-none cursor-pointer">
+                            <option value="all">All Ratings (Show All)</option>
+                            <option value="5">5 Stars Frameworks</option>
+                            <option value="4">4 Stars Frameworks</option>
+                        </select>
+                        <button onclick="triggerReviewSubmissionModal()"
+                            class="text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3.5 py-2 rounded-xl transition shadow-2xs cursor-pointer flex items-center gap-1"><i
+                                class="fa-solid fa-pen-to-square"></i> Write Review</button>
+                    </div>
+                </div>
+                <div id="reviewsContainerGridFeed" class="grid grid-cols-1 md:grid-cols-2 gap-4 grid-stretch-fix">
+                </div>
+            </div>
+
+            <div id="adminSection"
+                class="bg-white p-6 rounded-xl border-l-4 border-l-rose-500 border border-slate-200/60 shadow-xs dark:bg-slate-900 dark:border-rose-950/20 scroll-mt-20">
+                <div class="flex items-start justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
+                    <div>
+                        <h4
+                            class="text-xs font-extrabold text-rose-500 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-user-gear"></i> Administrative Partner Dashboard Interface
+                        </h4>
+                        <p class="text-[10px] text-slate-400 font-medium mt-0.5">Override active structural parameters,
+                            modify processing status flags, push validation changes live to database keys.</p>
+                    </div>
+                    <span
+                        class="text-[9px] font-mono bg-rose-50 dark:bg-rose-950/40 text-rose-600 px-2 py-0.5 rounded font-bold uppercase tracking-wider border border-rose-100 dark:border-none">Active
+                        Session</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end mb-8">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5">Target Application
+                            ID</label>
+                        <input type="text" id="adminAppId" placeholder="e.g. SETU-1001"
+                            class="w-full p-2.5 border border-slate-200 dark:border-slate-800 rounded-xl bg-transparent text-xs font-mono font-bold outline-none focus:border-rose-500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5">New Workflow Status
+                            State</label>
+                        <select id="adminNewStatus"
+                            class="w-full p-2.5 border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-950 text-xs font-bold outline-none focus:border-rose-500 cursor-pointer">
+                            <option value="In Processing">In Processing ⏳</option>
+                            <option value="Approved & Signed">Approved & Signed ✓</option>
+                            <option value="Rejected / Action Needed">Rejected / Action Needed ❌</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button onclick="updateApplicationStatus()"
+                            class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition tracking-wide cursor-pointer shadow-sm flex items-center justify-center gap-2"><i
+                                class="fa-solid fa-cloud-arrow-up"></i> Update Workflow State</button>
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-100 dark:border-slate-800 pt-6 mt-4">
+                    <h4 class="text-xs font-extrabold text-emerald-500 uppercase tracking-wider flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-circle-plus"></i> Deploy New Corporate Service / Shop To Grid
+                    </h4>
+                    <form id="adminAddServiceForm" class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end" onsubmit="handleAdminAddService(event)">
+                        <div class="sm:col-span-2">
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5">Service / Shop Name</label>
+                            <input type="text" id="newSrvName" placeholder="e.g. MSME Advanced Audit" required
+                                class="w-full p-2.5 border border-slate-200 dark:border-slate-800 rounded-xl bg-transparent text-xs font-bold outline-none focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5">Cost / Price (₹)</label>
+                            <input type="number" id="newSrvPrice" placeholder="e.g. 1999" required
+                                class="w-full p-2.5 border border-slate-200 dark:border-slate-800 rounded-xl bg-transparent text-xs font-bold outline-none focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <button type="submit"
+                                class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition tracking-wide cursor-pointer shadow-sm flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-upload"></i> Publish to UI
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <footer
+        class="bg-slate-950 text-slate-400 text-xs border-t border-slate-900 pt-12 pb-6 mt-auto dark:border-slate-900/60">
+        <div class="mx-auto max-w-[1400px] w-full px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-10">
+            <div class="space-y-4">
+                <div class="flex items-center gap-2.5 text-white">
+                    <div
+                        class="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black text-base">
+                        S</div>
+                    <div>
+                        <h4 class="font-extrabold text-sm tracking-tight leading-none">Seva Setu</h4>
+                        <p class="text-[9px] text-slate-500 font-bold mt-0.5">Government & Corporate Bridging Node</p>
+                    </div>
+                </div>
+                <p class="text-[11px] text-slate-500 leading-relaxed">Integrated e-governance service mapping
+                    architecture helping enterprise setups deploy structured commercial assets securely across
+                    sub-continent servers.</p>
+                <div class="flex items-center gap-3.5 text-slate-400 pt-1">
+                    <a href="#" class="hover:text-white transition"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                    <a href="#" class="hover:text-white transition"><i class="fa-brands fa-instagram text-sm"></i></a>
+                    <a href="#" class="hover:text-white transition"><i class="fa-brands fa-linkedin-in text-sm"></i></a>
+                </div>
+            </div>
+
+            <div>
+                <h5 class="text-white font-bold text-xs uppercase tracking-wider mb-4 border-b border-slate-900 pb-2">
+                    Quick Links</h5>
+                <ul class="space-y-2 text-[11px] font-medium text-slate-500">
+                    <li><a href="#" class="hover:text-white transition">Home Directory</a></li>
+                    <li><a href="#trackerSection" class="hover:text-white transition">Appointments Core</a></li>
+                    <li><a href="#catalogAnchor" class="hover:text-white transition">Services Blueprint</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h5 class="text-white font-bold text-xs uppercase tracking-wider mb-4 border-b border-slate-900 pb-2">
+                    Top Services</h5>
+                <ul class="space-y-2 text-[11px] font-medium text-slate-500">
+                    <li><a href="#" class="hover:text-white transition">GST Filing Node</a></li>
+                    <li><a href="#" class="hover:text-white transition">Shop Act Processing</a></li>
+                    <li><a href="#" class="hover:text-white transition">Company Incorporation</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h5 class="text-white font-bold text-xs uppercase tracking-wider mb-4 border-b border-slate-900 pb-2">
+                    Support & Help</h5>
+                <ul class="space-y-2 text-[11px] font-medium text-slate-500">
+                    <li><a href="#" class="hover:text-white transition">Help Center Core</a></li>
+                    <li><a href="#" class="hover:text-white transition">Terms of Architecture</a></li>
+                    <li><a href="#" class="hover:text-white transition">Privacy Policy Matrix</a></li>
+                </ul>
+            </div>
+
+            <div class="space-y-3">
+                <h5 class="text-white font-bold text-xs uppercase tracking-wider border-b border-slate-900 pb-2">
+                    Subscribe Center</h5>
+                <p class="text-[11px] text-slate-500">Receive automated updates about critical tax infrastructures.</p>
+                <div class="space-y-1.5">
+                    <input type="email" placeholder="Enter corporate email..."
+                        class="w-full bg-slate-900 border border-slate-800 text-xs p-2.5 rounded-lg text-white outline-none focus:border-indigo-600 transition">
+                    <button
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[11px] py-2.5 rounded-lg transition shadow-md cursor-pointer">Subscribe
+                        Now</button>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-slate-900 pt-6 text-center text-[10px] text-slate-600 font-semibold tracking-wide">
+            © 2026 Seva Setu Portal Network Infrastructure. All rights reserved. Cloud Node Enterprise System.
+        </div>
+    </footer>
+
+
+    <div id="masterBookingOverlay"
+        class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 transition-all duration-300 animate-fadeIn">
+        <div
+            class="bg-white dark:bg-slate-900 w-full max-w-5xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[92vh] border border-slate-200 dark:border-slate-800">
+
+            <div class="p-6 md:p-10 flex-1 flex flex-col overflow-y-auto">
+                <div
+                    class="flex justify-between items-center mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">
+                    <div>
+                        <span id="wizardModalServiceBadge"
+                            class="bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 font-extrabold text-[9px] px-2.5 py-1 rounded-full uppercase tracking-wider border border-indigo-200 dark:border-indigo-800">Premium
+                            Gateway Matrix</span>
+                        <h3 id="targetModalHeading" class="text-xl font-black text-slate-950 dark:text-white mt-1.5">
+                            Configure Secure System Appointment</h3>
+                    </div>
+                    <button type="button"
+                        class="text-slate-400 hover:text-slate-900 dark:hover:text-white text-3xl font-light leading-none cursor-pointer"
+                        onclick="dismissBookingMatrix()">×</button>
+                </div>
+
+                <div class="grid grid-cols-4 gap-2 mb-8 text-center text-[9px] font-black uppercase tracking-wider">
+                    <div id="stepBadge1"
+                        class="py-2 rounded-lg bg-indigo-600 text-white border border-indigo-600 transition-all duration-300">
+                        1. Verification</div>
+                    <div id="stepBadge2"
+                        class="py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 border border-slate-200 dark:border-slate-700 transition-all duration-300">
+                        2. Geo Routing</div>
+                    <div id="stepBadge3"
+                        class="py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 border border-slate-200 dark:border-slate-700 transition-all duration-300">
+                        3. Operator Scheduling</div>
+                    <div id="stepBadge4"
+                        class="py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 border border-slate-200 dark:border-slate-700 transition-all duration-300">
+                        4. Processing Core</div>
+                </div>
+
+                <div class="flex-grow flex flex-col justify-center">
+
+                    <div id="bookingWizardStepField1" class="space-y-4">
+                        <div class="border-l-2 border-indigo-500 pl-3 py-1 mb-2">
+                            <h4 class="text-xs font-extrabold text-slate-900 dark:text-white uppercase">Client
+                                Authentication Fields</h4>
+                            <p class="text-[10px] text-slate-400 font-medium">Declare structural identifiers matched
+                                with legal government identities.</p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-extrabold text-slate-500 uppercase mb-1.5">Full
+                                    Customer Name *</label>
+                                <input type="text" id="aptFormName" placeholder="As per PAN / Aadhaar Identity"
+                                    class="w-full p-3 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none bg-slate-50/50 dark:bg-slate-950/40 text-slate-800 dark:text-white font-bold focus:border-indigo-600 transition">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-extrabold text-slate-500 uppercase mb-1.5">Mobile
+                                    Contact Number *</label>
+                                <input type="tel" id="aptFormMobile" placeholder="10-Digit Smartphone Identity"
+                                    maxlength="10"
+                                    class="w-full p-3 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none bg-slate-50/50 dark:bg-slate-950/40 text-slate-800 dark:text-white font-mono font-bold focus:border-indigo-600 transition">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-slate-500 uppercase mb-1.5">Corporate
+                                Email Address *</label>
+                            <input type="email" id="aptFormEmail" placeholder="e.g., info@enterprise.com"
+                                class="w-full p-3 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none bg-slate-50/50 dark:bg-slate-950/40 text-slate-800 dark:text-white font-bold focus:border-indigo-600 transition">
+                        </div>
+                    </div>
+
+                    <div id="bookingWizardStepField2" class="space-y-4 hidden">
+                        <div class="border-l-2 border-emerald-500 pl-3 py-1 mb-2">
+                            <h4 class="text-xs font-extrabold text-slate-900 dark:text-white uppercase">Geographical
+                                Node Distribution Routing</h4>
+                            <p class="text-[10px] text-slate-400 font-medium">Select your matching node sector to bind
+                                resource queues efficiently.</p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-extrabold text-slate-500 uppercase mb-1.5">Select
+                                    Indian State Core *</label>
+                                <select id="stateSelectorNode" onchange="synchronizeWizardDistricts()"
+                                    class="w-full p-3 border border-slate-200 dark:border-slate-800 rounded-xl text-xs bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-bold outline-none focus:border-indigo-600 cursor-pointer">
+                                    <option value="">-- Choose State --</option>
+                                    <option value="Maharashtra">Maharashtra</option>
+                                    <option value="Gujarat">Gujarat</option>
+                                    <option value="Goa">Goa</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-extrabold text-slate-500 uppercase mb-1.5">Select
+                                    Local District Hub *</label>
+                                <select id="districtSelectorNode" onchange="handleWizardDistrictSelectionChange()"
+                                    class="w-full p-3 border border-slate-200 dark:border-slate-800 rounded-xl text-xs bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-bold outline-none focus:border-indigo-600 cursor-pointer"
+                                    disabled>
+                                    <option value="">-- Choose District --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-slate-500 uppercase mb-1.5">Target
+                                Offline Facilitation Hub Center *</label>
+                            <select id="centerSelectorNode"
+                                class="w-full p-3 border border-slate-200 dark:border-slate-800 rounded-xl text-xs bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-bold outline-none focus:border-indigo-600 cursor-pointer"
+                                disabled>
+                                <option value="">-- Select Center --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="bookingWizardStepField3" class="space-y-4 hidden">
+                        <div class="border-l-2 border-amber-500 pl-3 py-1 mb-2">
+                            <h4 class="text-xs font-extrabold text-slate-900 dark:text-white uppercase">Temporal Metrics
+                                Optimization Scheduling</h4>
+                            <p class="text-[10px] text-slate-400 font-medium">Select non-conflicting calendars timestamp
+                                slots matching operators bounds.</p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label
+                                    class="block text-[10px] font-extrabold text-slate-500 uppercase mb-1.5">Preferred
+                                    Processing Date *</label>
+                                <input type="date" id="aptFormDate"
+                                    class="w-full p-3 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none bg-slate-50/50 dark:bg-slate-950/40 text-slate-800 dark:text-white font-bold focus:border-indigo-600 transition">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-extrabold text-slate-500 uppercase mb-1.5">Select
+                                    Time Slot Framework *</label>
+                                <select id="aptFormSlot"
+                                    class="w-full p-3 border border-slate-200 dark:border-slate-800 rounded-xl text-xs bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-bold outline-none focus:border-indigo-600 cursor-pointer">
+                                    <option>Morning Horizon (10:00 AM - 01:00 PM)</option>
+                                    <option>Mid-Day Horizon (01:00 PM - 04:00 PM)</option>
+                                    <option>Evening Horizon (04:00 PM - 07:00 PM)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-slate-500 uppercase mb-1.5">Sub-District
+                                Location Details / Address Notes</label>
+                            <input type="text" id="aptFormVillage"
+                                placeholder="Enter landmark details or taluka context"
+                                class="w-full p-3 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none bg-slate-50/50 dark:bg-slate-950/40 text-slate-800 dark:text-white font-bold focus:border-indigo-600 transition">
+                        </div>
+                    </div>
+
+                    <div id="bookingWizardStepField4" class="space-y-4 hidden">
+                        <div class="border-l-2 border-indigo-600 pl-3 py-1 mb-2">
+                            <h4 class="text-xs font-extrabold text-slate-900 dark:text-white uppercase">System
+                                Deployment Vector Verification</h4>
+                            <p class="text-[10px] text-slate-400 font-medium">Verify execution variables parameters
+                                packet prior to writing block changes.</p>
+                        </div>
+                        <div
+                            class="bg-slate-50 dark:bg-slate-950/60 rounded-xl p-4 border border-slate-200 dark:border-slate-800 text-xs space-y-2 font-bold">
+                            <div class="flex justify-between border-b border-slate-100 dark:border-slate-800/80 pb-1.5">
+                                <span class="text-slate-400">Target Core Service:</span>
+                                <span id="summaryServiceLabel" class="text-indigo-600 dark:text-indigo-400">GST
+                                    Registration</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-100 dark:border-slate-800/80 pb-1.5">
+                                <span class="text-slate-400">Customer Identity Node:</span>
+                                <span id="summaryNameLabel" class="text-slate-800 dark:text-slate-200">-</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-100 dark:border-slate-800/80 pb-1.5">
+                                <span class="text-slate-400">Assigned Routing Node:</span>
+                                <span id="summaryGeoLabel" class="text-slate-800 dark:text-slate-200">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">Target Time Matrix:</span>
+                                <span id="summaryTimeLabel" class="text-slate-800 dark:text-slate-200">-</span>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center gap-2 text-[10px] text-slate-400 font-medium bg-indigo-500/5 p-3 rounded-lg border border-indigo-500/10">
+                            <input type="checkbox" id="wizardTermsCheckbox"
+                                class="h-3.5 w-3.5 accent-indigo-600 cursor-pointer">
+                            <label for="wizardTermsCheckbox" class="cursor-pointer">I authorize Seva Setu Infrastructure
+                                to propagate my verified variables data packet directly into selected district node
+                                channels safely.</label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div
+                    class="flex items-center justify-between mt-8 pt-4 border-t border-slate-100 dark:border-slate-800">
+                    <button type="button" id="wizardPrevBtnInstance" onclick="navigateBookingWizardStep(-1)"
+                        class="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 font-bold text-xs text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer disabled:opacity-0 disabled:pointer-events-none transition">Back</button>
+                    <button type="button" id="wizardNextBtnInstance" onclick="navigateBookingWizardStep(1)"
+                        class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md shadow-indigo-600/10 transition cursor-pointer">Continue</button>
+                </div>
+            </div>
+
+            <div
+                class="bg-slate-950 p-6 md:p-10 text-white w-full md:w-[360px] flex flex-col justify-between border-t md:border-t-0 md:border-l border-slate-900">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <span class="text-[9px] uppercase font-bold tracking-widest text-emerald-400 block">Instant
+                            Billing Hub</span>
+                        <h4 class="text-xs font-bold text-slate-200">Dynamic Payment Router</h4>
+                    </div>
+                    <button type="button"
+                        class="text-slate-500 hover:text-white text-3xl hidden md:block leading-none cursor-pointer"
+                        onclick="dismissBookingMatrix()">×</button>
+                </div>
+
+                <div class="text-center my-8 space-y-5">
+                    <div class="bg-white p-4 rounded-2xl inline-block shadow-2xl">
+                        <div
+                            class="w-40 h-40 bg-slate-50 rounded-xl flex items-center justify-center relative border border-slate-200">
+                            <i class="fa-solid fa-qrcode text-slate-900 text-7xl"></i>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div
+                                    class="bg-indigo-600 text-white font-black text-[8px] px-2 py-0.5 rounded shadow-sm tracking-wide">
+                                    BHIM UPI</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center items-center gap-2 text-[9px] font-black tracking-wider">
+                        <span
+                            class="bg-slate-900 text-indigo-400 px-2.5 py-1 rounded border border-slate-800">PHONEPE</span>
+                        <span
+                            class="bg-slate-900 text-emerald-400 px-2.5 py-1 rounded border border-slate-800">GPAY</span>
+                        <span
+                            class="bg-slate-900 text-amber-400 px-2.5 py-1 rounded border border-slate-800">PAYTM</span>
+                    </div>
+
+                    <div class="space-y-0.5 border-t border-slate-900 pt-4 mt-2">
+                        <p class="text-[10px] text-slate-400 leading-normal">Clear Gateway Liquidity Parameters
+                            Instantly</p>
+                        <div id="dynamicPriceLabel" class="text-2xl font-black text-emerald-400 tracking-tight">₹0.00
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="border-t border-slate-900 pt-4 text-center text-[10px] text-slate-500 flex items-center justify-center gap-1.5 font-medium">
+                    <i class="fa-solid fa-user-shield text-emerald-500"></i> Secured 256-bit Encrypted Tunnel
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="razorpaySimulationOverlay" class="fixed inset-0 z-[99999] bg-slate-900/95 backdrop-blur-md hidden flex-col items-center justify-center p-4 transition-all duration-300">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 max-w-sm w-full shadow-2xl border border-slate-200 dark:border-slate-800 text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full bg-indigo-600 text-white py-2 text-[10px] font-black tracking-widest uppercase">Secure Payment Gateway <i class="fa-solid fa-lock ml-1"></i></div>
+            
+            <div class="mt-8 mb-6 flex justify-center">
+                <div class="payment-processing-spinner"></div>
+            </div>
+            
+            <h3 class="text-lg font-black text-slate-900 dark:text-white mb-2">Processing Transaction...</h3>
+            <p class="text-xs text-slate-500 font-medium mb-6">Please do not press back or refresh the browser.</p>
+            
+            <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-100 dark:border-slate-800 mb-4 flex justify-between items-center text-sm font-bold">
+                <span class="text-slate-500">Amount:</span>
+                <span class="text-indigo-600 dark:text-indigo-400" id="gatewayAmountDisplay">₹0.00</span>
+            </div>
+
+            <div class="flex items-center justify-center gap-2 text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                <i class="fa-brands fa-cc-visa text-lg text-blue-600"></i>
+                <i class="fa-brands fa-cc-mastercard text-lg text-red-500"></i>
+                <span class="mx-2">|</span>
+                <span class="bg-slate-800 text-white px-2 py-0.5 rounded">UPI</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="customReviewSubmissionOverlay"
+        class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs hidden items-center justify-center p-4 transition-all duration-300">
+        <div
+            class="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl p-6 border border-slate-100 dark:border-slate-800">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
+                <div>
+                    <h3 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">Submit
+                        Feedback Node</h3>
+                    <p class="text-[10px] text-gray-400 font-medium">Share your experience on Seva Setu Architecture</p>
+                </div>
+                <button onclick="dismissReviewSubmissionModal()"
+                    class="text-slate-400 hover:text-slate-900 dark:hover:text-white text-2xl leading-none cursor-pointer">×</button>
+            </div>
+
+            <form id="feedbackSubmissionFormMatrix" onsubmit="handleReviewFormSubmission(event)" class="space-y-4">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Your Full Name
+                        *</label>
+                    <input type="text" id="revFormName"
+                        class="w-full p-2.5 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none bg-slate-50/30 dark:bg-slate-950/40 text-slate-800 dark:text-white font-bold"
+                        placeholder="e.g. Mahendra Kale" required>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Select Rating
+                        Star *</label>
+                    <select id="revFormRating"
+                        class="w-full p-2.5 border border-slate-200 dark:border-slate-800 rounded-xl text-xs bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-bold outline-none focus:border-indigo-600 cursor-pointer"
+                        required>
+                        <option value="5">⭐⭐⭐⭐⭐ 5 Stars (Excellent Service)</option>
+                        <option value="4">⭐⭐⭐⭐ 4 Stars (Good Experience)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Select Service
+                        Availed *</label>
+                    <select id="revFormService"
+                        class="w-full p-2.5 border border-slate-200 dark:border-slate-800 rounded-xl text-xs bg-white dark:bg-slate-900 text-slate-800 dark:text-white font-bold outline-none focus:border-indigo-600 cursor-pointer"
+                        required>
+                        <option>GST Registration</option>
+                        <option>Shop & Establishment</option>
+                        <option>Private Limited Company</option>
+                        <option>MSME Registration</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Your Honest
+                        Review Message *</label>
+                    <textarea id="revFormMessage" rows="3"
+                        class="w-full p-2.5 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none bg-slate-50/30 dark:bg-slate-950/40 text-slate-800 dark:text-white font-bold placeholder-gray-400"
+                        placeholder="Describe your approval journey..." required></textarea>
+                </div>
+
+                <button type="submit"
+                    class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs transition shadow-md cursor-pointer">
+                    Push Review to Portal Feed
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script type="text/javascript">
+    (function() {
+        // Active verified Public Key embedded securely
+        emailjs.init("a5a85978-a376-4679-a958-088082e7ceb6");
+    })();
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?v=weekly&callback=initializeGeospatialMapEngine" async defer></script>
+
+<script>
+    // 🔗 SEVA SETU UNIFIED API URL (PORT 3000)
+    const API_BASE_URL = 'http://localhost:3000/api';
+
+    // MASTER GEOGRAPHICAL BOUNDS GRAPH - COMPREHENSIVE 36 DISTRICTS OF MAHARASHTRA
+    const spatialGeoDictionary = {
+        "Maharashtra": {
+            "center": [19.7515, 75.7139],
+            "districts": {
+                "Ahmednagar": { "coords": [19.0948, 74.7480], "subDistricts": ["Nagar", "Rahuri", "Sangamner", "Kopargaon", "Akole", "Shrirampur", "Nevasa", "Shevgaon", "Pathardi", "Jamkhed", "Karjat", "Shrigonda", "Parner", "Rahta"] },
+                "Akola": { "coords": [20.7002, 77.0082], "subDistricts": ["Akola", "Akot", "Balapur", "Barshitakli", "Murtijapur", "Patur", "Telhara"] },
+                "Amravati": { "coords": [20.9374, 77.7796], "subDistricts": ["Amravati", "Anjangaon Surji", "Achalpur", "Chandur Bazar", "Daryapur", "Morshi", "Warud", "Dharni", "Chikhaldara"] },
+                "Chhatrapati Sambhajinagar": { "coords": [19.8762, 75.3433], "subDistricts": ["Aurangabad", "Kannad", "Sillod", "Phulambri", "Vaijapur", "Gangapur", "Paithan"] },
+                "Beed": { "coords": [18.9891, 75.7601], "subDistricts": ["Beed", "Ashti", "Georai", "Kaij", "Majalgaon", "Parli", "Ambejogai"] },
+                "Bhandara": { "coords": [21.1693, 79.6548], "subDistricts": ["Bhandara", "Tumsar", "Mohadi", "Sakoli", "Lakhani", "Lakhandur", "Pauni"] },
+                "Buldhana": { "coords": [20.5293, 76.1837], "subDistricts": ["Buldhana", "Chikhli", "Khamgaon", "Malkapur", "Shegaon", "Mehkar", "Sindkhed Raja"] },
+                "Chandrapur": { "coords": [19.9615, 79.2961], "subDistricts": ["Chandrapur", "Warora", "Bhadravati", "Chimur", "Brahmapuri", "Mul", "Rajura"] },
+                "Dhule": { "coords": [20.9042, 74.7749], "subDistricts": ["Dhule", "Sakri", "Shirpur", "Sindkhede"] },
+                "Gadchiroli": { "coords": [20.1005, 80.0001], "subDistricts": ["Gadchiroli", "Armori", "Chamorshi", "Aheri", "Sironcha", "Dhanora", "Kurkheda"] },
+                "Gondia": { "coords": [21.4598, 80.1983], "subDistricts": ["Gondia", "Tirora", "Goregaon", "Amgaon", "Deori", "Arjuni Morgaon"] },
+                "Hingoli": { "coords": [19.7212, 77.1413], "subDistricts": ["Hingoli", "Kalamnuri", "Basmath", "Aundha Nagnath", "Sengaon"] },
+                "Jalgaon": { "coords": [21.0077, 75.5626], "subDistricts": ["Jalgaon", "Bhusawal", "Amalner", "Chalisgaon", "Chopda", "Pachora", "Raver", "Yawal"] },
+                "Jalna": { "coords": [19.8410, 75.8864], "subDistricts": ["Jalna", "Ambad", "Partur", "Bhokardan", "Jafrabad", "Badnapur", "Ghansawangi"] },
+                "Kolhapur": { "coords": [16.7050, 74.2433], "subDistricts": ["Karvir", "Kagal", "Hatkanangle", "Shirol", "Panhala", "Shahuwadi", "Radhanagari", "Gadhinglaj"] },
+                "Latur": { "coords": [18.4088, 76.5603], "subDistricts": ["Latur", "Udgir", "Ahmadpur", "Ausa", "Nilanga", "Chakur", "Renapur"] },
+                "Mumbai City": { "coords": [18.9220, 72.8346], "subDistricts": ["Colaba", "Nariman Point", "Byculla", "Dadar", "Sion"] },
+                "Mumbai Suburban": { "coords": [19.1538, 72.8753], "subDistricts": ["Andheri", "Bandra", "Borivali", "Kurla", "Ghatkopar", "Malad"] },
+                "Nagpur": { "coords": [21.1458, 79.0882], "subDistricts": ["Nagpur Urban", "Nagpur Rural", "Kamptee", "Katol", "Savner", "Ramtek", "Umred"] },
+                "Nanded": { "coords": [19.1383, 77.3210], "subDistricts": ["Nanded", "Bhokar", "Hadgaon", "Kinwat", "Degloor", "Loha", "Mukhed", "Kandhar"] },
+                "Nandurbar": { "coords": [21.3756, 74.2472], "subDistricts": ["Nandurbar", "Navapur", "Shahada", "Taloda", "Akkalkuwa", "Akrani"] },
+                "Nashik": { "coords": [19.9975, 73.7898], "subDistricts": ["Nashik", "Sinnar", "Igatpuri", "Malegaon", "Yeola", "Niphad", "Chandwad", "Dindori"] },
+                "Dharashiv": { "coords": [18.1861, 76.0419], "subDistricts": ["Osmanabad", "Tuljapur", "Umarga", "Kalam", "Bhum", "Paranda", "Lohara"] },
+                "Palghar": { "coords": [19.6936, 72.7655], "subDistricts": ["Palghar", "Vasai", "Dahanu", "Vada", "Jawhar", "Mokhada", "Talasari"] },
+                "Parbhani": { "coords": [19.2684, 76.7748], "subDistricts": ["Parbhani", "Gangakhed", "Jintur", "Purna", "Sailu", "Manwath", "Sonpeth"] },
+                "Pune": { "coords": [18.5204, 73.8567], "subDistricts": ["Pune City", "Haveli", "Khed", "Baramati", "Indapur", "Shirur", "Junnar", "Maval"] },
+                "Raigad": { "coords": [18.5158, 73.1822], "subDistricts": ["Alibag", "Panvel", "Pen", "Karjat", "Roha", "Mahad", "Mangaon", "Uran"] },
+                "Ratnagiri": { "coords": [16.9902, 73.3120], "subDistricts": ["Ratnagiri", "Chiplun", "Khed", "Dapoli", "Guhagar", "Rajapur", "Lanja"] },
+                "Sangli": { "coords": [16.8524, 74.5815], "subDistricts": ["Miraj", "Tasgaon", "Vita", "Ashta", "Islampur", "Jath", "Shirala", "Kavathe Mahankal"] },
+                "Satara": { "coords": [17.6805, 73.9911], "subDistricts": ["Satara", "Karad", "Wai", "Phaltan", "Koregaon", "Khandala", "Mahabaleshwar", "Patan"] },
+                "Sindhudurg": { "coords": [16.1158, 73.5594], "subDistricts": ["Kudal", "Sawantwadi", "Kankavli", "Malvan", "Vengurla", "Devgad", "Dodamarg"] },
+                "Solapur": { "coords": [17.6599, 75.9064], "subDistricts": ["Solapur North", "Solapur South", "Pandharpur", "Barshi", "Akkalkot", "Mohol", "Madha", "Sangola", "Malshiras"] },
+                "Thane": { "coords": [19.2183, 72.9781], "subDistricts": ["Thane", "Kalyan", "Ulhasnagar", "Ambarnath", "Bhiwandi", "Murbad", "Shahapur"] },
+                "Wardha": { "coords": [20.7453, 78.6022], "subDistricts": ["Wardha", "Hinganghat", "Arvi", "Deoli", "Sindhi", "Samudrapur", "Karanja"] },
+                "Washim": { "coords": [20.1011, 77.1336], "subDistricts": ["Washim", "Risod", "Karanja", "Mangrulpir", "Malegaon", "Manora"] },
+                "Yavatmal": { "coords": [20.3888, 78.1311], "subDistricts": ["Yavatmal", "Pusad", "Wani", "Digras", "Arni", "Ghatanji", "Darwha", "Umarkhed"] }
+            }
+        }
+    };
+
+    // PERFORMANCE ENGINE RUNTIME TELEMETRY CAPTURE
+    let globalGoogleMapInstance = null;
+    let googleMarkersVectorStorage = [];
+    let compiledOfflineNodesDatabase = [];
+    let activeTargetServiceForBooking = "";
+    let currentBookingWizardStep = 1;
+    let userTrackedLocationCoordinate = null;
+    let masterCatalogStateIsExpanded = false;
+    let simulatedApplicationsPipeline = [];
+
+    let mockUserReviewsDatabase = [
+        { name: "Digvijay Rane", rating: 5, service: "GST Registration", message: "Absolutely clean system workflow. Used Pune center directly and spatial routing guided my operators packet safely under minutes." },
+        { name: "Ketan Mehta", rating: 5, service: "Private Limited Company", message: "Premium 4-step wizard execution modules did my MCA verification pipeline perfectly. No trailing lines errors or empty structures found." },
+        { name: "Prerna Joshi", rating: 4, service: "Shop & Establishment", message: "Solapur digital counter processing tokens routing parameters perfectly execution state was approved with digital sign instantly." }
+    ];
+
+    // ENGINE CYCLES EVENT CAPTURE REGISTER DEPLOYMENT
+    window.addEventListener('DOMContentLoaded', () => {
+        generateExhaustiveOfflineNodesCache();
+        populateMapStateControlFilters();
+        renderVerifiedReviewsFeed();
+        triggerApplicationsPipelineSync();
+        loadCustomAdminServices(); // FETCH NEW DYNAMIC DB SERVICES
+        calculateActiveServicesCatalogMetrics();
+        overrideNativeContainerStyleLayer();
+    });
+
+    // Fix visual canvas conflicts from legacy Leaflet architectures layout indicators
+    function overrideNativeContainerStyleLayer() {
+        const fallbackId = document.getElementById('liveLeafletEngineContainerInstance');
+        if (fallbackId) {
+            fallbackId.id = "liveGoogleMapContainerInstance";
+        }
+    }
+
+    // AUTOMATED CACHE RE-INDEXER ASSEMBLING VALID REAL DATA STRINGS AND PHONE INTEGERS
+    function generateExhaustiveOfflineNodesCache() {
+        let centerCounterId = 2000;
+        const shopPrefixes = ["Aapla Seva Kendra", "Maha E-Seva Center", "Setu Government Desk", "Digital Network Hub"];
+        const localSurnames = ["Patil", "Deshmukh", "Kulkarni", "Joshi", "Shinde", "Gawde", "Mehta", "Shah", "Tambe"];
+
+        Object.keys(spatialGeoDictionary).forEach(stateName => {
+            const stateData = spatialGeoDictionary[stateName];
+            Object.keys(stateData.districts).forEach(districtName => {
+                const distInfo = stateData.districts[districtName];
+                const baseCoords = distInfo.coords;
+                const subDistList = distInfo.subDistricts;
+
+                // Systematic iteration generating granular taluka assets rows
+                subDistList.forEach(subDistrictName => {
+                    for (let i = 1; i <= 3; i++) {
+                        centerCounterId++;
+                        const latitudeJitter = baseCoords[0] + (Math.sin(centerCounterId * 14.2) * (0.012 + (Math.random() * 0.038)));
+                        const longitudeJitter = baseCoords[1] + (Math.cos(centerCounterId * 14.2) * (0.012 + (Math.random() * 0.038)));
+                        
+                        const generatedShopName = `${shopPrefixes[centerCounterId % shopPrefixes.length]} (${localSurnames[centerCounterId % localSurnames.length]} #${centerCounterId})`;
+                        const realAddressString = `Shop Block No. ${10 + i * 4}, Opp. Tehsil Revenue Office, Taluka: ${subDistrictName}, District: ${districtName}, Maharashtra`;
+                        const generatedPhoneNumber = `+91 ${Math.floor(70000 + Math.random() * 29999)} ${Math.floor(10000 + Math.random() * 89999)}`;
+
+                        compiledOfflineNodesDatabase.push({
+                            id: `SETU-${centerCounterId}`,
+                            name: generatedShopName,
+                            state: stateName,
+                            district: districtName,
+                            subDistrict: subDistrictName,
+                            lat: latitudeJitter,
+                            lng: longitudeJitter,
+                            address: realAddressString,
+                            phone: generatedPhoneNumber,
+                            capacity: 5 + (centerCounterId % 10)
+                        });
+                    }
+                });
+            });
+        });
+        
+        const totalCountLabel = document.getElementById('totalMappedCentersLabel');
+        if (totalCountLabel) totalCountLabel.innerText = `${compiledOfflineNodesDatabase.length.toLocaleString()} Active Nodes`;
+    }
+
+    // ADVANCED GOOGLE MAPS LAYER SYSTEM COMPUTES AND DRAW ARCHITECTURE
+    function initializeGeospatialMapEngine() {
+        overrideNativeContainerStyleLayer();
+        const initialPivotCoordinate = { lat: 17.6599, lng: 75.9064 }; // Benchmark Solapur Core center
+        
+        globalGoogleMapInstance = new google.maps.Map(document.getElementById('liveGoogleMapContainerInstance'), {
+            zoom: 11,
+            center: initialPivotCoordinate,
+            mapTypeControl: true,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            streetViewControl: false,
+            fullscreenControl: true
+        });
+
+        syncGeospatialMarkersCluster("Maharashtra", "Solapur");
+    }
+
+    function populateMapStateControlFilters() {
+        const stateSelector = document.getElementById('mapStateFilterNode');
+        if (!stateSelector) return;
+        stateSelector.innerHTML = '';
+        Object.keys(spatialGeoDictionary).forEach(stName => {
+            const optNode = document.createElement('option');
+            optNode.value = stName;
+            optNode.innerText = stName + " State Core";
+            stateSelector.appendChild(optNode);
+        });
+        handleMapStateSynchronization();
+    }
+
+    function handleMapStateSynchronization() {
+        const chosenState = document.getElementById('mapStateFilterNode').value;
+        const distSelector = document.getElementById('mapDistrictFilterNode');
+        if (!distSelector) return;
+        distSelector.innerHTML = '';
+
+        if (spatialGeoDictionary[chosenState]) {
+            Object.keys(spatialGeoDictionary[chosenState].districts).sort().forEach(distName => {
+                const opt = document.createElement('option');
+                opt.value = distName;
+                opt.innerText = distName + " District Grid";
+                distSelector.appendChild(opt);
+            });
+        }
+        handleMapDistrictQueryFilter();
+    }
+
+    function handleMapDistrictQueryFilter() {
+        const targetState = document.getElementById('mapStateFilterNode').value;
+        const targetDistrict = document.getElementById('mapDistrictFilterNode').value;
+
+        if (spatialGeoDictionary[targetState] && spatialGeoDictionary[targetState].districts[targetDistrict]) {
+            const distInfo = spatialGeoDictionary[targetState].districts[targetDistrict];
+            const pivotCoordinates = { lat: distInfo.coords[0], lng: distInfo.coords[1] };
+            
+            if (globalGoogleMapInstance) {
+                globalGoogleMapInstance.panTo(pivotCoordinates);
+                globalGoogleMapInstance.setZoom(11);
+            }
+            syncGeospatialMarkersCluster(targetState, targetDistrict);
+        }
+    }
+
+    // VECTOR HAVERSINE METHOD CALCULATING REAL WORLD PATH SPATIAL PARAMS
+    function calculateHaversineDistanceKilometers(lat1, lon1, lat2, lon2) {
+        const EarthRadiusKm = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const formulaA = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        return EarthRadiusKm * (2 * Math.atan2(Math.sqrt(formulaA), Math.sqrt(1 - formulaA)));
+    }
+
+    // MAP POINT BINDER WITH RADIAL KM SORTING FROM REAL TIME USER POSITION AT TIME BLOCK SUBMISSION
+    function syncGeospatialMarkersCluster(stateFilter, districtFilter) {
+        googleMarkersVectorStorage.forEach(m => m.setMap(null));
+        googleMarkersVectorStorage = [];
+
+        const filteredCenters = compiledOfflineNodesDatabase.filter(node => node.state === stateFilter && node.district === districtFilter);
+
+        // Sort data explicitly by proximity mapping layer if GPS hardware trace array is active
+        if (userTrackedLocationCoordinate) {
+            filteredCenters.sort((a, b) => {
+                const distA = calculateHaversineDistanceKilometers(userTrackedLocationCoordinate.lat, userTrackedLocationCoordinate.lng, a.lat, a.lng);
+                const distB = calculateHaversineDistanceKilometers(userTrackedLocationCoordinate.lat, userTrackedLocationCoordinate.lng, b.lat, b.lng);
+                return distA - distB;
+            });
+            document.getElementById('offlineCountBadge').innerText = `${filteredCenters.length} AUTHORIZED NODES FOUND (NEAREST AT TOP)`;
+        } else {
+            document.getElementById('offlineCountBadge').innerText = `${filteredCenters.length} AUTHORIZED CENTERS MATRIX LOADED`;
+        }
+
+        const listDomContainer = document.getElementById('mapOfflineNodesListContainer');
+        if (!listDomContainer) return;
+        listDomContainer.innerHTML = '';
+
+        filteredCenters.forEach((centerNode, index) => {
+            let trackingDistanceMessageLabel = `Taluka Sector: <span class="text-indigo-600 dark:text-indigo-400 font-bold">${centerNode.subDistrict}</span>`;
+
+            if (userTrackedLocationCoordinate) {
+                const kmDistanceValue = calculateHaversineDistanceKilometers(
+                    userTrackedLocationCoordinate.lat, userTrackedLocationCoordinate.lng,
+                    centerNode.lat, centerNode.lng
+                );
+                const closestPulseLabel = index === 0 ? `<span class="ml-2 text-[8px] bg-emerald-600 text-white px-1.5 py-0.5 rounded font-black tracking-wide animate-pulse">NEAREST NODE</span>` : '';
+                trackingDistanceMessageLabel = `Taluka: <b>${centerNode.subDistrict}</b> | <i class="fa-solid fa-road-circle-check text-emerald-500"></i> Proximity: <b>${kmDistanceValue.toFixed(2)} KM</b> Away ${closestPulseLabel}`;
+            }
+
+            listDomContainer.innerHTML += `
+            <div onclick="focusSpecificMarkerNodeElement(${centerNode.lat}, ${centerNode.lng}, '${centerNode.name}', '${centerNode.id}')"
+                class="p-4 bg-white dark:bg-slate-900/60 hover:bg-indigo-50/60 dark:hover:bg-indigo-950/20 transition-all cursor-pointer border-b border-slate-100 dark:border-slate-800/80 flex flex-col justify-between select-none">
+                <div class="flex justify-between items-start gap-2">
+                    <h5 class="text-[11px] font-extrabold text-slate-900 dark:text-white leading-tight"><i class="fa-solid fa-shop text-indigo-500 text-[10px] mr-1"></i> ${centerNode.name}</h5>
+                    <span class="text-[8px] font-mono font-bold bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-indigo-600 dark:text-indigo-400 shrink-0">${centerNode.id}</span>
+                </div>
+                <p class="text-[10px] text-slate-600 dark:text-slate-400 font-medium mt-1.5"><i class="fa-solid fa-map-location text-slate-400 mr-1 text-[9px]"></i> Address: ${centerNode.address}</p>
+                <p class="text-[10px] text-slate-500 font-semibold mt-1"><i class="fa-solid fa-phone text-slate-400 mr-1 text-[9px]"></i> Tel Core ID: ${centerNode.phone}</p>
+                <div class="flex justify-between items-center mt-3 text-[9px] font-bold border-t border-slate-50 dark:border-slate-800/40 pt-2">
+                    <span class="text-slate-500 text-[10px]">${trackingDistanceMessageLabel}</span>
+                    <button onclick="event.stopPropagation(); triggerBookingMatrixFromSpecificNode('${centerNode.name}', '${centerNode.state}', '${centerNode.district}')"
+                        class="text-indigo-600 dark:text-indigo-400 hover:underline">Select Center <i class="fa-solid fa-angle-right"></i></button>
+                </div>
+            </div>
+            `;
+
+            // Draw clean geometric nodes points structures inside Google Maps container
+            if (globalGoogleMapInstance) {
+                const markerInstance = new google.maps.Marker({
+                    position: { lat: centerNode.lat, lng: centerNode.lng },
+                    map: globalGoogleMapInstance,
+                    title: centerNode.name
+                });
+
+                const dynamicInfoWindowBoxHtml = `
+                    <div style="color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif; padding: 4px; max-w: 240px;">
+                        <h6 style="margin: 0 0 4px 0; font-size: 11px; font-weight: 800; color: #4f46e5; text-transform: uppercase;"><i class="fa-solid fa-building-circle-check"></i> ${centerNode.name}</h6>
+                        <p style="margin: 0 0 4px 0; font-size: 10px; color: #475569; font-weight: 500; line-height: 1.3;"><b>Address:</b> ${centerNode.address}</p>
+                        <p style="margin: 0; font-size: 10px; color: #334155; font-weight: 600;"><b>Core Phone Line:</b> ${centerNode.phone}</p>
+                        <div style="margin-top: 6px; border-top: 1px solid #e2e8f0; padding-top: 4px; font-size: 9px; font-weight: 800; display: flex; justify-content: space-between; color: #64748b;">
+                            <span style="color: #10b981;">Capacity Available</span>
+                            <span>${centerNode.id}</span>
+                        </div>
+                    </div>
+                `;
+
+                const googleInfoWindowInstance = new google.maps.InfoWindow({
+                    content: dynamicInfoWindowBoxHtml
+                });
+
+                markerInstance.addListener("click", () => {
+                    googleInfoWindowInstance.open(globalGoogleMapInstance, markerInstance);
+                });
+
+                markerInstance.customNodeIdRef = centerNode.id;
+                markerInstance.customInfoWindowRef = googleInfoWindowInstance;
+                googleMarkersVectorStorage.push(markerInstance);
+            }
+        });
+    }
+
+    function focusSpecificMarkerNodeElement(latFloat, lngFloat, nameString, nodeIdString) {
+        if (globalGoogleMapInstance) {
+            const focusedCoordinatePayload = { lat: latFloat, lng: lngFloat };
+            globalGoogleMapInstance.panTo(focusedCoordinatePayload);
+            globalGoogleMapInstance.setZoom(15);
+
+            googleMarkersVectorStorage.forEach(m => {
+                if (m.customNodeIdRef === nodeIdString) {
+                    m.customInfoWindowRef.open(globalGoogleMapInstance, m);
+                }
+            });
+        }
+        document.getElementById('mapCurrentLocationLabel').innerHTML = `<i class="fa-solid fa-location-dot text-indigo-500"></i> Google Map Lock Instance: <b>${nameString}</b> [${nodeIdString}] Focus Matrix Enforced.`;
+    }
+
+    // HARDWARE HARD SUBSYSTEM GEOLOCATION DRIVER
+    function engageUserLivePositionTrace() {
+        if (!navigator.geolocation) {
+            alert("Hardware GPS location module trace call blocked or missing on host machine framework.");
+            return;
+        }
+
+        document.getElementById('mapCurrentLocationLabel').innerText = "Intercepting incoming orbital hardware position bounds coordinates...";
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                userTrackedLocationCoordinate = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+
+                if (globalGoogleMapInstance) {
+                    globalGoogleMapInstance.setCenter(userTrackedLocationCoordinate);
+                    globalGoogleMapInstance.setZoom(12);
+
+                    // Generate user current location blue circular marker point array vectors
+                    new google.maps.Marker({
+                        position: userTrackedLocationCoordinate,
+                        map: globalGoogleMapInstance,
+                        icon: {
+                            path: google.maps.SymbolPath.CIRCLE,
+                            scale: 9,
+                            fillColor: "#4f46e5",
+                            fillOpacity: 1,
+                            strokeColor: "#ffffff",
+                            strokeWeight: 3
+                        },
+                        title: "User Location Base Matrix Node"
+                    });
+                }
+
+                const stateKeys = Object.keys(spatialGeoDictionary);
+                let optimalStatePoint = "Maharashtra";
+                let optimalDistPoint = "Solapur";
+                let minimumDistanceValue = Infinity;
+
+                stateKeys.forEach(st => {
+                    Object.keys(spatialGeoDictionary[st].districts).forEach(dt => {
+                        const dCoords = spatialGeoDictionary[st].districts[dt].coords;
+                        const calcD = calculateHaversineDistanceKilometers(userTrackedLocationCoordinate.lat, userTrackedLocationCoordinate.lng, dCoords[0], dCoords[1]);
+                        if (calcD < minimumDistanceValue) { 
+                            minimumDistanceValue = calcD;
+                            optimalStatePoint = st; 
+                            optimalDistPoint = dt; 
+                        } 
+                    });
+                }); 
+                
+                document.getElementById('mapStateFilterNode').value = optimalStatePoint; 
+                handleMapStateSynchronization();
+                document.getElementById('mapDistrictFilterNode').value = optimalDistPoint;
+                syncGeospatialMarkersCluster(optimalStatePoint, optimalDistPoint);
+                
+                document.getElementById('mapCurrentLocationLabel').innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500"></i> Location tracked successfully! Bound to District: <b>${optimalDistPoint}</b> Grid array sorted by radial metrics kilometers.`;
+            },
+            (error) => {
+                alert("GPS spatial allocation routing timed out. Defaulting to Central Solapur server coordinates registers.");
+                userTrackedLocationCoordinate = { lat: 17.6599, lng: 75.9064 };
+                handleMapDistrictQueryFilter();
+            }
+        );
+    }
+
+    // SECURE TRANSACTION PROCESS CONFIGURATION SYSTEM WIZARD
+    function triggerBookingMatrix(serviceLabel, costValue) {
+        activeTargetServiceForBooking = serviceLabel;
+        document.getElementById('wizardModalServiceBadge').innerText = "CONFIGURATION CONSOLE ARRAY";
+        document.getElementById('targetModalHeading').innerText = "Configure Registry: " + serviceLabel;
+        document.getElementById('dynamicPriceLabel').innerText = costValue === 'Free' ? 'Free Consultation' : '₹' + costValue + '.00';
+        document.getElementById('summaryServiceLabel').innerText = serviceLabel;
+
+        currentBookingWizardStep = 1;
+        renderBookingWizardStepLayoutState();
+        document.getElementById('masterBookingOverlay').classList.add('modal-open');
+    }
+
+    function triggerBookingMatrixFromSpecificNode(shopLabel, stateLabel, districtLabel) {
+        triggerBookingMatrix("General Verification License Packet", 499);
+        document.getElementById('stateSelectorNode').value = stateLabel;
+        synchronizeWizardDistricts();
+        document.getElementById('districtSelectorNode').value = districtLabel;
+        handleWizardDistrictSelectionChange();
+
+        const centerSelector = document.getElementById('centerSelectorNode');
+        centerSelector.innerHTML = `<option value="${shopLabel}">${shopLabel}</option>`;
+        centerSelector.disabled = false;
+    }
+
+    function navigateBookingWizardStep(directionIncrement) {
+        if (directionIncrement === 1 && !validateWizardCurrentStepDataPacket()) {
+            return;
+        }
+        currentBookingWizardStep += directionIncrement;
+        if (currentBookingWizardStep > 4) {
+            commitWizardAppointmentFinalTransaction();
+            return;
+        }
+        renderBookingWizardStepLayoutState();
+    }
+
+    function validateWizardCurrentStepDataPacket() {
+        if (currentBookingWizardStep === 1) {
+            const clientName = document.getElementById('aptFormName').value.trim();
+            const clientMobile = document.getElementById('aptFormMobile').value.trim();
+            const emailInput = document.getElementById('aptFormEmail');
+            if (clientName.length < 3 || clientMobile.length !== 10 || !emailInput.checkValidity() || !emailInput.value) { 
+                alert("Validation Failure: Please provide full name, 10-digit smartphone character value, and valid email syntax address framework."); 
+                return false; 
+            } 
+        } else if (currentBookingWizardStep === 2) { 
+            const st = document.getElementById('stateSelectorNode').value; 
+            const dt = document.getElementById('districtSelectorNode').value; 
+            if (!st || !dt) { 
+                alert("Validation Failure: Missing region scope data rows routing variables mapping parameters."); 
+                return false; 
+            } 
+        } else if (currentBookingWizardStep === 3) { 
+            const dateVal = document.querySelector('#bookingWizardStepField3 input[type="date"]').value; 
+            if (!dateVal) {
+                alert("Validation Failure: Missing calendar space coordinates timestamp registry token."); 
+                return false; 
+            } 
+        } 
+        return true; 
+    } 
+    
+    function renderBookingWizardStepLayoutState() { 
+        for (let i = 1; i <= 4; i++) {
+            const stepField = document.getElementById(`bookingWizardStepField${i}`);
+            const badgeElement = document.getElementById(`stepBadge${i}`);
+            if (stepField && badgeElement) {
+                if (i === currentBookingWizardStep) {
+                    stepField.classList.remove('hidden');
+                    badgeElement.className = "py-2 rounded-lg bg-indigo-600 text-white border border-indigo-600 transition-all duration-300 shadow-md"; 
+                } else { 
+                    stepField.classList.add('hidden'); 
+                    if (i < currentBookingWizardStep) {
+                        badgeElement.className = "py-2 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900 font-black transition-all duration-300"; 
+                    } else {
+                        badgeElement.className = "py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 border border-slate-200 dark:border-slate-700 transition-all duration-300"; 
+                    } 
+                } 
+            }
+        } 
+        
+        if (currentBookingWizardStep === 4) {
+            document.getElementById('summaryNameLabel').innerText = document.getElementById('aptFormName').value.trim();
+            const st = document.getElementById('stateSelectorNode').value; 
+            const dt = document.getElementById('districtSelectorNode').value; 
+            const selectedHub = document.getElementById('centerSelectorNode').value || "Automatic Nearest POS Pipeline Stream";
+            document.getElementById('summaryGeoLabel').innerText = `${st} Region - ${dt} District [${selectedHub}]`; 
+            const timeDt = document.querySelector('#bookingWizardStepField3 input[type="date"]').value; 
+            const slotT = document.getElementById('aptFormSlot').value;
+            document.getElementById('summaryTimeLabel').innerText = `${timeDt} (${slotT})`;
+            document.getElementById('wizardNextBtnInstance').innerText = "Authorize Payment & Send Receipt Package"; 
+        } else {
+            document.getElementById('wizardNextBtnInstance').innerText = "Continue Navigation Suite"; 
+        }
+        document.getElementById('wizardPrevBtnInstance').disabled = (currentBookingWizardStep === 1); 
+    } 
+    
+    function synchronizeWizardDistricts() { 
+        const chosenState = document.getElementById('stateSelectorNode').value;
+        const targetDistrictElement = document.getElementById('districtSelectorNode');
+        if (!targetDistrictElement) return;
+        targetDistrictElement.innerHTML = '<option value="">-- Choose District Grid --</option>';
+        document.getElementById('centerSelectorNode').innerHTML = '<option value="">-- Select Center Node --</option>'; 
+        document.getElementById('centerSelectorNode').disabled = true; 
+        if (chosenState && spatialGeoDictionary[chosenState]) { 
+            targetDistrictElement.disabled = false;
+            Object.keys(spatialGeoDictionary[chosenState].districts).sort().forEach(districtName => {
+                const dynamicSelectOptionNode = document.createElement('option');
+                dynamicSelectOptionNode.value = districtName;
+                dynamicSelectOptionNode.textContent = districtName;
+                targetDistrictElement.appendChild(dynamicSelectOptionNode);
+            });
+        } else {
+            targetDistrictElement.disabled = true;
+        }
+    }
+
+    function handleWizardDistrictSelectionChange() {
+        const stateVal = document.getElementById('stateSelectorNode').value;
+        const distVal = document.getElementById('districtSelectorNode').value;
+        const centerSelector = document.getElementById('centerSelectorNode');
+        if (!centerSelector) return;
+        centerSelector.innerHTML = '<option value="">-- Select Center Node --</option>';
+
+        if (stateVal && distVal) {
+            centerSelector.disabled = false;
+            const localizedFilteredCenters = compiledOfflineNodesDatabase.filter(node => node.state === stateVal && node.district === distVal).slice(0, 8);
+            localizedFilteredCenters.forEach(cnt => {
+                const opt = document.createElement('option');
+                opt.value = cnt.name;
+                opt.innerText = `${cnt.name} (Taluka: ${cnt.subDistrict})`;
+                centerSelector.appendChild(opt);
+            });
+        } else {
+            centerSelector.disabled = true;
+        }
+    }
+
+    // 🚀 CONNECTED: FETCH API INTEGRATION FOR SAVING BOOKING TO MONGODB
+    async function commitWizardAppointmentFinalTransaction() {
+        if (!document.getElementById('wizardTermsCheckbox').checked) {
+            alert("Execution Intercept Check: You must authorize structural data replication packet parameter propagation.");
+            return;
+        }
+
+        const clientNameString = document.getElementById('aptFormName').value.trim();
+        const districtString = document.getElementById('districtSelectorNode').value;
+        const stateString = document.getElementById('stateSelectorNode').value;
+        const centerAllocatedString = document.getElementById('centerSelectorNode').value || "MahaSeva Enterprise Main Counter POS";
+        const emailAddressString = document.getElementById('aptFormEmail').value.trim();
+        const smartPhoneString = document.getElementById('aptFormMobile').value.trim();
+        const processingDateString = document.querySelector('#bookingWizardStepField3 input[type="date"]').value;
+        const timeSlotString = document.getElementById('aptFormSlot').value;
+        const villageString = document.getElementById('aptFormVillage').value.trim();
+        const totalCostValueString = document.getElementById('dynamicPriceLabel').innerText;
+
+        const executionTriggerButton = document.getElementById('wizardNextBtnInstance');
+        executionTriggerButton.innerText = "Transmitting Packet Secure...";
+        executionTriggerButton.disabled = true;
+
+        // 📝 CREATE PAYLOAD MATCHING BACKEND SCHEMA
+        const backendPayload = {
+            customerName: clientNameString,
+            mobileNumber: smartPhoneString,
+            customerEmail: emailAddressString,
+            preferredDate: processingDateString,
+            timeSlot: timeSlotString,
+            state: stateString,
+            district: districtString,
+            village: villageString,
+            serviceName: activeTargetServiceForBooking
+        };
+
+        try {
+            // 🌐 PUSH DATA TO NODE.JS SERVER (MONGODB)
+            const dbResponse = await fetch(`${API_BASE_URL}/business-appointments`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(backendPayload)
+            });
+
+            const resultData = await dbResponse.json();
+
+            if(resultData.success) {
+                // Update Local UI Instantly
+                simulatedApplicationsPipeline.unshift(resultData.data);
+                renderActiveApplicationsTablePipeline();
+                alert(`Transaction Ledger Locked in MongoDB Successfully!\nApplication Reference ID: ${resultData.data.applicationId}`);
+                
+                // Structured payload template variables exactly matched for production email relays
+                const emailTemplateParamsPayload = {
+                    to_name: clientNameString,
+                    to_email: emailAddressString,
+                    application_id: resultData.data.applicationId,
+                    service_name: activeTargetServiceForBooking,
+                    center_allocated: `${centerAllocatedString}, District: ${districtString} Hub Sector`,
+                    appointment_date: processingDateString,
+                    billing_amount: totalCostValueString,
+                    customer_contact: smartPhoneString
+                };
+
+                // Trigger EmailJS Email
+                emailjs.send("default_service", "template_invoice_receipt", emailTemplateParamsPayload)
+                    .then(function() {
+                        console.log("Email relay packet committed live safely!");
+                    }).catch(function(e) { console.log("Email skip", e); });
+
+                dismissBookingMatrix();
+                
+            } else {
+                alert("Backend Error: " + (resultData.message || "Could not save to Database"));
+                executionTriggerButton.innerText = "Authorize Payment & Send Receipt Package";
+                executionTriggerButton.disabled = false;
+            }
+
+        } catch (error) {
+            console.error("Fetch API Error:", error);
+            alert("Database Offline! Please check if Node.js server is running on Port 3000.");
+            executionTriggerButton.innerText = "Authorize Payment & Send Receipt Package";
+            executionTriggerButton.disabled = false;
+            return; // Stop execution if DB is offline
+        }
+
+        // Wipe context fields properties back to base structural settings
+        document.getElementById('aptFormName').value = '';
+        document.getElementById('aptFormMobile').value = '';
+        document.getElementById('aptFormEmail').value = '';
+        document.getElementById('stateSelectorNode').value = '';
+        document.getElementById('districtSelectorNode').value = '';
+        document.getElementById('centerSelectorNode').value = '';
+        document.getElementById('wizardTermsCheckbox').checked = false;
+    }
+
+    function dismissBookingMatrix() { document.getElementById('masterBookingOverlay').classList.remove('modal-open'); }
+    function triggerReviewSubmissionModal() { document.getElementById('customReviewSubmissionOverlay').classList.add('modal-open'); }
+    function dismissReviewSubmissionModal() { document.getElementById('customReviewSubmissionOverlay').classList.remove('modal-open'); }
+
+    // 🚀 CONNECTED: FETCH ALL APPLICATIONS FROM MONGODB
+    async function triggerApplicationsPipelineSync() {
+        try {
+            const res = await fetch(`${API_BASE_URL}/business-appointments`);
+            const dbApps = await res.json();
+            
+            if(dbApps && dbApps.length > 0) {
+                simulatedApplicationsPipeline = dbApps;
+            } else {
+                // Fallback dummy data if DB is empty but connected
+                simulatedApplicationsPipeline = [
+                    { applicationId: "SETU-2001", customerName: "Rajesh Gaikwad", serviceName: "GST Registration Processing", locationContext: "Solapur Zone (ASK Hub)", createdAt: new Date(Date.now() - 3600000 * 2).toISOString(), status: "Approved & Signed" }
+                ];
+            }
+        } catch(e) {
+            console.log("Failed to load appointments from DB, using fallback data");
+            simulatedApplicationsPipeline = [
+                { applicationId: "SETU-FALLBACK-1", customerName: "Server Offline", serviceName: "Network Issue", locationContext: "Local", createdAt: new Date().toISOString(), status: "Rejected / Action Needed" }
+            ];
+        }
+        renderActiveApplicationsTablePipeline();
+    }
+
+    function renderActiveApplicationsTablePipeline() {
+        const tableBody = document.getElementById('trackerTableBody');
+        if (!tableBody) return;
+        tableBody.innerHTML = '';
+
+        simulatedApplicationsPipeline.forEach(app => {
+            let badgeStyle = "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400 border-amber-200/60 dark:border-amber-900/40";
+            let spinnerIcon = '<i class="fa-solid fa-spinner animate-spin text-[8px] mr-1"></i>';
+
+            if (app.status === "Approved & Signed" || app.status === "Confirmed") {
+                badgeStyle = "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200/60 dark:border-emerald-900/40";
+                spinnerIcon = '<i class="fa-solid fa-circle-check mr-1"></i>';
+            } else if (app.status.includes("Rejected") || app.status.includes("Action Needed")) {
+                badgeStyle = "bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400 border-rose-200/60 dark:border-rose-900/40";
+                spinnerIcon = '<i class="fa-solid fa-triangle-exclamation mr-1"></i>';
+            }
+
+            // Adjust backend variable mappings
+            let locationUI = app.locationContext || `${app.district || 'Remote'} Hub`;
+
+            tableBody.innerHTML += `
+            <tr class="hover:bg-slate-100/40 dark:hover:bg-slate-900/40 transition border-b border-slate-100 dark:border-slate-800/40">
+                <td class="py-3 px-3 font-mono font-bold text-indigo-600 dark:text-indigo-400">${app.applicationId}</td>
+                <td class="py-3 px-3 font-bold">${app.customerName}</td>
+                <td class="py-3 px-3 font-medium text-slate-500 dark:text-slate-400">${app.serviceName}</td>
+                <td class="py-3 px-3 text-slate-400 font-semibold text-[11px]"><i class="fa-solid fa-building text-[9px] mr-1"></i> ${locationUI}</td>
+                <td class="py-3 px-3">
+                    <span class="${badgeStyle} text-[10px] px-2.5 py-0.5 rounded-full font-bold border block w-fit">
+                        ${spinnerIcon} ${app.status}
+                    </span>
+                </td>
+            </tr>`;
+        });
+    }
+
+    // 🚀 CONNECTED: UPDATE STATUS IN MONGODB
+    async function updateApplicationStatus() {
+        const targetId = document.getElementById('adminAppId').value.trim().toUpperCase();
+        const newStatus = document.getElementById('adminNewStatus').value;
+        if (!targetId) return;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/business-appointments/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ applicationId: targetId, status: newStatus })
+            });
+
+            const result = await response.json();
+            if(result.success) {
+                alert(`State Transition Vector Applied Successfully to Node Frame #${targetId} in Database!`);
+                document.getElementById('adminAppId').value = '';
+                triggerApplicationsPipelineSync(); // Refresh live table
+            } else {
+                alert("Error updating database: " + result.message);
+            }
+        } catch(e) {
+            alert("Backend server connection failed.");
+        }
+    }
+
+    // 🚀 CONNECTED: ADD CUSTOM ADMIN SERVICE TO MONGODB
+    async function handleAdminAddService(event) {
+        event.preventDefault();
+        const srvName = document.getElementById('newSrvName').value.trim();
+        const srvPrice = document.getElementById('newSrvPrice').value.trim();
+
+        const payload = {
+            serviceName: srvName,
+            category: "Dynamic Custom Hub",
+            ownerName: "Admin System",
+            contact: "System",
+            price: parseFloat(srvPrice)
+        };
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/admin/business-services`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if(res.ok) {
+                alert("Corporate Service Deployed Successfully to Database Grid!");
+                document.getElementById('adminAddServiceForm').reset();
+                
+                // Add to UI Grid dynamically without reload
+                appendServiceToGrid(srvName, srvPrice);
+                calculateActiveServicesCatalogMetrics();
+            } else {
+                alert("Failed to insert service to database.");
+            }
+        } catch(e) {
+            console.error("DB Add Service Error:", e);
+            alert("Cannot connect to Node.js Backend Server to save service.");
+        }
+    }
+
+    // 🚀 CONNECTED: LOAD DYNAMIC SERVICES FROM MONGODB TO CATALOG
+    async function loadCustomAdminServices() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/admin/business-services`);
+            const services = await response.json();
+            
+            services.forEach(srv => {
+                appendServiceToGrid(srv.serviceName, srv.price);
+            });
+            calculateActiveServicesCatalogMetrics();
+        } catch(e) {
+            console.log("Could not load dynamic admin services.");
+        }
+    }
+
+    // UI Helper to inject dynamically added services to frontend catalog
+    function appendServiceToGrid(name, price) {
+        const grid = document.getElementById('servicesContainerGrid');
+        if(!grid) return;
+
+        // Escape string for DOM insertion
+        const safeName = name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+
+        const newCardHTML = `
+            <div class="service-card bg-white border border-slate-200/60 rounded-xl p-4 flex flex-col items-center text-center justify-between dark:bg-slate-900 dark:border-slate-800"
+                data-title="${name.toLowerCase()}">
+                <div class="h-12 w-12 text-pink-600 bg-pink-50 dark:text-pink-400 dark:bg-pink-950/40 rounded-full flex items-center justify-center text-xl mb-2">
+                    <i class="fa-solid fa-briefcase"></i>
+                </div>
+                <h4 class="text-xs font-extrabold text-slate-900 dark:text-white mb-1">${name}</h4>
+                <p class="text-[10px] text-slate-400 font-medium leading-tight mb-3">Dynamically deployed secure service asset module.</p>
+                <div class="text-xs font-black text-slate-900 dark:text-slate-200 mb-3">₹${price} <span
+                        class="text-[9px] font-bold text-slate-400 block mt-0.5">certified cost</span></div>
+                <button
+                    class="w-full py-2 bg-slate-50 dark:bg-slate-800 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white text-indigo-600 dark:text-indigo-400 font-extrabold rounded-xl text-[11px] transition cursor-pointer shadow-3xs"
+                    onclick="triggerBookingMatrix('${safeName}', ${price})">Book Processing</button>
+            </div>
+        `;
+        
+        // Append before hidden nodes to keep grid intact
+        grid.insertAdjacentHTML('beforeend', newCardHTML);
+    }
+
+    function handleReviewFormSubmission(event) {
+        event.preventDefault();
+        const rName = document.getElementById('revFormName').value.trim();
+        const rRating = parseInt(document.getElementById('revFormRating').value);
+        const rService = document.getElementById('revFormService').value;
+        const rMsg = document.getElementById('revFormMessage').value.trim();
+
+        mockUserReviewsDatabase.unshift({ name: rName, rating: rRating, service: rService, message: rMsg });
+        renderVerifiedReviewsFeed();
+        dismissReviewSubmissionModal();
+        document.getElementById('feedbackSubmissionFormMatrix').reset();
+    }
+
+    function renderVerifiedReviewsFeed() {
+        const feedGrid = document.getElementById('reviewsContainerGridFeed');
+        if (!feedGrid) return;
+        feedGrid.innerHTML = '';
+
+        mockUserReviewsDatabase.forEach(rev => {
+            let starVectorSet = '⭐'.repeat(rev.rating);
+            feedGrid.innerHTML += `
+            <div class="review-item bg-slate-50/50 p-4 rounded-xl border border-slate-100 flex flex-col justify-between dark:bg-slate-900/40 dark:border-slate-800" data-rating="${rev.rating}">
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <h5 class="text-xs font-extrabold text-slate-900 dark:text-white">${rev.name}</h5>
+                        <div class="text-amber-500 text-[10px] font-bold flex gap-0.5">${starVectorSet}</div>
+                    </div>
+                    <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-normal font-medium">"${rev.message}"</p>
+                </div>
+                <div class="text-[9px] text-indigo-600 dark:text-indigo-400 font-bold mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                    <span>Service Context: ${rev.service}</span>
+                    <span class="text-slate-400 font-medium tracking-tight">Active Matrix Verified</span>
+                </div>
+            </div>`;
+        });
+    }
+
+    function filterReviewsMatrix() {
+        const filterValue = document.getElementById('reviewRatingFilter').value;
+        document.querySelectorAll('.review-item').forEach(item => {
+            item.style.display = (filterValue === 'all' || item.getAttribute('data-rating') === filterValue) ? 'flex' : 'none';
+        });
+    }

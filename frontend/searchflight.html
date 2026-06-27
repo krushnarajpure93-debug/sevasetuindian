@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seva Setu - Travel Booking Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- CSS VARIABLES FOR LIGHT & DARK MODE --- */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #f1f5f9;
+            --header-bg: #ffffff;
+            --hero-bg: linear-gradient(180deg, #f0f7ff 0%, #ffffff 100%);
+            --trust-bg: #f8fafc;
+            --card-route-border: #e2e8f0;
+            --route-arrow-bg: #f8fafc;
+            
+            /* Fixed Colors */
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --footer-bg: #0b1329;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --header-bg: #1e293b;
+            --hero-bg: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            --trust-bg: #1e293b;
+            --card-route-border: #334155;
+            --route-arrow-bg: #334155;
+        }
+
+        /* --- BASE STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            background-color: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 72px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            color: var(--text-color);
+            font-size: 22px;
+        }
+
+        .logo-subtitle {
+            display: block;
+            font-size: 10px;
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-top: -2px;
+        }
+
+        .logo-icon-box {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 28px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 24px;
+        }
+
+        .nav-links a.active::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .dark-mode-toggle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-color);
+            font-size: 16px;
+        }
+
+        .btn-login {
+            background-color: var(--primary);
+            color: #ffffff;
+            padding: 10px 22px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-login:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero-section {
+            background: var(--hero-bg);
+            padding: 40px 0 60px;
+            position: relative;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .breadcrumb span {
+            color: var(--primary);
+        }
+
+        .hero-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .hero-text {
+            flex: 1;
+            max-width: 540px;
+        }
+
+        .hero-text h1 {
+            font-size: 48px;
+            color: var(--text-color);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 12px;
+        }
+
+        .hero-text h3 {
+            font-size: 22px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .hero-text p {
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* --- SEARCH BAR CSS --- */
+        .search-container {
+            text-align: center;
+            margin: -25px auto 40px;
+            position: relative;
+            z-index: 10;
+            max-width: 600px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 16px 24px;
+            border-radius: 50px;
+            border: 2px solid var(--primary);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 16px;
+            outline: none;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.15);
+        }
+
+        /* --- SECTION HEADER --- */
+        .section-header {
+            text-align: center;
+            margin: 50px 0 35px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: var(--text-color);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .section-title::before, .section-title::after {
+            content: "";
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary));
+        }
+        .section-title::after {
+            background: linear-gradient(90deg, var(--primary), transparent);
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        /* --- TRAVEL OPTIONS GRID --- */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 50px;
+        }
+
+        .option-card {
+            background: var(--bg-color);
+            border-radius: 12px;
+            padding: 24px 16px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .option-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Light mode card tint / Dark mode keeps neutral style */
+        [data-theme="light"] .card-taxi { background-color: #fffbeb; border-color: #fef3c7; }
+        [data-theme="light"] .card-rapido { background-color: #fffdf5; border-color: #fef3c7; }
+        [data-theme="light"] .card-bus { background-color: #f0fdf4; border-color: #dcfce7; }
+        [data-theme="light"] .card-train { background-color: #fef2f2; border-color: #fee2e2; }
+        [data-theme="light"] .card-airplane { background-color: #eff6ff; border-color: #dbeafe; }
+        [data-theme="light"] .card-metro { background-color: #faf5ff; border-color: #f3e8ff; }
+        [data-theme="light"] .card-other { background-color: #f8fafc; border-color: #e2e8f0; cursor: pointer; }
+
+        .option-card img {
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+            margin-bottom: 16px;
+        }
+
+        .option-card h4 {
+            font-size: 16px;
+            color: var(--text-color);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .option-card p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.4;
+            min-height: 34px;
+        }
+
+        .btn-book {
+            width: 100%;
+            padding: 9px 0;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-taxi, .btn-rapido { background-color: #f59e0b; }
+        .btn-bus { background-color: #10b981; }
+        .btn-train { background-color: #ef4444; }
+        .btn-airplane { background-color: #3b82f6; }
+        .btn-metro { background-color: #a855f7; }
+        .btn-other { background-color: #64748b; }
+        .btn-dynamic { background-color: var(--primary); }
+
+        .other-icon-container {
+            width: 60px;
+            height: 60px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            align-content: center;
+            justify-items: center;
+            margin-bottom: 16px;
+        }
+
+        .other-icon-container div {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--text-muted);
+            border-radius: 4px;
+        }
+
+        /* --- POPULAR ROUTES --- */
+        .sub-section-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-top: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .sub-section-title i { color: var(--primary); }
+        .sub-section-subtitle { text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 24px; }
+
+        .routes-wrapper {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 50px;
+        }
+
+        .route-card {
+            background: var(--bg-color);
+            border: 1px solid var(--card-route-border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .route-details h5 {
+            font-size: 14px;
+            color: var(--text-color);
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+
+        .route-details p { font-size: 11px; color: var(--text-muted); }
+
+        .route-arrow-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: var(--route-arrow-bg);
+            border: 1px solid var(--card-route-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 10px;
+        }
+
+        /* --- TRUST FEATURES --- */
+        .trust-section {
+            background-color: var(--trust-bg);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 40px 0;
+        }
+
+        .trust-title { text-align: center; font-size: 20px; color: var(--text-color); font-weight: 700; margin-bottom: 30px; }
+        .features-container { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+        .feature-box { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 210px; }
+        .feature-icon-wrapper { font-size: 26px; color: var(--primary); }
+        .feature-info h5 { font-size: 14px; color: var(--text-color); font-weight: 600; margin-bottom: 2px; }
+        .feature-info p { font-size: 12px; color: var(--text-muted); }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--footer-bg);
+            color: #94a3b8;
+            padding: 60px 0 24px;
+            font-size: 13px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2.2fr 1fr 1.2fr 1fr 2fr;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .footer-about .logo { color: #ffffff; margin-bottom: 16px; }
+        .footer-about p { line-height: 1.6; margin-bottom: 20px; max-width: 260px; }
+        
+        .social-links { display: flex; gap: 12px; }
+        .social-links a {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+        }
+        .social-links a:hover { background-color: var(--primary); }
+
+        .footer-column h4 { color: #ffffff; font-size: 14px; font-weight: 600; margin-bottom: 20px; }
+        .footer-column ul { list-style: none; }
+        .footer-column ul li { margin-bottom: 12px; }
+        .footer-column ul li a:hover { color: #ffffff; }
+
+        .footer-newsletter h4 { color: #ffffff; font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+        .subscribe-form input {
+            width: 100%; padding: 12px 16px; border-radius: 6px; border: 1px solid #1e293b;
+            background-color: #ffffff; color: #0f172a; margin-bottom: 12px; font-size: 13px; outline: none;
+        }
+        .subscribe-form button {
+            width: 100%; padding: 12px; border-radius: 6px; border: none;
+            background-color: var(--primary); color: #ffffff; font-weight: 500; cursor: pointer;
+        }
+
+        .footer-bottom { text-align: center; border-top: 1px solid #1e293b; padding-top: 24px; font-size: 12px; color: #64748b; }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 1024px) {
+            .footer-grid { grid-template-columns: repeat(3, 1fr); gap: 30px; }
+            .footer-newsletter { grid-column: span 3; max-width: 400px; }
+        }
+        @media (max-width: 768px) {
+            .hero-content { flex-direction: column; text-align: center; }
+            .hero-image { justify-content: center; }
+            .nav-links { display: none; }
+            .footer-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-newsletter { grid-column: span 2; }
+        }
+
+        /* --- DYNAMIC SERVICES & MODAL CSS --- */
+        #dynamic-services-container { 
+            display: none; 
+            margin-top: 20px; 
+            border-top: 2px dashed var(--border-color); 
+            padding-top: 30px; 
+            margin-bottom: 40px; 
+        }
+
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; 
+            z-index: 9999; backdrop-filter: blur(4px); 
+        }
+        .modal-content { 
+            background: var(--bg-color); width: 90%; max-width: 500px; padding: 30px; 
+            border-radius: 16px; border: 1px solid var(--border-color); 
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); color: var(--text-color); 
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header h2 { font-size: 20px; color: var(--primary); font-weight: 700; }
+        .modal-close { background: none; border: none; font-size: 24px; color: var(--text-muted); cursor: pointer; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 5px; font-weight: 500; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); outline: none; }
+        .btn-confirm-booking { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        .btn-confirm-booking:hover { background: var(--primary-hover); }
+
+    </style>
+</head>
+<body data-theme="light">
+
+    <header>
+        <div class="container nav-bar">
+            <div class="logo">
+                <div class="logo-icon-box"><i class="fa-solid fa-layer-group"></i></div>
+                <div>Seva Setu<span class="logo-subtitle">One Stop Appointment Platform</span></div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#">Appointments <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></a></li>
+                <li><a href="service.html">Services</a></li>
+                <li><a href="index.html" class="active">Travel Booking Hub</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-right">
+                <div class="dark-mode-toggle" id="darkModeBtn">
+                    <i class="fa-regular fa-moon" id="themeIcon"></i>
+                </div>
+                <a href="login.html"><button class="btn-login"><i class="fa-regular fa-user"></i> Login / Signup</button></a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="container">
+            <div class="breadcrumb">Home &gt; <span>Travel Booking Hub</span></div>
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Travel Booking Hub</h1>
+                    <h3>Book your journey anywhere, anytime</h3>
+                    <p>Taxi, Rapido, Bus, Train, Airplane, Metro and more – all your travel needs at one place.</p>
+                </div>
+                <div class="hero-image">
+                    <img src="https://i.ibb.co/6wG1m07/travel-hero-mockup.png" alt="Vehicles Fleet Mockup">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+        
+        <!-- SEARCH BAR (NEWLY ADDED) -->
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="🔍 Search Flights, Bus, Train, Hotels, Cars..." onkeyup="filterServices()">
+        </div>
+
+        <div class="section-header">
+            <div class="section-title">Choose Your Travel Option</div>
+            <div class="section-subtitle">Select a service below to book your journey</div>
+        </div>
+
+        <div class="options-grid" id="main-options-grid">
+            <div class="option-card card-taxi service-item" data-name="Taxi Cab Car">
+                <img src="https://cdn-icons-png.flaticon.com/512/3448/3448339.png" alt="Taxi">
+                <h4>Taxi</h4><p>Book local taxis anytime, anywhere</p>
+                <a href="cars.html" class="btn-book btn-taxi" style="text-align: center; display: block;">Book Now</a>
+            </div>
+
+            <div class="option-card card-rapido service-item" data-name="Rapido Bike Scooter">
+                <img src="https://cdn-icons-png.flaticon.com/512/2972/2972185.png" alt="Bike">
+                <h4>Rapido</h4><p>Quick bike rides at your doorstep</p>
+                <button type="button" class="btn-book btn-rapido" onclick="openBookingModal('Rapido')">Book Now</button>
+            </div>
+
+            <div class="option-card card-bus service-item" data-name="Bus Booking Travels">
+                <img src="https://cdn-icons-png.flaticon.com/512/1042/1042263.png" alt="Bus">
+                <h4>Bus Booking</h4>
+                <p>Book bus tickets easily online</p>
+                <a href="bus.html" class="btn-book btn-bus" style="text-align: center; display: block;">Book Now</a>
+            </div>
+
+            <div class="option-card card-train service-item" data-name="Train Railway IRCTC">
+                <img src="https://cdn-icons-png.flaticon.com/512/723/723876.png" alt="Train">
+                <h4>Train</h4><p>Book train tickets easily online</p>
+                <a href="trainbook.html" class="btn-book btn-train" style="text-align: center; display: block;">Book Now</a>
+            </div>
+
+            <div class="option-card card-airplane service-item" data-name="Airplane Flight Indigo AirIndia">
+                <img src="https://cdn-icons-png.flaticon.com/512/723/723955.png" alt="Airplane">
+                <h4>Airplane</h4><p>Book flights to any destination</p>
+                <a href="flight.html" class="btn-book btn-airplane" style="text-align: center; display: block;">Book Now</a>
+            </div>
+
+            <div class="option-card card-metro service-item" data-name="Metro Rail City">
+                <img src="https://cdn-icons-png.flaticon.com/512/2414/2414603.png" alt="Metro">
+                <h4>Metro</h4><p>Book metro tickets in your city</p>
+                <button type="button" class="btn-book btn-metro" onclick="openBookingModal('Metro')">Book Now</button>
+            </div>
+
+            <div class="option-card card-other" id="otherBtn" onclick="toggleDynamicServices()">
+                <div class="other-icon-container"><div></div><div></div><div></div><div></div></div>
+                <h4>Other</h4><p>Ferry, Cab, Rentals and more</p>
+                <button type="button" class="btn-book btn-other">Explore</button>
+            </div>
+        </div>
+
+        <!-- DYNAMIC SERVICES (Added from Admin) -->
+        <div id="dynamic-services-container">
+            <div class="sub-section-title"><i class="fa-solid fa-star"></i> More Services Added by Admin</div>
+            <div class="options-grid" id="dynamic-options-grid">
+                <!-- Dynamically injected cards will appear here -->
+            </div>
+        </div>
+
+        <div class="sub-section-title"><i class="fa-solid fa-chart-line"></i> Popular Routes</div>
+        <div class="sub-section-subtitle">Top searched routes by our users</div>
+
+        <div class="routes-wrapper">
+            <div class="route-card">
+                <div class="route-details"><h5>Mumbai &harr; Pune</h5><p>1,250+ Bookings</p></div>
+                <div class="route-arrow-icon"><i class="fa-solid fa-chevron-right"></i></div>
+            </div>
+            <div class="route-card">
+                <div class="route-details"><h5>Delhi &harr; Jaipur</h5><p>980+ Bookings</p></div>
+                <div class="route-arrow-icon"><i class="fa-solid fa-chevron-right"></i></div>
+            </div>
+            <div class="route-card">
+                <div class="route-details"><h5>Bangalore &harr; Chennai</h5><p>870+ Bookings</p></div>
+                <div class="route-arrow-icon"><i class="fa-solid fa-chevron-right"></i></div>
+            </div>
+            <div class="route-card">
+                <div class="route-details"><h5>Hyderabad &harr; Vizag</h5><p>760+ Bookings</p></div>
+                <div class="route-arrow-icon"><i class="fa-solid fa-chevron-right"></i></div>
+            </div>
+        </div>
+    </main>
+
+    <section class="trust-section">
+        <div class="container features-container">
+            <div class="feature-box">
+                <div class="feature-icon-wrapper"><i class="fa-solid fa-shield-halved"></i></div>
+                <div class="feature-info"><h5>Secure Booking</h5><p>100% safe and secure payments</p></div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon-wrapper"><i class="fa-solid fa-tags"></i></div>
+                <div class="feature-info"><h5>Best Prices</h5><p>Compare & get the best prices</p></div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon-wrapper"><i class="fa-solid fa-headset"></i></div>
+                <div class="feature-info"><h5>24/7 Support</h5><p>We are always here to help you</p></div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon-wrapper"><i class="fa-regular fa-id-badge"></i></div>
+                <div class="feature-info"><h5>Trusted Services</h5><p>Verified and trusted travel partners</p></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-grid">
+            <div class="footer-about">
+                <div class="logo">
+                    <div class="logo-icon-box"><i class="fa-solid fa-layer-group"></i></div><span>Seva Setu</span>
+                </div>
+                <p>Seva Setu is your one-stop solution for all appointments and bookings.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/krushn_rajpure" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-column">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="service.html">Services</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="setting.html">Setting</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>Travel Services</h4>
+                <ul>
+                    <li><a href="#">Taxi Booking</a></li>
+                    <li><a href="#">Rapido Booking</a></li>
+                    <li><a href="#">Bus Booking</a></li>
+                    <li><a href="#">Train Booking</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="setting.html">Terms & Conditions</a></li>
+                    <li><a href="setting.html">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-newsletter">
+                <h4>Newsletter</h4>
+                <form class="subscribe-form" id="travelNewsletterForm">
+                    <input type="email" id="subscriberEmail" placeholder="Enter your email" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">&copy; 2026 Seva Setu. Designed for krushn_rajpure. All Rights Reserved.</div>
+    </footer>
+
+    <!-- UNIVERSAL BOOKING MODAL -->
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Book Service</h2>
+                <button class="modal-close" onclick="closeBookingModal()">&times;</button>
+            </div>
+            <form id="bookingForm" onsubmit="submitBooking(event)">
+                <div class="form-group">
+                    <label>Travel Mode / Service</label>
+                    <input type="text" id="b_mode" readonly style="background: var(--border-color); font-weight: bold;">
+                </div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="b_name" required placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label>Mobile Number</label>
+                    <input type="tel" id="b_mobile" required placeholder="Enter mobile number">
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>From (Source)</label>
+                        <input type="text" id="b_from" required placeholder="City or Location">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>To (Destination)</label>
+                        <input type="text" id="b_to" required placeholder="City or Location">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Journey Date</label>
+                    <input type="date" id="b_date" required>
+                </div>
+                <button type="submit" class="btn-confirm-booking">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN SCRIPTS -->
+    <script>
+        const darkModeBtn = document.getElementById('darkModeBtn');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        // --- 1. LOCAL STORAGE थीम मॅनेजमेंट ---
+        const savedTheme = localStorage.getItem('travel_hub_theme') || 'light';
+        applyTheme(savedTheme);
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                body.setAttribute('data-theme', 'dark');
+                themeIcon.removeAttribute('class');
+                themeIcon.setAttribute('class', 'fa-solid fa-sun');
+                themeIcon.style.color = '#f59e0b';
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeIcon.removeAttribute('class');
+                themeIcon.setAttribute('class', 'fa-regular fa-moon');
+                themeIcon.style.color = '';
+            }
+        }
+
+        darkModeBtn.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            localStorage.setItem('travel_hub_theme', newTheme);
+            applyTheme(newTheme);
+        });
+
+        // --- 2. NEWSLETTER FETCH API INTEGRATION ---
+        document.getElementById('travelNewsletterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const emailInput = document.getElementById('subscriberEmail');
+            const emailValue = emailInput.value;
+
+            try {
+                const response = await fetch('http://localhost:3000/api/travel-subscribe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: emailValue })
+                });
+
+                const data = await response.json();
+
+                if (response.status === 201 && data.success) {
+                    alert(data.message);
+                    emailInput.value = ''; 
+                } else {
+                    alert("⚠️ " + data.message); 
+                }
+            } catch (error) {
+                console.error('API Connection Error:', error);
+                alert('❌ सर्व्हरशी संपर्क होऊ शकला नाही! कृपया तुमचा Node.js सर्व्हर (Port 5004) चालू असल्याची खात्री करा.');
+            }
+        });
+
+        // --- 3. DYNAMIC SERVICES & SEARCH LOGIC ---
+        function loadDynamicServices() {
+            const dynamicGrid = document.getElementById('dynamic-options-grid');
+            const services = JSON.parse(localStorage.getItem('adminAddedServices')) || [];
+            
+            dynamicGrid.innerHTML = ''; 
+
+            services.forEach(srv => {
+                const card = document.createElement('div');
+                card.className = "option-card service-item";
+                card.setAttribute('data-name', srv.name + " " + srv.desc);
+                card.innerHTML = `
+                    <img src="${srv.icon}" alt="${srv.name}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2065/2065064.png'">
+                    <h4>${srv.name}</h4>
+                    <p>${srv.desc}</p>
+                    <button class="btn-book btn-dynamic" onclick="openBookingModal('${srv.name}')">Book Now</button>
+                `;
+                dynamicGrid.appendChild(card);
+            });
+        }
+        
+        loadDynamicServices();
+
+        function toggleDynamicServices() {
+            const container = document.getElementById('dynamic-services-container');
+            if(container.style.display === 'block') {
+                container.style.display = 'none';
+            } else {
+                container.style.display = 'block';
+                loadDynamicServices();
+                container.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function filterServices() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const allServices = document.querySelectorAll('.service-item');
+            const dynamicContainer = document.getElementById('dynamic-services-container');
+            const otherBtn = document.getElementById('otherBtn');
+            
+            if(input.length > 0) {
+                dynamicContainer.style.display = 'block';
+                otherBtn.style.display = 'none'; 
+            } else {
+                dynamicContainer.style.display = 'none';
+                otherBtn.style.display = 'flex';
+            }
+
+            allServices.forEach(card => {
+                const searchKeywords = card.getAttribute('data-name').toLowerCase();
+                if (searchKeywords.includes(input)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // --- 4. BOOKING MODAL & LOCALSTORAGE SAVE LOGIC ---
+        const modal = document.getElementById('bookingModal');
+        
+        function openBookingModal(serviceName) {
+            document.getElementById('b_mode').value = serviceName;
+            document.getElementById('modalTitle').innerText = "Book " + serviceName;
+            document.getElementById('bookingForm').reset();
+            document.getElementById('b_mode').value = serviceName;
+            modal.style.display = 'flex';
+        }
+
+        function closeBookingModal() {
+            modal.style.display = 'none';
+        }
+
+        function submitBooking(e) {
+            e.preventDefault();
+            
+            const bookingData = {
+                id: "BKG" + Math.floor(Math.random() * 900000 + 100000),
+                mode: document.getElementById('b_mode').value,
+                name: document.getElementById('b_name').value,
+                mobile: document.getElementById('b_mobile').value,
+                route: document.getElementById('b_from').value + " ➔ " + document.getElementById('b_to').value,
+                date: document.getElementById('b_date').value,
+                price: "₹" + (Math.floor(Math.random() * 5000) + 500),
+                timestamp: new Date().toLocaleString(),
+                status: "Confirmed"
+            };
+
+            let allBookings = JSON.parse(localStorage.getItem('allBookings')) || [];
+            allBookings.push(bookingData);
+            localStorage.setItem('allBookings', JSON.stringify(allBookings));
+
+            alert(`✅ ${bookingData.mode} Booking Confirmed for ${bookingData.name}!\nBooking ID: ${bookingData.id}\n\nCheck Admin Dashboard to see this entry!`);
+            closeBookingModal();
+        }
+    </script>
+</body>
+</html>

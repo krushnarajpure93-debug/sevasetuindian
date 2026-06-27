@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seva Setu - Complete Maharashtra Bus Booking Hub & Live Tracking</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        /* Google Fonts Import */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+        
+        /* Base Configuration */
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #f3f4f6; 
+            overflow-x: hidden; 
+            scroll-behavior: smooth;
+        }
+        
+        /* Hide Scrollbar for clean sliders */
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Modal & Dialog Animation Overlays */
+        .modal-overlay { 
+            display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); 
+            z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(8px); 
+        }
+        .modal-container { 
+            background: white; width: 100%; max-width: 1100px; max-height: 90vh; 
+            overflow-y: auto; border-radius: 20px; position: relative; 
+            animation: modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); 
+        }
+        
+        .fullscreen-page {
+            display: none; position: fixed; inset: 0; background: #f8fafc; z-index: 100000; overflow-y: auto;
+            animation: slideInUp 0.3s ease-out forwards;
+        }
+        @keyframes slideInUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes modalPop { from { transform: translateY(100px) scale(0.95); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+
+        .map-modal-container { max-width: 900px; }
+        #live-tracking-map { width: 100%; height: 450px; border-radius: 12px; z-index: 1; border: 2px solid #e2e8f0; }
+
+        /* Intermediate Stop Map Markers */
+        .route-stop-marker {
+            background-color: white;
+            border: 3px solid #3b82f6;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Seat Layout Styles */
+        .bus-layout-wrapper {
+            background: #ffffff; border: 2px solid #e2e8f0; border-radius: 20px;
+            padding: 30px; position: relative; box-shadow: inset 0 4px 6px rgba(0,0,0,0.02); margin: 0 auto;
+        }
+        .driver-cabin {
+            position: absolute; top: 20px; right: 25px; width: 45px; height: 45px;
+            border: 5px solid #cbd5e1; border-radius: 50%; border-bottom-color: transparent; transform: rotate(45deg);
+        }
+        .driver-cabin::after { content: 'DRIVER'; position: absolute; bottom: -20px; left: -10px; font-size: 8px; color: #94a3b8; font-weight: 800; }
+        
+        .seat { 
+            width: 50px; height: 60px; border: 2px solid #94a3b8; border-radius: 8px; 
+            display: flex; align-items: center; justify-content: center; cursor: pointer; 
+            font-size: 11px; font-weight: 800; background: #f8fafc; color: #64748b; transition: all 0.2s; position: relative;
+        }
+        .seat::before { content: ''; position: absolute; top: 4px; left: 10%; width: 80%; height: 8px; background: #e2e8f0; border-radius: 4px; }
+        .seat:hover:not(.booked) { border-color: #d84e55; background: #fef2f2; color: #d84e55; transform: translateY(-2px); box-shadow: 0 4px 6px rgba(216,78,85,0.2); }
+        .seat.selected { background: linear-gradient(135deg, #d84e55, #a93036); color: white; border-color: #7f1d1d; transform: scale(1.05); box-shadow: 0 4px 10px rgba(216,78,85,0.4); }
+        .seat.selected::before { background: rgba(255,255,255,0.3); }
+        .seat.booked { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; border-color: #cbd5e1; opacity: 0.6; }
+        .seat.booked::after { content: '\f00d'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; font-size: 20px; color: #cbd5e1; }
+        .sleeper { height: 110px; } 
+
+        .radio-tab input:checked + div { background: linear-gradient(135deg, #d84e55, #b91c1c); color: white; border-color: #991b1b; box-shadow: 0 4px 10px rgba(216,78,85,0.3); }
+        
+        .loader-spinner { border: 4px solid #f1f5f9; border-top: 4px solid #d84e55; border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; margin: 40px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        input::-webkit-calendar-picker-indicator { opacity: 0; cursor: pointer; }
+        
+        /* Redbus Style Enhancements */
+        .glass-effect { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); }
+        .filter-header { cursor: pointer; transition: 0.3s; }
+        .filter-header:hover { color: #d84e55; }
+        .rb-card { transition: all 0.3s ease; border: 1px solid #e2e8f0; }
+        .rb-card:hover { border-color: #d84e55; box-shadow: 0 10px 25px -5px rgba(216, 78, 85, 0.15); }
+
+        .digital-ticket { background: #fff; border-radius: 20px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border: 2px solid #e2e8f0; overflow: hidden; }
+        .digital-ticket::before, .digital-ticket::after { content: ''; position: absolute; top: 50%; width: 40px; height: 40px; background: #f8fafc; border-radius: 50%; border: 2px solid #e2e8f0; z-index: 10; }
+        .digital-ticket::before { left: -22px; transform: translateY(-50%); border-left: none; }
+        .digital-ticket::after { right: -22px; transform: translateY(-50%); border-right: none; }
+        .ticket-divider { border-top: 2px dashed #cbd5e1; margin: 0 20px; position: relative; z-index: 1; }
+        
+        /* Barcode CSS Simulation */
+        .barcode {
+            width: 100%; height: 30px; 
+            background-image: repeating-linear-gradient(to right, #1e293b 0, #1e293b 2px, transparent 2px, transparent 4px, #1e293b 4px, #1e293b 5px, transparent 5px, transparent 8px);
+        }
+
+        /* Auth Modal Styling */
+        .auth-container { max-width: 450px; background: white; border-radius: 24px; overflow: hidden; position: relative; animation: modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+    </style>
+</head>
+<body class="text-slate-800 flex flex-col min-h-screen">
+
+    <header class="glass-effect border-b border-slate-200 py-3 px-4 md:px-8 flex justify-between items-center sticky top-0 z-50 shadow-sm w-full">
+        <div class="max-w-[1500px] mx-auto w-full flex justify-between items-center">
+            <div class="flex items-center gap-4 md:gap-6">
+                <a href="travelbookinghub.html" class="flex items-center gap-2 text-slate-600 hover:text-[#d84e55] font-extrabold transition bg-slate-100 hover:bg-red-50 px-4 py-2.5 rounded-xl border border-slate-200 hover:border-red-200">
+                    <i class="fa-solid fa-arrow-left"></i> <span class="hidden md:inline">Dashboard</span>
+                </a>
+                <div class="flex items-center gap-3 border-l-2 border-slate-200 pl-4 md:pl-6">
+                    <div class="bg-[#d84e55] p-3 rounded-xl text-white shadow-lg">
+                        <i class="fa-solid fa-bus-simple text-2xl"></i>
+                    </div>
+                    <div>
+                        <span class="font-black text-2xl md:text-3xl text-slate-900 block leading-none tracking-tighter">Seva Setu</span>
+                        <span class="text-[10px] md:text-[11px] text-[#d84e55] font-extrabold tracking-widest uppercase block mt-1">Maharashtra Bus Express</span>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="hidden lg:flex items-center gap-8 font-bold text-sm text-slate-600">
+                <button onclick="openFullscreenPage('all-routes-page')" class="hover:text-[#d84e55] transition flex items-center gap-2"><i class="fa-solid fa-route"></i> All Routes</button>
+                <button onclick="openFullscreenPage('manage-bookings-page')" class="hover:text-[#d84e55] transition flex items-center gap-2"><i class="fa-solid fa-ticket"></i> Manage Bookings</button>
+                
+                <button id="header-auth-btn" onclick="openAuthModal()" class="bg-[#d84e55] text-white px-6 py-2.5 rounded-xl hover:bg-red-700 transition flex items-center gap-2 shadow-md font-black">
+                    <i class="fa-regular fa-user-circle text-base"></i> Login / Signup
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <section class="bg-slate-900 text-white pt-14 pb-28 px-4 relative w-full overflow-hidden">
+        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#ef4444 1px, transparent 1px); background-size: 24px 24px;"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-slate-950 opacity-90"></div>
+        
+        <div class="max-w-[1400px] mx-auto relative z-10 flex flex-col items-center">
+            <div class="inline-block bg-[#d84e55]/20 border border-[#d84e55]/50 text-red-100 font-black uppercase tracking-widest text-[10px] px-4 py-1.5 rounded-full mb-6 backdrop-blur">
+                India's No. 1 Bus Ticket Booking Platform
+            </div>
+            <h1 class="text-3xl md:text-5xl lg:text-6xl font-black mb-4 text-center tracking-tight leading-tight">
+                Book Real <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400">Government & Private</span> Buses
+            </h1>
+            <p class="text-center text-slate-400 mb-12 font-medium text-lg max-w-2xl">
+                Experience ultra-fast booking with live GPS tracking. Access thousands of real buses across every corner of India.
+            </p>
+            
+            <div class="bg-white rounded-[24px] p-2 md:p-3 flex flex-col md:flex-row gap-2 shadow-[0_30px_60px_rgba(0,0,0,0.4)] w-full max-w-6xl mx-auto relative border border-slate-200/50">
+                <div class="flex-1 flex items-center bg-slate-50 hover:bg-slate-100 border-2 border-transparent hover:border-red-100 rounded-2xl px-6 py-4 relative transition cursor-text group" onclick="document.getElementById('search-from').focus()">
+                    <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center mr-4 group-hover:bg-red-100 transition"><i class="fa-solid fa-location-crosshairs text-slate-500 group-hover:text-red-600 transition text-xl"></i></div>
+                    <div class="flex-1">
+                        <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest block mb-0.5">From Origin</label>
+                        <input type="text" id="search-from" list="mh-districts-list" value="BEED" class="w-full bg-transparent outline-none text-slate-900 font-black text-xl md:text-2xl uppercase placeholder-slate-300 cursor-text" placeholder="Select City">
+                    </div>
+                </div>
+                
+                <button onclick="swapCities()" class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-4 border-slate-100 w-14 h-14 rounded-full flex items-center justify-center text-slate-600 shadow-2xl hover:bg-red-50 hover:text-[#d84e55] hover:border-red-200 z-20 hidden md:flex transition-all hover:rotate-180 duration-500"><i class="fa-solid fa-right-left text-lg"></i></button>
+
+                <div class="flex-1 flex items-center bg-slate-50 hover:bg-slate-100 border-2 border-transparent hover:border-red-100 rounded-2xl px-6 py-4 relative md:pl-12 transition cursor-text group" onclick="document.getElementById('search-to').focus()">
+                    <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center mr-4 group-hover:bg-red-100 transition"><i class="fa-solid fa-location-dot text-slate-500 group-hover:text-red-600 transition text-xl"></i></div>
+                    <div class="flex-1">
+                        <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest block mb-0.5">To Destination</label>
+                        <input type="text" id="search-to" list="mh-districts-list" value="NAGPUR" class="w-full bg-transparent outline-none text-slate-900 font-black text-xl md:text-2xl uppercase placeholder-slate-300 cursor-text" placeholder="Select City">
+                    </div>
+                </div>
+
+                <div class="flex-1 flex items-center bg-slate-50 hover:bg-slate-100 border-2 border-transparent hover:border-red-100 rounded-2xl px-6 py-4 transition cursor-text group" onclick="document.getElementById('search-date').focus()">
+                    <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center mr-4 group-hover:bg-red-100 transition"><i class="fa-regular fa-calendar-check text-slate-500 group-hover:text-red-600 transition text-xl"></i></div>
+                    <div class="flex-1">
+                        <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest block mb-0.5">Journey Date</label>
+                        <input type="date" id="search-date" class="w-full bg-transparent outline-none text-slate-900 font-black text-lg md:text-xl cursor-pointer">
+                    </div>
+                </div>
+
+                <button onclick="triggerSearchEngine()" class="bg-[#d84e55] hover:bg-red-700 text-white font-black px-10 py-5 rounded-2xl transition-all md:w-auto w-full text-xl shadow-[0_10px_25px_rgba(216,78,85,0.4)] flex items-center justify-center gap-3 transform hover:-translate-y-1">
+                    SEARCH BUSES
+                </button>
+            </div>
+            
+            <datalist id="mh-districts-list">
+                <option value="MUMBAI"></option><option value="PUNE"></option><option value="NAGPUR"></option>
+                <option value="THANE"></option><option value="NASHIK"></option><option value="BEED"></option>
+                <option value="SOLAPUR"></option><option value="CHHATRAPATI SAMBHAJINAGAR"></option>
+                <option value="BENGALURU"></option><option value="HYDERABAD"></option><option value="AHMEDABAD"></option>
+                <option value="AMRAVATI"></option><option value="WARDHA"></option><option value="CHANDRAPUR"></option>
+            </datalist>
+        </div>
+    </section>
+
+    <div class="max-w-[1500px] mx-auto px-4 md:px-8 -mt-6 relative z-30 mb-8">
+        <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+            <div onclick="viewAllBuses()" class="bg-white shadow-lg rounded-xl p-3 flex items-center gap-3 border border-slate-100 cursor-pointer hover:border-red-200 transition">
+                <div class="bg-slate-100 p-2 rounded-lg text-slate-600"><i class="fa-solid fa-bus"></i></div>
+                <div><p class="text-xs font-bold text-slate-800">All Buses</p></div>
+            </div>
+            <div class="bg-gradient-to-r from-blue-900 to-blue-800 shadow-lg rounded-xl p-3 flex items-center gap-3 border border-blue-900 cursor-pointer hover:shadow-xl transition" onclick="document.querySelector('.filter-feature[value=\'primo\']').click()">
+                <div class="bg-white/20 p-2 rounded-lg text-yellow-400"><i class="fa-solid fa-star"></i></div>
+                <div><p class="text-xs font-black text-white italic tracking-wider">Primo Buses</p><p class="text-[9px] text-blue-200">Top Rated</p></div>
+            </div>
+            <div class="bg-green-50 shadow-lg rounded-xl p-3 flex items-center gap-3 border border-green-200 cursor-pointer hover:border-green-400 transition">
+                <div class="bg-green-200 text-green-700 p-2 rounded-lg"><i class="fa-solid fa-shield-halved"></i></div>
+                <div><p class="text-xs font-bold text-green-800">Free Cancellation</p><p class="text-[9px] text-green-600">Get full refund</p></div>
+            </div>
+            <div class="bg-amber-50 shadow-lg rounded-xl p-3 flex items-center gap-3 border border-amber-200 cursor-pointer hover:border-amber-400 transition">
+                <div class="bg-amber-200 text-amber-700 p-2 rounded-lg"><i class="fa-solid fa-bolt"></i></div>
+                <div><p class="text-xs font-bold text-amber-800">Instant Confirm</p><p class="text-[9px] text-amber-600">No waiting</p></div>
+            </div>
+        </div>
+    </div>
+
+    <main class="flex-1 w-full bg-[#f8fafc] px-4 py-4 relative z-20">
+        <div class="max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8">
+            
+            <aside class="hidden lg:block col-span-1 space-y-4">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm sticky top-28">
+                    
+                    <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                        <h3 class="font-black text-slate-800 text-sm uppercase">Filter Buses</h3>
+                        <button onclick="resetAllFilters()" class="text-xs text-[#d84e55] font-bold hover:underline">CLEAR ALL</button>
+                    </div>
+
+                    <div class="mb-5 bg-purple-50 p-3 rounded-xl border border-purple-100">
+                        <p class="text-xs font-bold text-purple-800 mb-2 flex items-center gap-1"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Smart Filter</p>
+                        <input type="text" placeholder='Try "Morning bus under ₹1000"' class="w-full text-xs p-2 rounded border border-purple-200 outline-none">
+                    </div>
+
+                    <div class="mb-4 border-b border-slate-100 pb-4">
+                        <h4 class="text-xs font-black text-slate-700 mb-3 filter-header flex justify-between">Bus Features <i class="fa-solid fa-angle-up"></i></h4>
+                        <div class="space-y-3">
+                            <label class="flex items-center gap-3 text-xs font-bold text-slate-600 cursor-pointer hover:bg-slate-50 p-1.5 rounded transition"><input type="checkbox" class="custom-checkbox filter-feature" value="free-cancellation" onchange="runFilterPipeline()"> Free Cancellation</label>
+                            <label class="flex items-center gap-3 text-xs font-bold text-slate-600 cursor-pointer hover:bg-slate-50 p-1.5 rounded transition"><input type="checkbox" class="custom-checkbox filter-feature" value="live-tracking" onchange="runFilterPipeline()"> Live Tracking</label>
+                            <label class="flex items-center gap-3 text-xs font-bold text-slate-600 cursor-pointer hover:bg-slate-50 p-1.5 rounded transition"><input type="checkbox" class="custom-checkbox filter-feature" value="primo" onchange="runFilterPipeline()"> Primo Bus (Top Rated)</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 border-b border-slate-100 pb-4">
+                        <h4 class="text-xs font-black text-slate-700 mb-3 filter-header flex justify-between">Departure time from source <i class="fa-solid fa-angle-up"></i></h4>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="border border-slate-200 text-center py-2 rounded flex flex-col items-center cursor-pointer hover:bg-red-50 hover:border-[#d84e55] transition">
+                                <input type="checkbox" class="hidden filter-dep" value="morning" onchange="runFilterPipeline()">
+                                <i class="fa-solid fa-sun text-amber-500 mb-1"></i><span class="text-[10px] font-bold text-slate-600">06:00-12:00</span>
+                            </label>
+                            <label class="border border-slate-200 text-center py-2 rounded flex flex-col items-center cursor-pointer hover:bg-red-50 hover:border-[#d84e55] transition">
+                                <input type="checkbox" class="hidden filter-dep" value="afternoon" onchange="runFilterPipeline()">
+                                <i class="fa-solid fa-cloud-sun text-orange-400 mb-1"></i><span class="text-[10px] font-bold text-slate-600">12:00-18:00</span>
+                            </label>
+                            <label class="border border-slate-200 text-center py-2 rounded flex flex-col items-center cursor-pointer hover:bg-red-50 hover:border-[#d84e55] transition">
+                                <input type="checkbox" class="hidden filter-dep" value="evening" onchange="runFilterPipeline()">
+                                <i class="fa-solid fa-moon text-blue-800 mb-1"></i><span class="text-[10px] font-bold text-slate-600">18:00-24:00</span>
+                            </label>
+                            <label class="border border-slate-200 text-center py-2 rounded flex flex-col items-center cursor-pointer hover:bg-red-50 hover:border-[#d84e55] transition">
+                                <input type="checkbox" class="hidden filter-dep" value="night" onchange="runFilterPipeline()">
+                                <i class="fa-solid fa-cloud-moon text-indigo-900 mb-1"></i><span class="text-[10px] font-bold text-slate-600">00:00-06:00</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 border-b border-slate-100 pb-4">
+                        <h4 class="text-xs font-black text-slate-700 mb-3 filter-header flex justify-between">Arrival time at destination <i class="fa-solid fa-angle-up"></i></h4>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="border border-slate-200 text-center py-2 rounded flex flex-col items-center cursor-pointer hover:bg-red-50 hover:border-[#d84e55] transition">
+                                <input type="checkbox" class="hidden filter-arr" value="morning" onchange="runFilterPipeline()">
+                                <i class="fa-solid fa-sun text-amber-500 mb-1"></i><span class="text-[10px] font-bold text-slate-600">06:00-12:00</span>
+                            </label>
+                            <label class="border border-slate-200 text-center py-2 rounded flex flex-col items-center cursor-pointer hover:bg-red-50 hover:border-[#d84e55] transition">
+                                <input type="checkbox" class="hidden filter-arr" value="afternoon" onchange="runFilterPipeline()">
+                                <i class="fa-solid fa-cloud-sun text-orange-400 mb-1"></i><span class="text-[10px] font-bold text-slate-600">12:00-18:00</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 border-b border-slate-100 pb-4">
+                        <h4 class="text-xs font-black text-slate-700 mb-3 filter-header flex justify-between">Bus type <i class="fa-solid fa-angle-up"></i></h4>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="border border-slate-200 p-2 rounded cursor-pointer hover:bg-red-50 transition flex items-center gap-2"><input type="checkbox" class="custom-checkbox filter-type" value="ac" onchange="runFilterPipeline()"> <span class="text-[10px] font-bold text-slate-600">AC</span></label>
+                            <label class="border border-slate-200 p-2 rounded cursor-pointer hover:bg-red-50 transition flex items-center gap-2"><input type="checkbox" class="custom-checkbox filter-type" value="non-ac" onchange="runFilterPipeline()"> <span class="text-[10px] font-bold text-slate-600">NON-AC</span></label>
+                            <label class="border border-slate-200 p-2 rounded cursor-pointer hover:bg-red-50 transition flex items-center gap-2"><input type="checkbox" class="custom-checkbox filter-type" value="sleeper" onchange="runFilterPipeline()"> <span class="text-[10px] font-bold text-slate-600">SLEEPER</span></label>
+                            <label class="border border-slate-200 p-2 rounded cursor-pointer hover:bg-red-50 transition flex items-center gap-2"><input type="checkbox" class="custom-checkbox filter-type" value="seater" onchange="runFilterPipeline()"> <span class="text-[10px] font-bold text-slate-600">SEATER</span></label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 border-b border-slate-100 pb-4">
+                        <h4 class="text-xs font-black text-slate-700 mb-3 filter-header flex justify-between">Single window seater/sleeper <i class="fa-solid fa-angle-down"></i></h4>
+                        <label class="flex items-center gap-3 text-xs font-bold text-slate-600 cursor-pointer"><input type="checkbox" class="custom-checkbox filter-feature" value="single-seat" onchange="runFilterPipeline()"> Single Seats Available</label>
+                    </div>
+
+                    <div class="mb-4 border-b border-slate-100 pb-4">
+                        <h4 class="text-xs font-black text-slate-700 mb-3 filter-header flex justify-between">Bus operator <i class="fa-solid fa-angle-down"></i></h4>
+                        <div class="space-y-2 max-h-32 overflow-y-auto custom-scrollbar" id="filter-operators">
+                            </div>
+                    </div>
+                    <div class="mb-4 border-b border-slate-100 pb-4">
+                        <h4 class="text-xs font-black text-slate-700 mb-3 filter-header flex justify-between">Boarding points <i class="fa-solid fa-angle-down"></i></h4>
+                        <div class="space-y-2 max-h-32 overflow-y-auto" id="filter-boarding"></div>
+                    </div>
+                    <div class="mb-4 border-b border-slate-100 pb-4">
+                        <h4 class="text-xs font-black text-slate-700 mb-3 filter-header flex justify-between">Dropping points <i class="fa-solid fa-angle-down"></i></h4>
+                        <div class="space-y-2 max-h-32 overflow-y-auto" id="filter-dropping"></div>
+                    </div>
+                    <div class="mb-4">
+                        <h4 class="text-xs font-black text-slate-700 mb-3 filter-header flex justify-between">Amenities <i class="fa-solid fa-angle-down"></i></h4>
+                        <div class="space-y-2 max-h-32 overflow-y-auto" id="filter-amenities">
+                            <label class="flex items-center gap-3 text-xs font-bold text-slate-600 cursor-pointer"><input type="checkbox" class="custom-checkbox" onchange="runFilterPipeline()"> Water Bottle</label>
+                            <label class="flex items-center gap-3 text-xs font-bold text-slate-600 cursor-pointer"><input type="checkbox" class="custom-checkbox" onchange="runFilterPipeline()"> Charging Point</label>
+                            <label class="flex items-center gap-3 text-xs font-bold text-slate-600 cursor-pointer"><input type="checkbox" class="custom-checkbox" onchange="runFilterPipeline()"> WIFI</label>
+                            <label class="flex items-center gap-3 text-xs font-bold text-slate-600 cursor-pointer"><input type="checkbox" class="custom-checkbox" onchange="runFilterPipeline()"> Blankets</label>
+                        </div>
+                    </div>
+
+                </div>
+            </aside>
+
+            <div class="col-span-1 lg:col-span-3 space-y-4">
+                
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center text-sm font-bold text-slate-800 bg-white p-4 rounded-xl border border-slate-200 shadow-sm gap-4">
+                    <div class="flex items-center gap-2">
+                        <span id="route-display-title" class="font-black uppercase tracking-tight mr-2 text-[#d84e55]">ROUTE</span> | 
+                        <span id="total-buses-count" class="text-xl font-black ml-2">0</span> buses found
+                    </div>
+                    <div class="flex flex-wrap gap-4 text-xs text-slate-500 font-semibold items-center">
+                        <span class="mr-2 text-slate-800 font-bold uppercase tracking-widest text-[10px]">Sort by:</span>
+                        <a href="#" class="hover:text-[#d84e55] transition">Ratings</a>
+                        <a href="#" class="hover:text-[#d84e55] transition">Departure time</a>
+                        <a href="#" class="hover:text-[#d84e55] transition">Price</a>
+                    </div>
+                </div>
+
+                <div id="bus-results-container" class="space-y-6"></div>
+
+                <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-center mt-6">
+                    <p class="text-xs text-slate-500 font-bold">End of list</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section class="bg-white py-12 border-t border-slate-200 w-full relative z-10">
+        <div class="max-w-[1500px] mx-auto px-4 md:px-8">
+            <div class="flex justify-between items-end mb-6 border-b border-slate-100 pb-3">
+                <h2 class="text-2xl font-black text-slate-900 flex items-center gap-3">
+                    <i class="fa-solid fa-landmark-flag text-slate-400"></i> All Indian Government Buses (State RTCs)
+                </h2>
+            </div>
+            <div class="flex gap-4 overflow-x-auto hide-scroll pb-4 pt-2" id="govt-bus-slider"></div>
+        </div>
+    </section>
+
+    <div id="all-routes-page" class="fullscreen-page">
+        <header class="bg-[#d84e55] text-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-md">
+            <h1 class="text-2xl font-black tracking-widest uppercase flex items-center gap-3"><i class="fa-solid fa-route"></i> Complete Route Network</h1>
+            <button onclick="closeFullscreenPage('all-routes-page')" class="bg-white/20 hover:bg-white/40 w-10 h-10 rounded-full transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </header>
+        <div class="p-8 max-w-[1500px] mx-auto">
+            <h2 class="text-3xl font-black text-slate-800 mb-2">Explore Destinations</h2>
+            <p class="text-slate-500 font-medium mb-10 border-b border-slate-200 pb-4">Search and book buses across 36 districts and thousands of villages in Maharashtra and beyond.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="font-black text-lg text-[#d84e55] mb-4 uppercase tracking-widest border-l-4 border-[#d84e55] pl-3">Vidarbha</h3>
+                    <ul class="space-y-3 text-sm font-bold text-slate-700">
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Nagpur ➔ Pune</a></li>
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Amravati ➔ Pune</a></li>
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Wardha ➔ Mumbai</a></li>
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Chandrapur ➔ Hyderabad</a></li>
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Yavatmal ➔ Nanded</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-black text-lg text-[#d84e55] mb-4 uppercase tracking-widest border-l-4 border-[#d84e55] pl-3">Marathwada</h3>
+                    <ul class="space-y-3 text-sm font-bold text-slate-700">
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Beed ➔ Pune</a></li>
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Chh. Sambhajinagar ➔ Mumbai</a></li>
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Nanded ➔ Pune</a></li>
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Latur ➔ Nagpur</a></li>
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Dharashiv ➔ Solapur</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-black text-lg text-[#d84e55] mb-4 uppercase tracking-widest border-l-4 border-[#d84e55] pl-3">Western Maharashtra</h3>
+                    <ul class="space-y-3 text-sm font-bold text-slate-700">
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Pune ➔ Mumbai</a></li>
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Solapur ➔ Pune</a></li>
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Kolhapur ➔ Mumbai</a></li>
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Sangli ➔ Bengaluru</a></li>
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Satara ➔ Thane</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-black text-lg text-[#d84e55] mb-4 uppercase tracking-widest border-l-4 border-[#d84e55] pl-3">Interstate</h3>
+                    <ul class="space-y-3 text-sm font-bold text-slate-700">
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Mumbai ➔ Ahmedabad</a></li>
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Pune ➔ Bengaluru</a></li>
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Nagpur ➔ Hyderabad</a></li>
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Nashik ➔ Surat</a></li>
+                        <li><a href="#" class="hover:text-blue-600 flex items-center gap-2"><i class="fa-solid fa-arrow-right text-slate-300"></i> Mumbai ➔ Goa</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="manage-bookings-page" class="fullscreen-page">
+        <header class="bg-slate-900 text-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-md">
+            <h1 class="text-2xl font-black tracking-widest uppercase flex items-center gap-3"><i class="fa-solid fa-ticket"></i> Manage Bookings</h1>
+            <button onclick="closeFullscreenPage('manage-bookings-page')" class="bg-white/20 hover:bg-white/40 w-10 h-10 rounded-full transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </header>
+        <div class="p-8 max-w-4xl mx-auto mt-10">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
+                    <div class="w-16 h-16 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center text-3xl mb-6"><i class="fa-solid fa-print"></i></div>
+                    <h2 class="text-2xl font-black text-slate-800 mb-2">Print / Download Ticket</h2>
+                    <p class="text-slate-500 text-xs mb-8 font-medium">Enter your PNR details to fetch your confirmed booking.</p>
+                    
+                    <input type="text" placeholder="Enter PNR No (e.g. MH123456)" class="w-full bg-slate-50 border-2 border-slate-200 p-4 rounded-xl mb-4 font-bold outline-none focus:border-blue-500">
+                    <input type="email" placeholder="Email ID / Mobile Number" class="w-full bg-slate-50 border-2 border-slate-200 p-4 rounded-xl mb-6 font-bold outline-none focus:border-blue-500">
+                    <button onclick="alert('Searching Database...')" class="bg-blue-600 hover:bg-blue-700 w-full p-4 rounded-xl text-white font-black text-sm uppercase tracking-widest shadow-lg transition">Fetch Ticket</button>
+                </div>
+                
+                <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
+                    <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center text-3xl mb-6"><i class="fa-solid fa-ban"></i></div>
+                    <h2 class="text-2xl font-black text-slate-800 mb-2">Cancel Ticket</h2>
+                    <p class="text-slate-500 text-xs mb-8 font-medium">Cancel your ticket and initiate refund process instantly.</p>
+                    
+                    <input type="text" placeholder="Enter PNR No to Cancel" class="w-full bg-slate-50 border-2 border-slate-200 p-4 rounded-xl mb-4 font-bold outline-none focus:border-red-500">
+                    <input type="email" placeholder="Email ID / Mobile Number" class="w-full bg-slate-50 border-2 border-slate-200 p-4 rounded-xl mb-6 font-bold outline-none focus:border-red-500">
+                    <button onclick="alert('Initiating Cancellation...')" class="bg-red-600 hover:bg-red-700 w-full p-4 rounded-xl text-white font-black text-sm uppercase tracking-widest shadow-lg transition">Cancel Ticket</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="bg-slate-950 text-white mt-auto border-t-[6px] border-[#d84e55] w-full relative z-10">
+        <div class="max-w-[1500px] mx-auto px-4 md:px-8 py-16 grid grid-cols-1 md:grid-cols-5 gap-12">
+            <div class="md:col-span-2 space-y-6">
+                <div class="flex items-center gap-4">
+                    <div class="bg-[#d84e55] p-3.5 rounded-2xl text-white shadow-lg border border-red-500/30">
+                        <i class="fa-solid fa-bus-simple text-3xl"></i>
+                    </div>
+                    <span class="font-black text-4xl tracking-tighter">Seva Setu</span>
+                </div>
+                <p class="text-sm text-slate-400 leading-relaxed font-semibold max-w-md">
+                    Seva Setu is India's most reliable and comprehensive localized workflow interface, offering instant express bus carrier registries, live GPS tracking, and secure payment corridors.
+                </p>
+            </div>
+            <div>
+                <h4 class="text-xs font-black uppercase tracking-widest text-slate-500 mb-6 border-b border-slate-800 pb-3">Quick Links</h4>
+                <ul class="space-y-4 text-sm font-bold text-slate-300">
+                    <li><a href="index.html" class="hover:text-white hover:translate-x-2 inline-block transition transform"><i class="fa-solid fa-angle-right text-[#d84e55] mr-2"></i> Home</a></li>
+                    <li><a href="about.html" class="hover:text-white hover:translate-x-2 inline-block transition transform"><i class="fa-solid fa-angle-right text-[#d84e55] mr-2"></i> About Us</a></li>
+                    <li><a href="contact.html" class="hover:text-white hover:translate-x-2 inline-block transition transform"><i class="fa-solid fa-angle-right text-[#d84e55] mr-2"></i> Contact Support</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xs font-black uppercase tracking-widest text-slate-500 mb-6 border-b border-slate-800 pb-3">Services</h4>
+                <ul class="space-y-4 text-sm font-bold text-slate-300">
+                    <li><a onclick="openFullscreenPage('all-routes-page')" class="cursor-pointer hover:text-white hover:translate-x-2 inline-block transition transform"><i class="fa-solid fa-angle-right text-[#d84e55] mr-2"></i> Route Network</a></li>
+                    <li><a onclick="openFullscreenPage('manage-bookings-page')" class="cursor-pointer hover:text-white hover:translate-x-2 inline-block transition transform"><i class="fa-solid fa-angle-right text-[#d84e55] mr-2"></i> Manage Booking</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="bg-[#0b0f19] py-6 text-center text-sm font-black text-slate-600 border-t border-slate-800/50 uppercase tracking-widest">
+            © 2026 Seva Setu Corporation Express Bus Fleet Management. All Rights Reserved.
+        </div>
+    </footer>
+
+    <div id="live-map-modal" class="modal-overlay">
+        <div class="modal-container map-modal-container flex flex-col">
+            <div class="bg-slate-900 text-white p-5 px-6 rounded-t-2xl flex justify-between items-center shadow-md z-10 relative">
+                <div>
+                    <h2 class="font-black text-xl flex items-center gap-2"><i class="fa-solid fa-satellite-dish text-[#d84e55]"></i> Live GPS Highway Tracker</h2>
+                    <p class="text-xs text-slate-400 font-bold mt-1 uppercase tracking-widest" id="map-route-title">ROUTE</p>
+                </div>
+                <button onclick="closeMapModal()" class="bg-slate-800 hover:bg-[#d84e55] w-10 h-10 rounded-full text-white text-xl flex items-center justify-center transition shadow"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center text-xs font-black text-slate-500 uppercase tracking-widest">
+                <span class="flex items-center gap-2"><i class="fa-solid fa-circle-dot text-green-500"></i> Est. Distance: <span id="map-dist-text" class="text-slate-800 text-sm">0 km</span></span>
+                <span class="flex items-center gap-2"><i class="fa-solid fa-clock text-blue-500"></i> Duration: <span id="map-dur-text" class="text-slate-800 text-sm">0 hrs</span></span>
+            </div>
+            <div class="p-2 bg-white rounded-b-2xl relative">
+                <div class="absolute top-6 left-6 bg-white/90 backdrop-blur border border-slate-200 shadow-lg px-4 py-2 rounded-xl text-xs font-black text-slate-800 z-[1000] flex items-center gap-2">
+                    <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span></span>
+                    GPS ACTIVE
+                </div>
+                <div id="live-tracking-map"></div>
+                <div class="absolute bottom-6 right-6 z-[1000]">
+                    <button onclick="startBusAnimation()" class="bg-slate-900 text-white px-5 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl hover:bg-[#d84e55] transition flex items-center gap-2">
+                        <i class="fa-solid fa-play"></i> Simulate Journey
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="booking-wizard" class="modal-overlay">
+        <div class="modal-container flex flex-col h-full md:h-auto bg-slate-50">
+            <div class="bg-white border-b border-slate-200 p-4 md:px-8 flex justify-between items-center shrink-0 shadow-sm relative z-10 rounded-t-2xl">
+                <div>
+                    <h2 class="font-black text-xl text-slate-800" id="wizard-bus-details">Maharaja Tours | Nagpur ➔ Beed</h2>
+                </div>
+                <button onclick="closeBookingModal()" class="text-slate-400 hover:text-red-600 text-2xl transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="wizard-content" class="p-6 md:p-8 overflow-y-auto flex-1 bg-slate-50 relative"></div>
+            <div class="p-5 md:px-10 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center bg-white rounded-b-2xl shrink-0 gap-4">
+                <div class="text-center md:text-left">
+                    <div class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Total Payable</div>
+                    <div class="text-2xl text-slate-900 font-black leading-none" id="wizard-total-price">₹0</div>
+                </div>
+                <button id="wizard-next-btn" class="w-full md:w-auto bg-[#d84e55] hover:bg-red-700 text-white font-bold uppercase px-8 py-3 rounded shadow transition flex items-center justify-center gap-2">
+                    Proceed <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="auth-modal" class="modal-overlay">
+        <div class="auth-container w-full shadow-2xl relative">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-red-100 hover:text-red-600 transition z-50">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="flex border-b border-slate-200 pt-2">
+                <button id="tab-login" onclick="toggleAuthView('login')" class="flex-1 py-4 font-black text-sm uppercase tracking-widest border-b-[3px] border-[#d84e55] text-[#d84e55] transition">Login</button>
+                <button id="tab-register" onclick="toggleAuthView('register')" class="flex-1 py-4 font-black text-sm uppercase tracking-widest border-b-[3px] border-transparent text-slate-400 hover:text-slate-600 transition">Sign Up</button>
+            </div>
+            
+            <div id="view-login" class="p-8">
+                <h2 class="text-2xl font-black text-slate-800 mb-2">Welcome Back!</h2>
+                <p class="text-xs text-slate-500 font-bold mb-6">Login to access your bookings and exclusive offers.</p>
+                <form onsubmit="handleAuthSubmit(event, 'login')" class="space-y-4">
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Email Address</label>
+                        <input type="email" id="log_email" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-sm font-bold text-slate-800 outline-none focus:border-[#d84e55] transition" placeholder="Enter your email" required>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Password</label>
+                        <input type="password" id="log_password" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-sm font-bold text-slate-800 outline-none focus:border-[#d84e55] transition" placeholder="Enter password" required>
+                    </div>
+                    <div class="text-right">
+                        <a href="#" class="text-[10px] font-bold text-blue-600 hover:underline">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="w-full bg-[#d84e55] hover:bg-red-700 text-white font-black text-sm uppercase tracking-widest px-6 py-4 rounded-xl shadow-lg transition transform hover:-translate-y-1 mt-4">
+                        Login Securely
+                    </button>
+                </form>
+            </div>
+            
+            <div id="view-register" class="p-8 hidden">
+                <h2 class="text-2xl font-black text-slate-800 mb-2">Create Account</h2>
+                <p class="text-xs text-slate-500 font-bold mb-6">Join India's largest bus network today.</p>
+                <form onsubmit="handleAuthSubmit(event, 'register')" class="space-y-4">
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Full Name</label>
+                        <input type="text" id="reg_name" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-sm font-bold text-slate-800 outline-none focus:border-[#d84e55] transition" placeholder="e.g. Rahul Patil" required>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Email Address</label>
+                        <input type="email" id="reg_email" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-sm font-bold text-slate-800 outline-none focus:border-[#d84e55] transition" placeholder="Email" required>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Mobile Number</label>
+                        <input type="tel" id="reg_phone" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-sm font-bold text-slate-800 outline-none focus:border-[#d84e55] transition" placeholder="+91 0000000000" required>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Create Password</label>
+                        <input type="password" id="reg_password" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-sm font-bold text-slate-800 outline-none focus:border-[#d84e55] transition" placeholder="Min 6 characters" required>
+                    </div>
+                    <button type="submit" class="w-full bg-[#d84e55] hover:bg-red-700 text-white font-black text-sm uppercase tracking-widest px-6 py-4 rounded-xl shadow-lg transition transform hover:-translate-y-1 mt-4">
+                        Register Account
+                    </button>
+                </form>
+            </div>
+            
+            <div class="bg-slate-50 border-t border-slate-200 p-4 text-center">
+                <p class="text-[10px] text-slate-400 font-bold">By logging in, you agree to our Terms of Service & Privacy Policy.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+   <script>
+    const API_BASE = 'http://localhost:3000/api';
+
+    // 🚨 ENHANCED GEOGRAPHY DATABASE WITH INTERMEDIATE CITIES FOR ROUTING 🚨
+    const mhDistrictsDB = {
+        "MUMBAI": { lat: 19.0760, lng: 72.8777 }, "PUNE": { lat: 18.5204, lng: 73.8567 }, "NAGPUR": { lat: 21.1458, lng: 79.0882 },
+        "THANE": { lat: 19.2183, lng: 72.9781 }, "NASHIK": { lat: 20.0110, lng: 73.7903 }, "PALGHAR": { lat: 19.6960, lng: 72.7699 },
+        "BEED": { lat: 18.9894, lng: 75.7601 }, "SOLAPUR": { lat: 17.6599, lng: 75.9064 }, "CHHATRAPATI SAMBHAJINAGAR": { lat: 19.8762, lng: 75.3433 },
+        "AURANGABAD": { lat: 19.8762, lng: 75.3433 }, "AMRAVATI": { lat: 20.9320, lng: 77.7523 }, "WARDHA": { lat: 20.7453, lng: 78.6022 },
+        "CHANDRAPUR": { lat: 19.9615, lng: 79.2961 }, "JALNA": { lat: 19.8297, lng: 75.8800 }, "WASHIM": { lat: 20.1135, lng: 77.1352 },
+        "SANGAMNER": {lat: 19.5761, lng: 74.2053}, "CHAKAN": {lat: 18.7501, lng: 73.8631}, "LONAVALA": { lat: 18.7481, lng: 73.4072 }, "PANVEL": { lat: 18.9894, lng: 73.1175 },
+        "BENGALURU": {lat: 12.9716, lng: 77.5946}, "HYDERABAD": {lat: 17.3850, lng: 78.4867}, "AHMEDABAD": {lat: 23.0225, lng: 72.5714}
+    };
+
+    // Pre-defined intermediate stops for accurate map routes
+    const routeStops = {
+        "BEED-NAGPUR": ["BEED", "JALNA", "WASHIM", "AMRAVATI", "WARDHA", "NAGPUR"],
+        "NAGPUR-BEED": ["NAGPUR", "WARDHA", "AMRAVATI", "WASHIM", "JALNA", "BEED"],
+        "PUNE-MUMBAI": ["PUNE", "LONAVALA", "PANVEL", "MUMBAI"],
+        "MUMBAI-PUNE": ["MUMBAI", "PANVEL", "LONAVALA", "PUNE"],
+        "NASHIK-PUNE": ["NASHIK", "SANGAMNER", "CHAKAN", "PUNE"],
+        "PUNE-NASHIK": ["PUNE", "CHAKAN", "SANGAMNER", "NASHIK"]
+    };
+
+    let appState = {
+        searchOrigin: "BEED", searchDest: "PUNE",
+        filteredBuses: [], selectedBus: null, selectedSeats: [],
+        passengerData: { details: [], email: "", phone: "", board: "", drop: "" },
+        wizardStep: 1, mapInstance: null, mapPolyline: null, mapBusMarker: null
+    };
+
+    function initApp() {
+        const tmrw = new Date(); tmrw.setDate(tmrw.getDate() + 1);
+        document.getElementById('search-date').value = tmrw.toISOString().split('T')[0];
+        renderGovtSlider();
+        updateHeaderAuth();
+        triggerSearchEngine(); 
+        setInterval(silentDataRefresh, 5000);
+    }
+
+    // 🚨 LOGIN / AUTH LOGIC 🚨
+    function openAuthModal() { document.getElementById('auth-modal').style.display = 'flex'; }
+    function closeAuthModal() { document.getElementById('auth-modal').style.display = 'none'; }
+    
+    function toggleAuthView(view) {
+        if(view === 'login') {
+            document.getElementById('view-login').style.display = 'block';
+            document.getElementById('view-register').style.display = 'none';
+            document.getElementById('tab-login').classList.add('border-[#d84e55]', 'text-[#d84e55]');
+            document.getElementById('tab-login').classList.remove('border-transparent', 'text-slate-400');
+            document.getElementById('tab-register').classList.add('border-transparent', 'text-slate-400');
+            document.getElementById('tab-register').classList.remove('border-[#d84e55]', 'text-[#d84e55]');
+        } else {
+            document.getElementById('view-login').style.display = 'none';
+            document.getElementById('view-register').style.display = 'block';
+            document.getElementById('tab-register').classList.add('border-[#d84e55]', 'text-[#d84e55]');
+            document.getElementById('tab-register').classList.remove('border-transparent', 'text-slate-400');
+            document.getElementById('tab-login').classList.add('border-transparent', 'text-slate-400');
+            document.getElementById('tab-login').classList.remove('border-[#d84e55]', 'text-[#d84e55]');
+        }
+    }
+
+    async function handleAuthSubmit(e, type) {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        const ogText = btn.innerHTML;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
+        btn.disabled = true;
+
+        try {
+            if (type === 'register') {
+                const data = {
+                    name: document.getElementById('reg_name').value,
+                    email: document.getElementById('reg_email').value,
+                    phone: document.getElementById('reg_phone').value,
+                    password: document.getElementById('reg_password').value
+                };
+                // Real DB Connection Point
+                const res = await fetch(API_BASE + '/users/register', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
+                });
+                const resData = await res.json();
+                
+                if(resData.success || res.ok) {
+                    alert("Registration Successful! Welcome to Seva Setu Bus.");
+                    localStorage.setItem('seva_user_auth', JSON.stringify(data));
+                    updateHeaderAuth();
+                    closeAuthModal();
+                } else {
+                    alert(resData.message || "Registration failed. User might exist.");
+                }
+            } else {
+                // Login Flow via fetching all users and matching credentials
+                const email = document.getElementById('log_email').value;
+                const pass = document.getElementById('log_password').value;
+                
+                const res = await fetch(API_BASE + '/users/all');
+                const resData = await res.json();
+                
+                if(resData.users) {
+                    const user = resData.users.find(u => u.email === email && u.password === pass);
+                    if(user) {
+                        localStorage.setItem('seva_user_auth', JSON.stringify(user));
+                        updateHeaderAuth();
+                        closeAuthModal();
+                    } else {
+                        alert("Invalid Email or Password.");
+                    }
+                } else { alert("Failed to connect to MongoDB Users Collection."); }
+            }
+        } catch(err) {
+            alert("❌ Server Offline! Cannot connect to MongoDB Server (Port 3000). Ensure 'node server.js' is running.");
+        } finally {
+            btn.innerHTML = ogText;
+            btn.disabled = false;
+        }
+    }
+
+    function updateHeaderAuth() {
+        const user = JSON.parse(localStorage.getItem('seva_user_auth'));
+        const authBtn = document.getElementById('header-auth-btn');
+        if(user && authBtn) {
+            authBtn.innerHTML = `
+                <i class="fa-solid fa-user-check text-base"></i> Hi, ${user.name.split(' ')[0]} 
+                <span onclick="logoutUser(event)" class="ml-2 text-xs text-red-200 hover:text-white underline cursor-pointer">Logout</span>
+            `;
+            authBtn.classList.replace('bg-[#d84e55]', 'bg-green-600');
+            authBtn.classList.replace('hover:bg-red-700', 'hover:bg-green-700');
+            authBtn.onclick = null; 
+        }
+    }
+    
+    function logoutUser(e) {
+        e.stopPropagation();
+        localStorage.removeItem('seva_user_auth');
+        window.location.reload();
+    }
+
+    // Modal Operations
+    function openFullscreenPage(id) { document.getElementById(id).style.display = 'block'; document.body.style.overflow = 'hidden'; }
+    function closeFullscreenPage(id) { document.getElementById(id).style.display = 'none'; document.body.style.overflow = 'auto'; }
+
+    function swapCities() {
+        const f = document.getElementById('search-from').value;
+        document.getElementById('search-from').value = document.getElementById('search-to').value;
+        document.getElementById('search-to').value = f;
+    }
+
+    async function fetchFromMongoDB() {
+        try {
+            const res = await fetch(API_BASE + '/data');
+            const data = await res.json();
+            return data.listings ? data.listings : [];
+        } catch(e) { console.error("MongoDB API connection failed.", e); return []; }
+    }
+
+    function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371; const dLat = (lat2 - lat1) * Math.PI / 180; const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    // 🚨 VIEW ALL BUSES LOGIC 🚨
+    async function viewAllBuses() {
+        document.getElementById('bus-results-container').innerHTML = `<div class="loader-spinner"></div>`;
+        appState.searchOrigin = "ALL";
+        appState.searchDest = "ROUTES";
+        document.getElementById('route-display-title').innerText = `ALL AVAILABLE BUSES`;
+
+        let adminListings = await fetchFromMongoDB();
+        
+        let mappedAdminBuses = adminListings.filter(item => item.module === 'buses' || item.module === 'bus').map((bus, index) => {
+            let o = bus.district ? bus.district.split('➔')[0]?.trim() || "UNKNOWN" : "UNKNOWN";
+            let d = bus.district ? bus.district.split('➔')[1]?.trim() || "UNKNOWN" : "UNKNOWN";
+            
+            let isMSRTC = bus.name.toUpperCase().includes('MSRTC') || bus.name.toUpperCase().includes('SHIVNERI');
+            let compName = bus.owner && bus.owner.includes("Company:") ? bus.owner.split('Company:')[1].trim() : bus.name;
+            
+            return {
+                id: bus.id || bus._id || `admin_bus_${index}`,
+                name: bus.name,               
+                company: compName,            
+                operatorType: isMSRTC ? "Government" : "Private",
+                busType: bus.type || "AC Sleeper Premium",
+                rating: (4.0 + Math.random()).toFixed(1),
+                reviews: Math.floor(Math.random()*500 + 50),
+                depTime: "21:00", arrTime: "06:30", duration: `8h 30m`, price: parseInt(bus.price) || 750,
+                seats: Math.floor(Math.random()*25 + 5),
+                from: o, to: d, isPrimo: !isMSRTC,
+                boardings: [`${o} Central Bus Stand`], droppings: [`${d} Highway Drop`],
+                image: bus.image || null 
+            };
+        });
+
+        appState.filteredBuses = [...mappedAdminBuses];
+        populateDynamicFilters(appState.filteredBuses);
+        runFilterPipeline();
+    }
+
+    async function triggerSearchEngine() {
+        let o = document.getElementById('search-from').value.trim().toUpperCase();
+        let d = document.getElementById('search-to').value.trim().toUpperCase();
+        if(!o || !d) return;
+
+        appState.searchOrigin = o;
+        appState.searchDest = d;
+        document.getElementById('route-display-title').innerText = `${o} ➔ ${d}`;
+        document.getElementById('bus-results-container').innerHTML = `<div class="loader-spinner"></div>`;
+
+        let adminListings = await fetchFromMongoDB();
+        
+        // 🚨 STRICT ROUTE MATCHING 🚨
+        let matchingAdminBuses = adminListings.filter(item => {
+            let isBusModule = (item.module === 'buses' || item.module === 'bus');
+            if (!isBusModule) return false;
+            let routeString = item.district ? item.district.toUpperCase() : "";
+            return (routeString.includes(o) && routeString.includes(d));
+        });
+
+        let mappedAdminBuses = matchingAdminBuses.map((bus, index) => {
+            let isMSRTC = bus.name.toUpperCase().includes('MSRTC') || bus.name.toUpperCase().includes('SHIVNERI');
+            let distKm = 300; 
+            if(mhDistrictsDB[o] && mhDistrictsDB[d]) distKm = calculateHaversineDistance(mhDistrictsDB[o].lat, mhDistrictsDB[o].lng, mhDistrictsDB[d].lat, mhDistrictsDB[d].lng);
+            let durationHrs = distKm / 46 || 6;
+            
+            let compName = bus.name; 
+            if(bus.owner && bus.owner.includes("Company:")) {
+                compName = bus.owner.split('Company:')[1].trim();
+            } else if (bus.owner) {
+                compName = bus.owner;
+            }
+            
+            return {
+                id: bus.id || bus._id, name: bus.name, company: compName,            
+                operatorType: isMSRTC ? "Government" : "Private", busType: bus.type || "AC Sleeper Premium",
+                rating: (4.0 + Math.random()).toFixed(1), reviews: Math.floor(Math.random()*500 + 50),
+                depTime: "21:00", arrTime: "06:30", duration: `${Math.floor(durationHrs)}h ${Math.floor((durationHrs%1)*60)}m`,
+                price: parseInt(bus.price) || 750, seats: Math.floor(Math.random()*25 + 5),
+                from: o, to: d, isPrimo: !isMSRTC,
+                boardings: [`${o} Central Bus Stand`], droppings: [`${d} Highway Drop`],
+                image: bus.image || null 
+            };
+        });
+
+        // 🚨 ZERO FAKE BUSES 🚨
+        appState.filteredBuses = [...mappedAdminBuses];
+        populateDynamicFilters(appState.filteredBuses);
+        runFilterPipeline();
+    }
+
+    function populateDynamicFilters(buses) {
+        const opsSet = new Set(); const boardSet = new Set(); const dropSet = new Set();
+        buses.forEach(b => { opsSet.add(b.company); b.boardings.forEach(bp=>boardSet.add(bp)); b.droppings.forEach(dp=>dropSet.add(dp)); });
+        
+        document.getElementById('filter-operators').innerHTML = Array.from(opsSet).map(o => `<label class="flex items-center gap-3 text-xs font-bold text-slate-600 mb-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded transition"><input type="checkbox" class="custom-checkbox filter-op" value="${o}" onchange="runFilterPipeline()"> ${o}</label>`).join('');
+        document.getElementById('filter-boarding').innerHTML = Array.from(boardSet).map(o => `<label class="flex items-center gap-3 text-xs font-bold text-slate-600 mb-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded transition"><input type="checkbox" class="custom-checkbox"> ${o}</label>`).join('');
+        document.getElementById('filter-dropping').innerHTML = Array.from(dropSet).map(o => `<label class="flex items-center gap-3 text-xs font-bold text-slate-600 mb-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded transition"><input type="checkbox" class="custom-checkbox"> ${o}</label>`).join('');
+    }
+
+    function resetAllFilters() {
+        document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        document.querySelector('input[name="op_type"][value="All"]').checked = true;
+        runFilterPipeline();
+    }
+
+    function runFilterPipeline() {
+        document.getElementById('bus-results-container').innerHTML = `<div class="loader-spinner"></div>`;
+        setTimeout(runFilterLogicOnly, 400);
+    }
+
+    function runFilterLogicOnly() {
+        const opType = document.querySelector('input[name="op_type"]:checked')?.value || "All";
+        const activeDeps = Array.from(document.querySelectorAll('.filter-dep:checked')).map(cb => cb.value);
+        const activeTypes = Array.from(document.querySelectorAll('.filter-type:checked')).map(cb => cb.value.toLowerCase());
+        const activeOps = Array.from(document.querySelectorAll('.filter-op:checked')).map(cb => cb.value);
+        const isPrimoChecked = document.querySelector('.filter-feature[value="primo"]')?.checked;
+
+        let finalResults = appState.filteredBuses.filter(bus => {
+            if(opType !== "All" && bus.operatorType !== opType) return false;
+            if(isPrimoChecked && !bus.isPrimo) return false;
+            if(activeOps.length > 0 && !activeOps.includes(bus.company)) return false;
+
+            if(activeTypes.length > 0) {
+                let typeStr = bus.busType.toLowerCase();
+                if(!activeTypes.some(t => typeStr.includes(t))) return false;
+            }
+
+            if(activeDeps.length > 0) {
+                let hour = parseInt(bus.depTime.split(":")[0]);
+                let timeCat = hour >= 6 && hour < 12 ? "morning" : (hour >= 12 && hour < 18 ? "afternoon" : (hour >= 18 ? "evening" : "night"));
+                if(!activeDeps.includes(timeCat)) return false;
+            }
+            return true;
+        });
+        renderResultsUI(finalResults);
+    }
+
+    function renderResultsUI(buses) {
+        const container = document.getElementById('bus-results-container');
+        document.getElementById('total-buses-count').innerText = buses.length;
+
+        if (buses.length === 0) {
+            container.innerHTML = `<div class="bg-white p-10 text-center rounded-xl border border-slate-200">
+                <i class="fa-solid fa-bus-slash text-4xl text-slate-300 mb-4"></i><h3 class="font-bold text-slate-800">No Buses Found</h3>
+                <p class="text-xs text-slate-500 mt-2">Try adjusting filters or checking routes in Admin Panel.</p></div>`;
+            return;
+        }
+
+        container.innerHTML = buses.map(bus => {
+            let primoLogo = bus.isPrimo ? `<span class="bg-[#242424] text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm mr-2 flex items-center gap-1"><i class="fa-solid fa-star text-yellow-400"></i> Primo</span>` : ``;
+            
+            return `
+            <div class="rb-card bg-white rounded-xl p-5 relative overflow-hidden flex flex-col md:flex-row justify-between gap-4">
+                <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-1">
+                        <h3 class="font-black text-slate-900 text-xl">${bus.company}</h3>
+                        ${primoLogo} <span class="bg-green-100 text-green-700 border border-green-300 text-[9px] font-bold px-1.5 py-0.5 rounded">ADMIN VERIFIED</span>
+                    </div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <p class="text-xs text-slate-500 font-bold">${bus.name} • ${bus.busType}</p>
+                        <span class="bg-green-600 text-white text-[9px] px-1.5 py-0.5 rounded flex items-center gap-1 font-bold"><i class="fa-solid fa-star text-[8px]"></i> ${bus.rating}</span>
+                        <span class="text-[10px] text-slate-400">${bus.reviews} ratings</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-4 text-slate-800">
+                        <div class="font-black text-xl">${bus.depTime} <p class="text-[10px] font-bold text-slate-400 mt-0.5 uppercase">${bus.from}</p></div>
+                        <div class="flex-1 border-t-2 border-dashed border-slate-200 relative text-center min-w-[50px] max-w-[150px]">
+                            <span class="absolute top-[-10px] left-1/2 transform -translate-x-1/2 bg-slate-100 px-2 py-0.5 text-[9px] text-slate-500 rounded">${bus.duration}</span>
+                        </div>
+                        <div class="font-black text-xl">${bus.arrTime} <p class="text-[10px] font-bold text-slate-400 mt-0.5 uppercase">${bus.to}</p></div>
+                    </div>
+                    
+                    <div class="mt-4 flex gap-2">
+                        <button onclick="openLiveTrackingMap('${bus.from}', '${bus.to}')" class="text-[10px] font-bold text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white transition px-2 py-1 rounded border border-blue-100"><i class="fa-solid fa-location-crosshairs"></i> Live Map</button>
+                        <span class="text-[10px] text-slate-500 bg-slate-50 px-2 py-1 rounded border border-slate-100"><i class="fa-solid fa-plug text-slate-400"></i> Charging</span>
+                        <span class="text-[10px] text-slate-500 bg-slate-50 px-2 py-1 rounded border border-slate-100"><i class="fa-solid fa-bottle-water text-blue-400"></i> Water</span>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col items-end justify-between border-t md:border-t-0 md:border-l border-slate-100 pt-4 md:pt-0 md:pl-6 text-right shrink-0">
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 tracking-wider">STARTING FARE</p>
+                        <p class="font-black text-3xl text-slate-900">₹${bus.price}</p>
+                        <p class="text-[10px] font-bold text-green-600 mt-1">${bus.seats} Seats Remaining</p>
+                    </div>
+                    <button onclick="startBookingWizard('${bus.id}')" class="bg-[#d84e55] hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider px-6 py-2.5 rounded shadow transition mt-4 w-full md:w-auto">
+                        VIEW SEATS <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    // --- MAP LOGIC (INTERMEDIATE STOPS IMPLEMENTATION) ---
+    function openLiveTrackingMap(origin, dest) {
+        document.getElementById('live-map-modal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        document.getElementById('map-route-title').innerText = `${origin} ➔ ${dest}`;
+        
+        let oNode = mhDistrictsDB[origin] || {lat:19.0, lng:73.0};
+        let dNode = mhDistrictsDB[dest] || {lat:20.0, lng:74.0};
+        
+        let dist = calculateHaversineDistance(oNode.lat, oNode.lng, dNode.lat, dNode.lng);
+        document.getElementById('map-dist-text').innerText = `${dist.toFixed(1)} km`;
+        document.getElementById('map-dur-text').innerText = `${Math.floor(dist/45)}h ${Math.floor(((dist/45)%1)*60)}m`;
+
+        if(!appState.mapInstance) {
+            appState.mapInstance = L.map('live-tracking-map', { zoomControl: false }).setView([19.75, 75.71], 6);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { 
+                attribution: '© Seva Setu Carto Navigation' 
+            }).addTo(appState.mapInstance);
+        }
+
+        if(appState.mapPolyline) appState.mapInstance.removeLayer(appState.mapPolyline);
+        if(appState.mapBusMarker) appState.mapInstance.removeLayer(appState.mapBusMarker);
+        if(window.markers) window.markers.forEach(m => appState.mapInstance.removeLayer(m));
+        window.markers = [];
+
+        let pathArray = [];
+        let routeKey = `${origin}-${dest}`;
+        let stops = routeStops[routeKey];
+
+        if(stops) {
+            // Plot exact predefined intermediate stops
+            stops.forEach(stop => {
+                if(mhDistrictsDB[stop]) {
+                    pathArray.push([mhDistrictsDB[stop].lat, mhDistrictsDB[stop].lng]);
+                    let m = L.marker([mhDistrictsDB[stop].lat, mhDistrictsDB[stop].lng], {
+                        icon: L.divIcon({className: 'route-stop-marker w-3 h-3', html:''})
+                    }).addTo(appState.mapInstance).bindPopup(`<b>${stop}</b>`);
+                    window.markers.push(m);
+                }
+            });
+        } else {
+            // Fallback: Plot Origin -> Mid -> Dest
+            pathArray.push([oNode.lat, oNode.lng]);
+            let midLat = (oNode.lat + dNode.lat) / 2 + 0.2; 
+            let midLng = (oNode.lng + dNode.lng) / 2 - 0.2;
+            pathArray.push([midLat, midLng]);
+            pathArray.push([dNode.lat, dNode.lng]);
+
+            let m1 = L.marker([oNode.lat, oNode.lng]).addTo(appState.mapInstance).bindPopup(`<b>${origin} Boarding</b>`).openPopup();
+            let m2 = L.marker([dNode.lat, dNode.lng]).addTo(appState.mapInstance).bindPopup(`<b>${dest} Drop</b>`);
+            window.markers.push(m1, m2);
+        }
+        
+        appState.mapPolyline = L.polyline(pathArray, { color: '#dc2626', weight: 4, dashArray: '5, 10', opacity: 0.8 }).addTo(appState.mapInstance);
+        appState.mapInstance.fitBounds(appState.mapPolyline.getBounds(), { padding: [50, 50] });
+
+        const busIcon = L.divIcon({ html: '<div class="bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center border-2 border-white shadow-xl shadow-red-600/50"><i class="fa-solid fa-bus"></i></div>', className: '' });
+        appState.mapBusMarker = L.marker(pathArray[0], { icon: busIcon }).addTo(appState.mapInstance);
+        setTimeout(() => { appState.mapInstance.invalidateSize(); }, 300);
+    }
+
+    function startBusAnimation() {
+        if(!appState.mapPolyline || !appState.mapBusMarker) return;
+        const path = appState.mapPolyline.getLatLngs();
+        let index = 0;
+        let simInt = setInterval(() => {
+            if(index >= path.length - 1) { clearInterval(simInt); alert("Simulation Complete: Bus arrived."); return; }
+            index++; appState.mapBusMarker.setLatLng(path[index]); appState.mapInstance.panTo(path[index]);
+        }, 1200);
+    }
+    function closeMapModal() { document.getElementById('live-map-modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
+
+    // --- BOOKING WIZARD LOGIC ---
+    function startBookingWizard(busId) {
+        
+        // Ensure user is logged in before booking
+        const user = localStorage.getItem('seva_user_auth');
+        if(!user) {
+            alert("⚠️ Please Login or Sign Up first to book a bus!");
+            openAuthModal();
+            return;
+        }
+
+        const bus = appState.filteredBuses.find(b => b.id === busId);
+        if(!bus) return;
+        appState.selectedBus = bus; appState.basePrice = bus.price; appState.selectedSeats = []; appState.wizardStep = 1;
+        
+        document.getElementById('wizard-bus-details').innerHTML = `${bus.company} | ${bus.from} ➔ ${bus.to}`;
+        document.getElementById('booking-wizard').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        renderWizardUI();
+    }
+    function closeBookingModal() { document.getElementById('booking-wizard').style.display = 'none'; document.body.style.overflow = 'auto'; }
+
+    function generateHTMLSeats(count, isSleeper = false) {
+        let html = '';
+        for(let i=1; i<=count; i++) {
+            if(!isSleeper && (i-1)%4 === 2) { html += `<div class="w-12"></div>`; } 
+            let seatClass = `seat ${isSleeper ? 'sleeper' : ''} ${Math.random() < 0.3 ? 'booked' : ''}`;
+            html += `<div class="${seatClass}" onclick="selectMatrixSeat(this, 'S${i}')">${seatClass.includes('booked') ? '' : 'S'+i}</div>`;
+        }
+        return html;
+    }
+
+    function selectMatrixSeat(el, seatId) {
+        if(el.classList.contains('booked')) return;
+        if(el.classList.contains('selected')) {
+            el.classList.remove('selected'); appState.selectedSeats = appState.selectedSeats.filter(s => s !== seatId);
+        } else {
+            if(appState.selectedSeats.length >= 6) { alert("Max 6 seats allowed."); return; }
+            el.classList.add('selected'); appState.selectedSeats.push(seatId);
+        }
+        document.getElementById('wizard-total-price').innerText = `₹${appState.selectedSeats.length * appState.basePrice}`;
+    }
+
+    function renderWizardUI() {
+        const content = document.getElementById('wizard-content');
+        const nextBtn = document.getElementById('wizard-next-btn');
+
+        const cTotal = appState.selectedSeats.length * appState.basePrice;
+        if(document.getElementById('wizard-total-price')) {
+            document.getElementById('wizard-total-price').innerText = `₹${cTotal}`;
+        }
+
+        switch(appState.wizardStep) {
+            case 1:
+                content.innerHTML = `
+                    <h3 class="font-bold text-lg text-slate-800 mb-4 border-b border-slate-200 pb-2">Select Checkpoints</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm"><h4 class="font-bold text-xs text-slate-500 mb-2 uppercase">Boarding Point</h4><label class="flex items-center gap-2 text-sm font-bold"><input type="radio" name="w_board" value="${appState.selectedBus.boardings[0]}" checked class="accent-red-500"> ${appState.selectedBus.boardings[0]}</label></div>
+                        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm"><h4 class="font-bold text-xs text-slate-500 mb-2 uppercase">Dropping Point</h4><label class="flex items-center gap-2 text-sm font-bold"><input type="radio" name="w_drop" value="${appState.selectedBus.droppings[0]}" checked class="accent-red-500"> ${appState.selectedBus.droppings[0]}</label></div>
+                    </div>`;
+                nextBtn.innerHTML = `View Seats`;
+                nextBtn.onclick = () => { appState.wizardStep = 2; renderWizardUI(); };
+                break;
+
+            case 2:
+                // 📸 ADVANCED IMAGE SLIDER LOGIC 📸
+                let defaultImg1 = "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80";
+                let defaultImg2 = "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=600&q=80";
+                
+                let sliderHtml = `
+                <div class="mb-6">
+                    <h4 class="font-bold text-xs text-slate-500 mb-2 uppercase tracking-widest"><i class="fa-solid fa-images text-blue-500"></i> Bus Gallery</h4>
+                    <div class="flex overflow-x-auto gap-3 snap-x hide-scroll pb-2">
+                        ${appState.selectedBus.image ? `<img src="${appState.selectedBus.image}" class="w-64 h-36 object-cover rounded-xl snap-center shrink-0 border border-slate-200 shadow-sm">` : ''}
+                        <img src="${defaultImg1}" class="w-64 h-36 object-cover rounded-xl snap-center shrink-0 border border-slate-200 shadow-sm">
+                        <img src="${defaultImg2}" class="w-64 h-36 object-cover rounded-xl snap-center shrink-0 border border-slate-200 shadow-sm">
+                    </div>
+                </div>`;
+
+                let isSleeper = appState.selectedBus.busType.toLowerCase().includes('sleeper');
+                let layoutHtml = isSleeper ? `
+                    <div class="flex gap-8 justify-center min-w-max mx-auto px-4 py-2">
+                        <div class="bus-layout-wrapper p-6"><div class="driver-cabin top-5 right-5"></div><h4 class="text-[9px] font-bold text-slate-400 text-center border-b border-slate-200 pb-2 mb-4 mt-8">LOWER DECK</h4><div class="grid grid-cols-3 gap-4">${generateHTMLSeats(15, true, 'L')}</div></div>
+                        <div class="bus-layout-wrapper p-6"><h4 class="text-[9px] font-bold text-slate-400 text-center border-b border-slate-200 pb-2 mb-4 mt-8">UPPER DECK</h4><div class="grid grid-cols-3 gap-4">${generateHTMLSeats(15, true, 'U')}</div></div>
+                    </div>` : `
+                    <div class="flex justify-center min-w-max mx-auto px-4 py-2">
+                        <div class="bus-layout-wrapper p-6"><div class="driver-cabin top-5 right-5"></div><h4 class="text-[9px] font-bold text-slate-400 text-center border-b border-slate-200 pb-2 mb-4 mt-8">SEATER COACH (2+2)</h4><div class="grid grid-cols-5 gap-4">${generateHTMLSeats(40, false, 'S')}</div></div>
+                    </div>`;
+
+                content.innerHTML = `
+                    <div class="flex flex-col lg:flex-row justify-between items-center mb-6 border-b-2 border-slate-200 pb-4 gap-6">
+                        <h3 class="font-black text-2xl text-slate-800"><i class="fa-solid fa-couch text-[#d84e55] mr-3"></i> Choose Your Seats</h3>
+                        <div class="flex gap-6 text-xs font-black uppercase tracking-widest bg-white border border-slate-200 px-5 py-3 rounded-xl shadow-sm">
+                            <span class="flex items-center gap-2"><div class="w-5 h-5 border-2 border-slate-300 bg-slate-50 rounded"></div> Available</span>
+                            <span class="flex items-center gap-2"><div class="w-5 h-5 border-2 border-[#d84e55] bg-[#d84e55] rounded"></div> Selected</span>
+                            <span class="flex items-center gap-2"><div class="w-5 h-5 border-2 border-slate-300 bg-slate-200 rounded opacity-60 flex items-center justify-center text-slate-400"><i class="fa-solid fa-xmark"></i></div> Booked</span>
+                        </div>
+                    </div>
+                    ${sliderHtml}
+                    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-inner overflow-x-auto">${layoutHtml}</div>`;
+                
+                nextBtn.innerHTML = `Proceed to Passenger Details <i class="fa-solid fa-arrow-right"></i>`;
+                nextBtn.onclick = () => {
+                    if(appState.selectedSeats.length === 0) { alert("Please select a seat!"); return; }
+                    appState.wizardStep = 3; renderWizardUI();
+                };
+                break;
+
+            case 3:
+                // Pre-fill user data if logged in
+                const userData = JSON.parse(localStorage.getItem('seva_user_auth'));
+                
+                let dynamicForms = appState.selectedSeats.map((seat, i) => `
+                    <div class="bg-white border-2 border-slate-200 p-6 md:p-8 rounded-3xl mb-6 shadow-sm relative overflow-hidden">
+                        <div class="absolute left-0 top-0 w-2 h-full bg-[#d84e55]"></div>
+                        <h4 class="font-black text-sm text-slate-800 mb-6 border-b border-slate-100 pb-4 flex items-center justify-between pl-2">
+                            <span class="uppercase tracking-widest"><i class="fa-solid fa-user-circle text-slate-400 mr-2 text-xl"></i> Traveler ${i+1}</span>
+                            <span class="bg-red-50 text-[#d84e55] border border-red-200 px-4 py-1.5 rounded-lg">Seat <span class="font-black text-lg">${seat}</span></span>
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pl-2">
+                            <div class="md:col-span-2">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Full Name</label>
+                                <input type="text" id="p_name_${i}" value="${i===0 ? (userData?userData.name:'') : ''}" class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl p-4 text-base font-black text-slate-800 outline-none focus:border-[#d84e55] focus:bg-white transition" placeholder="Passenger Name">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Age</label>
+                                <input type="number" id="p_age_${i}" class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl p-4 text-base font-black text-slate-800 outline-none focus:border-[#d84e55] focus:bg-white transition" placeholder="Years">
+                            </div>
+                        </div>
+                    </div>`).join('');
+
+                content.innerHTML = `
+                    <h3 class="font-black text-2xl text-slate-800 mb-8 border-b-2 border-slate-200 pb-4"><i class="fa-solid fa-address-card text-[#d84e55] mr-3"></i> Passenger Information</h3>
+                    <div>
+                        ${dynamicForms}
+                        <div class="border-2 border-slate-200 p-6 md:p-8 rounded-3xl bg-slate-900 text-white mt-8 shadow-xl relative overflow-hidden">
+                            <i class="fa-solid fa-envelope-open-text absolute right-[-20px] bottom-[-20px] text-[150px] text-slate-800 opacity-50 z-0"></i>
+                            <h4 class="font-black text-sm text-white mb-6 tracking-widest uppercase relative z-10"><i class="fa-solid fa-address-book text-red-500 mr-2"></i> Contact Details</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                                <div>
+                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Email Address</label>
+                                    <input type="email" id="c_email" value="${userData ? userData.email : ''}" class="w-full bg-slate-800 border-2 border-slate-700 rounded-xl p-4 text-base font-bold text-white outline-none focus:border-[#d84e55] transition" placeholder="ticket@example.com">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Mobile Number</label>
+                                    <input type="tel" id="c_phone" value="${userData ? (userData.phone || userData.contact || '') : ''}" class="w-full bg-slate-800 border-2 border-slate-700 rounded-xl p-4 text-base font-bold text-white outline-none focus:border-[#d84e55] transition" placeholder="+91 00000 00000">
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                nextBtn.innerHTML = `Verify & Proceed to Payment <i class="fa-solid fa-arrow-right"></i>`;
+                nextBtn.onclick = () => {
+                    let ok = true;
+                    let pArr = [];
+                    for(let i=0; i<appState.selectedSeats.length; i++) {
+                        let n = document.getElementById(`p_name_${i}`).value.trim();
+                        let a = document.getElementById(`p_age_${i}`).value.trim();
+                        if(!n || !a) ok = false;
+                        pArr.push({ name: n, age: a, seat: appState.selectedSeats[i] });
+                    }
+                    let em = document.getElementById('c_email').value.trim();
+                    let ph = document.getElementById('c_phone').value.trim();
+                    if(!em || !ph) ok = false;
+
+                    if(!ok) { alert("Mandatory: Please fill all credentials."); return; }
+
+                    appState.passengerData.details = pArr;
+                    appState.passengerData.email = em;
+                    appState.passengerData.phone = ph;
+                    
+                    appState.wizardStep = 4;
+                    renderWizardUI();
+                };
+                break;
+
+            case 4:
+                let tBase = appState.selectedSeats.length * appState.basePrice;
+                let tTax = Math.round(tBase * 0.05); 
+                let gTotal = tBase + tTax;
+
+                content.innerHTML = `
+                    <h3 class="font-black text-2xl text-slate-800 mb-8 border-b-2 border-slate-200 pb-4"><i class="fa-solid fa-shield-check text-green-500 mr-3"></i> Secure Payment Gateway</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
+                        <div class="lg:col-span-3">
+                            <h4 class="font-black text-sm text-slate-500 uppercase tracking-widest mb-6">Select Payment Mode</h4>
+                            <div class="space-y-5">
+                                <label class="flex items-center justify-between p-6 border-2 border-green-500 bg-green-50 rounded-3xl cursor-pointer shadow-lg transform transition hover:scale-[1.02]">
+                                    <div class="flex items-center gap-5">
+                                        <div class="bg-white p-3 rounded-xl shadow-sm border border-green-100"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" class="h-8" alt="UPI"></div>
+                                        <div>
+                                            <span class="font-black text-slate-900 block text-xl">UPI Platforms</span>
+                                            <span class="text-xs font-black text-green-700 uppercase tracking-widest">GPay • PhonePe • Paytm</span>
+                                        </div>
+                                    </div>
+                                    <input type="radio" name="pay_mode" value="upi" checked class="w-6 h-6 accent-green-600">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-2">
+                            <div class="bg-white border-2 border-slate-200 rounded-3xl p-8 shadow-xl relative overflow-hidden">
+                                <h4 class="font-black text-sm text-slate-500 uppercase tracking-widest mb-6 border-b border-slate-100 pb-4">Invoice Summary</h4>
+                                <div class="space-y-5 text-sm font-bold text-slate-600 mb-8">
+                                    <div class="flex justify-between items-center"><span class="text-slate-400">Route</span> <span class="bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 text-slate-800">${appState.selectedBus.from} ➔ ${appState.selectedBus.to}</span></div>
+                                    <div class="flex justify-between items-center"><span class="text-slate-400">Seats</span> <span class="text-blue-600 text-base">${appState.selectedSeats.join(', ')}</span></div>
+                                    <div class="flex justify-between items-center"><span class="text-slate-400">Base Fare</span> <span class="text-base text-slate-800">₹${tBase}</span></div>
+                                    <div class="flex justify-between items-center"><span class="text-slate-400">GST (5%)</span> <span class="text-base text-slate-800">₹${tTax}</span></div>
+                                    <div class="border-t-[3px] border-dashed border-slate-200 pt-6 mt-4">
+                                        <div class="flex justify-between items-end"><span class="text-slate-500 font-black uppercase tracking-widest text-xs mb-1">Grand Total</span> <span class="text-red-600 text-4xl font-black tracking-tighter">₹${gTotal}</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                document.getElementById('wizard-total-price').innerText = `₹${gTotal}`;
+                nextBtn.innerHTML = `Pay Securely (₹${gTotal}) <i class="fa-solid fa-lock"></i>`;
+                nextBtn.onclick = () => {
+                    nextBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-xl mr-3"></i> Authenticating Gateway...`;
+                    nextBtn.disabled = true;
+                    setTimeout(() => { appState.wizardStep = 5; renderWizardUI(); nextBtn.disabled = false; }, 2000);
+                };
+                break;
+                
+            case 5:
+                document.getElementById('wizard-total-price').parentElement.style.display = 'none'; 
+                let pnrHash = "MH" + Math.floor(Math.random()*900000 + 100000);
+                let finTBase = appState.selectedSeats.length * appState.basePrice;
+                let finTotal = finTBase + Math.round(finTBase * 0.05);
+
+                // 🚨 MONGODB API POST 🚨
+                const bookingData = {
+                    module: "buses",
+                    userName: appState.passengerData.details[0].name,
+                    contact: appState.passengerData.phone,
+                    district: `${appState.selectedBus.from} ➔ ${appState.selectedBus.to}`,
+                    amount: finTotal.toString(),
+                    status: "pending",
+                    date: document.getElementById('search-date').value
+                };
+
+                fetch(API_BASE + '/bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bookingData)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success) {
+                        // 🎫 DIGITAL TICKET DESIGN (KADAK REDBUS STYLE) 🎫
+                        content.innerHTML = `
+                            <div class="text-center py-6 px-4 md:px-12 max-w-3xl mx-auto">
+                                <div class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-4 border-[6px] border-green-50 shadow-inner"><i class="fa-solid fa-check"></i></div>
+                                <h2 class="text-3xl font-black text-slate-900 mb-6">Booking Confirmed!</h2>
+                                
+                                <div class="digital-ticket text-left">
+                                    <div class="bg-[#d84e55] text-white p-6 text-left relative overflow-hidden">
+                                        <i class="fa-solid fa-bus text-white/10 text-[80px] absolute right-4 top-[-10px]"></i>
+                                        <div class="flex justify-between items-center mb-4 relative z-10">
+                                            <h3 class="font-black text-xl tracking-wider">SEVA SETU EXPRESS</h3>
+                                            <span class="bg-white/20 px-3 py-1 rounded text-xs font-bold uppercase tracking-widest">E-Ticket</span>
+                                        </div>
+                                        <h4 class="text-2xl font-black relative z-10">${appState.selectedBus.company}</h4>
+                                        <p class="text-sm opacity-90 mt-1 font-medium relative z-10">${appState.selectedBus.name} • ${appState.selectedBus.busType}</p>
+                                    </div>
+                                    
+                                    <div class="p-8 text-left bg-white relative">
+                                        <div class="grid grid-cols-2 gap-6 mb-6">
+                                            <div>
+                                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">PNR No</p>
+                                                <p class="text-xl font-black text-slate-800">${pnrHash}</p>
+                                            </div>
+                                            <div class="text-right">
+                                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Seat(s)</p>
+                                                <p class="text-xl font-black text-blue-600">${appState.selectedSeats.join(', ')}</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Boarding</p>
+                                                <p class="text-lg font-black text-slate-800">${appState.selectedBus.from}</p>
+                                                <p class="text-sm font-bold text-red-600"><i class="fa-regular fa-clock"></i> ${appState.selectedBus.depTime}</p>
+                                                <p class="text-xs font-medium text-slate-500 mt-1">${appState.passengerData.board}</p>
+                                            </div>
+                                            <div class="text-right">
+                                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Dropping</p>
+                                                <p class="text-lg font-black text-slate-800">${appState.selectedBus.to}</p>
+                                                <p class="text-sm font-bold text-slate-600"><i class="fa-regular fa-clock"></i> ${appState.selectedBus.arrTime}</p>
+                                                <p class="text-xs font-medium text-slate-500 mt-1">${appState.passengerData.drop}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="ticket-divider"></div>
+                                    
+                                    <div class="bg-slate-50 p-6 flex justify-between items-center text-left">
+                                        <div>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Passenger</p>
+                                            <p class="text-sm font-black text-slate-800 uppercase">${bookingData.userName}</p>
+                                            <p class="text-xs font-bold text-slate-500 mt-1">${bookingData.contact}</p>
+                                        </div>
+                                        <div class="flex flex-col items-end">
+                                            <i class="fa-solid fa-qrcode text-4xl text-slate-800"></i>
+                                            <div class="barcode mt-2 opacity-70 w-16"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button onclick="location.reload()" class="mt-8 bg-slate-900 hover:bg-slate-800 text-white font-black text-sm uppercase tracking-widest px-8 py-4 rounded-xl transition shadow-xl hover:-translate-y-1 transform">
+                                    <i class="fa-solid fa-house mr-2"></i> Return to Home
+                                </button>
+                            </div>
+                        `;
+                        nextBtn.style.display = "none";
+                    } else {
+                        alert("⚠️ डेटाबेस एरर: " + data.error);
+                    }
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                    alert("❌ सर्व्हरशी संपर्क होऊ शकला नाही. कृपया 'node server.js' (Port 3000) चालू असल्याची खात्री करा.");
+                });
+                break;
+        }
+    }
+
+    // Govt Slider Population
+    function renderGovtSlider() {
+        const container = document.getElementById('govt-bus-slider');
+        const gOps = [
+            { id: "MSRTC", name: "Maharashtra State RTC", rating: 4.2 }, { id: "GSRTC", name: "Gujarat State RTC", rating: 3.9 },
+            { id: "KSRTC", name: "Karnataka State RTC", rating: 4.1 }, { id: "RSRTC", name: "Rajasthan State RTC", rating: 4.0 },
+            { id: "UPSRTC", name: "Uttar Pradesh State RTC", rating: 3.8 }, { id: "HRTC", name: "Himachal Road Transport", rating: 4.5 },
+            { id: "APSRTC", name: "Andhra Pradesh State RTC", rating: 4.3 }
+        ];
+        container.innerHTML = gOps.map(op => `
+            <div onclick="${op.id === 'MSRTC' ? 'forceGovtFilterSearch()' : ''}" class="min-w-[250px] bg-slate-50 border border-slate-200 p-4 rounded-2xl cursor-pointer hover:border-red-300 hover:shadow-md transition group">
+                <h3 class="font-black text-slate-900 text-lg flex items-center justify-between">${op.id} <span class="bg-green-500 text-white text-[9px] px-2 py-0.5 rounded-md"><i class="fa-solid fa-star"></i> ${op.rating}</span></h3>
+                <p class="text-xs text-slate-500 font-bold mt-1">${op.name}</p>
+            </div>
+        `).join('');
+    }
+
+    window.addEventListener('storage', () => { triggerSearchEngine(); });
+    window.onload = initApp;
+</script>
+</body>
+</html>

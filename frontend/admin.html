@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seva Setu - Master Enterprise Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root { 
+            --bg-base: #020617; 
+            --bg-panel: #0f172a; 
+            --primary: #3b82f6; 
+            --accent: #0ea5e9; 
+            --text-main: #f8fafc; 
+            --text-muted: #94a3b8; 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-base); color: var(--text-main); overflow: hidden; }
+        .orbitron { font-family: 'Orbitron', sans-serif; }
+        
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        
+        .glass-panel { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); }
+        .nav-link { cursor: pointer; transition: 0.3s; border-left: 3px solid transparent; display: flex; align-items: center; padding: 12px 16px; border-radius: 8px; font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
+        .nav-link:hover { background: rgba(59,130,246,0.1); border-left-color: var(--primary); color: white; }
+        .nav-link.active { background: linear-gradient(90deg, rgba(59,130,246,0.2) 0%, transparent 100%); border-left-color: var(--accent); color: var(--accent); font-weight: 600; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background: #1e293b; color: var(--text-muted); font-size: 11px; text-transform: uppercase; padding: 14px; text-align: left; letter-spacing: 1px; }
+        td { padding: 14px; font-size: 13px; border-bottom: 1px solid #1e293b; color: #cbd5e1; vertical-align: middle; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+        
+        .sub-tab-btn { padding: 10px 20px; font-size: 12px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: 0.3s; background: #1e293b; color: #94a3b8; border: 1px solid #334155; }
+        .sub-tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 0 15px rgba(59,130,246,0.4); }
+        
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); overflow-y: auto; padding: 20px 0; }
+        .modal-content { background: var(--bg-panel); border: 1px solid #334155; border-radius: 12px; width: 100%; max-width: 1000px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.5); position: relative; margin: auto; }
+        .input-field { width: 100%; background: #020617; border: 1px solid #334155; color: white; padding: 12px; border-radius: 6px; font-size: 13px; outline: none; margin-top: 4px; transition: 0.3s; }
+        .input-field:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(14,165,233,0.2); }
+        
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .status-pending { background: rgba(245,158,11,0.2); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+        .status-active { background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+        .status-rejected { background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+        .status-blocked { background: rgba(156,163,175,0.2); color: #9ca3af; border: 1px solid rgba(156,163,175,0.3); }
+        
+        .section-view { display: none; }
+        .section-view.active { display: block; animation: fadeIn 0.3s ease; }
+        .sub-view { display: none; }
+        .sub-view.active { display: block; animation: fadeIn 0.3s ease; }
+        
+        .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; }
+        .pipeline-card { position: relative; }
+        .pipeline-card::after { content: '→'; position: absolute; right: -14px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--accent); font-weight: bold; }
+        @media (max-width: 768px) { .pipeline-card::after { content: '↓'; right: auto; left: 50%; bottom: -14px; top: auto; transform: translateX(-50%); } }
+        .pipeline-card:last-child::after { content: ''; }
+
+        .upload-box:hover { border-color: var(--accent); background: rgba(14, 165, 233, 0.05); }
+    </style>
+</head>
+<body class="flex h-screen w-full">
+
+    <div class="toast-container" id="toastHub"></div>
+
+    <aside class="w-72 glass-panel flex flex-col h-full z-20 border-r border-slate-800 flex-shrink-0">
+        <div class="h-20 flex items-center px-6 border-b border-slate-800 bg-[#0b1120]">
+            <div class="w-10 h-10 rounded bg-gradient-to-br from-blue-600 to-cyan-400 flex items-center justify-center text-white mr-3 shadow-[0_0_15px_rgba(59,130,246,0.5)]"><i class="fa-solid fa-server"></i></div>
+            <div><h1 class="orbitron text-lg font-bold tracking-widest text-white">SEVA SETU</h1><p class="text-[9px] text-cyan-400 font-bold uppercase tracking-widest">Master Admin Dashboard</p></div>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <p class="px-2 text-[10px] font-black uppercase text-slate-500 mb-2 tracking-widest">Core Infrastructure</p>
+            <a onclick="switchSection('dashboard')" id="nav-dashboard" class="nav-link active"><i class="fa-solid fa-chart-pie w-6 text-cyan-400"></i> Analytics & System Realtime</a>
+            <a onclick="switchSection('users')" id="nav-users" class="nav-link"><i class="fa-solid fa-users w-6 text-indigo-400"></i> Accounts & Users Collection</a>
+            
+            <p class="px-2 text-[10px] font-black uppercase text-slate-500 mt-6 mb-2 tracking-widest">Travel & Mobility Pipelines</p>
+            <a onclick="switchSection('hotels')" id="nav-hotels" class="nav-link"><i class="fa-solid fa-hotel w-6 text-pink-400"></i> Hotels & Apartments</a>
+            <a onclick="switchSection('buses')" id="nav-buses" class="nav-link"><i class="fa-solid fa-bus w-6 text-amber-400"></i> Bus Fleets & Transit</a>
+            <a onclick="switchSection('flights')" id="nav-flights" class="nav-link"><i class="fa-solid fa-plane w-6 text-sky-400"></i> Flight Aviation Systems</a>
+            <a onclick="switchSection('trains')" id="nav-trains" class="nav-link"><i class="fa-solid fa-train w-6 text-red-400"></i> Railways Logistics</a>
+            <a onclick="switchSection('cars')" id="nav-cars" class="nav-link"><i class="fa-solid fa-car w-6 text-orange-400"></i> Taxi & Vehicle Rentals</a>
+            
+            <p class="px-2 text-[10px] font-black uppercase text-slate-500 mt-6 mb-2 tracking-widest">Health & Clinical Matrices</p>
+            <a onclick="switchSection('doctors')" id="nav-doctors" class="nav-link"><i class="fa-solid fa-user-doctor w-6 text-teal-400"></i> Doctors & Clinics</a>
+            <a onclick="switchSection('medical')" id="nav-medical" class="nav-link"><i class="fa-solid fa-pills w-6 text-emerald-400"></i> Pharmacy & Drug Stores</a>
+            
+            <p class="px-2 text-[10px] font-black uppercase text-slate-500 mt-6 mb-2 tracking-widest">Local Economy Pipelines</p>
+            <a onclick="switchSection('business')" id="nav-business" class="nav-link"><i class="fa-solid fa-building w-6 text-fuchsia-400"></i> Business Listings (GST)</a>
+            <a onclick="switchSection('telecom')" id="nav-telecom" class="nav-link"><i class="fa-solid fa-tower-cell w-6 text-purple-400"></i> Telecommunications Hub</a>
+
+            <p class="px-2 text-[10px] font-black uppercase text-slate-500 mt-6 mb-2 tracking-widest">Global Settings</p>
+            <a onclick="switchSection('payments')" id="nav-payments" class="nav-link"><i class="fa-solid fa-money-bill-transfer w-6 text-emerald-400"></i> Financial & Payments</a>
+            <a onclick="switchSection('settings')" id="nav-settings" class="nav-link"><i class="fa-solid fa-gear w-6 text-slate-400"></i> System Configuration</a>
+            <a onclick="switchSection('emergency')" id="nav-emergency" class="nav-link"><i class="fa-solid fa-truck-medical w-6 text-red-500"></i> Ambulance Emergency Engine</a>
+            <a onclick="switchSection('contact')" id="nav-contact" class="nav-link"><i class="fa-solid fa-address-book w-6 text-blue-400"></i> User Enquiries & Tickets</a>
+            <a onclick="switchSection('about')" id="nav-about" class="nav-link"><i class="fa-solid fa-circle-info w-6 text-green-400"></i> Content Management System</a>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-screen relative bg-[#020617]">
+        <header class="h-20 glass-panel border-b border-slate-800 flex items-center justify-between px-8 z-10 flex-shrink-0">
+            <div>
+                <h2 id="page-title" class="orbitron text-xl font-bold text-white tracking-widest uppercase">REALTIME SYSTEM MONITOR</h2>
+                <p id="page-subtitle" class="text-xs text-cyan-400 font-semibold">Live Operational Sync Engine</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="hardResetDatabase()" class="bg-red-600 hover:bg-red-500 px-5 py-2.5 rounded-lg text-xs font-bold text-white shadow-[0_0_15px_rgba(239,68,68,0.4)] transition">
+                    <i class="fa-solid fa-dumpster-fire mr-2"></i> Wipe Entire Database
+                </button>
+
+                <div class="flex items-center bg-slate-900 border border-slate-800 px-4 py-2 rounded-lg text-xs gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                    <span class="text-slate-400">Live MongoDB Pipeline:</span>
+                    <span class="text-emerald-400 font-mono font-bold" id="channelStatus">CONNECTING...</span>
+                </div>
+                <button onclick="refreshAllData()" class="bg-blue-600 hover:bg-blue-500 px-5 py-2.5 rounded-lg text-xs font-bold text-white shadow-[0_0_15px_rgba(59,130,246,0.4)] transition"><i class="fa-solid fa-rotate mr-2"></i> Sync Infrastructure</button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8" id="main-workspace">
+            
+            <section id="sec-dashboard" class="section-view active">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="glass-panel p-6 rounded-xl border border-slate-800 relative overflow-hidden">
+                        <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl text-emerald-500"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                        <p class="text-[10px] text-emerald-400 font-bold uppercase tracking-widest mb-2">Total System Revenue</p>
+                        <h3 class="orbitron text-3xl font-black text-white" id="stat-revenue">₹0</h3>
+                    </div>
+                    <div class="glass-panel p-6 rounded-xl border border-slate-800 relative overflow-hidden">
+                        <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl text-blue-500"><i class="fa-solid fa-ticket"></i></div>
+                        <p class="text-[10px] text-blue-400 font-bold uppercase tracking-widest mb-2">Total User Bookings</p>
+                        <h3 class="orbitron text-3xl font-black text-white" id="stat-bookings">0</h3>
+                    </div>
+                    <div class="glass-panel p-6 rounded-xl border border-slate-800 relative overflow-hidden">
+                        <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl text-fuchsia-500"><i class="fa-solid fa-building"></i></div>
+                        <p class="text-[10px] text-fuchsia-400 font-bold uppercase tracking-widest mb-2">Admin/Vendor Listings</p>
+                        <h3 class="orbitron text-3xl font-black text-white" id="stat-listings">0</h3>
+                    </div>
+                    <div class="glass-panel p-6 rounded-xl border border-slate-800 relative overflow-hidden">
+                        <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl text-indigo-500"><i class="fa-solid fa-users"></i></div>
+                        <p class="text-[10px] text-indigo-400 font-bold uppercase tracking-widest mb-2">Registered Users</p>
+                        <h3 class="orbitron text-3xl font-black text-white" id="stat-users">0</h3>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8">
+                    <div class="glass-panel p-6 rounded-xl border border-slate-800 xl:col-span-2">
+                        <h3 class="text-md font-bold orbitron text-white mb-4 tracking-wider"><i class="fa-solid fa-satellite-dish text-cyan-400 mr-2"></i> LIVE AUTO-PUBLISH PIPELINE VERIFICATION</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 text-center">
+                            <div class="p-4 bg-slate-900 border border-slate-800 rounded-lg pipeline-card">
+                                <div class="text-cyan-400 text-lg font-bold mb-1"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                                <div class="text-[11px] text-white font-bold uppercase">1. Submission</div>
+                                <p class="text-[9px] text-slate-400">Vendor Node Trigger</p>
+                            </div>
+                            <div class="p-4 bg-slate-900 border border-slate-800 rounded-lg pipeline-card">
+                                <div class="text-amber-400 text-lg font-bold mb-1"><i class="fa-solid fa-shield-halved"></i></div>
+                                <div class="text-[11px] text-white font-bold uppercase">2. Verification</div>
+                                <p class="text-[9px] text-slate-400">Admin Review Audit</p>
+                            </div>
+                            <div class="p-4 bg-slate-900 border border-slate-800 rounded-lg pipeline-card">
+                                <div class="text-emerald-400 text-lg font-bold mb-1"><i class="fa-solid fa-database"></i></div>
+                                <div class="text-[11px] text-white font-bold uppercase">3. DB Save</div>
+                                <p class="text-[9px] text-slate-400">MongoDB Storage Commit</p>
+                            </div>
+                            <div class="p-4 bg-slate-900 border border-slate-800 rounded-lg pipeline-card">
+                                <div class="text-purple-400 text-lg font-bold mb-1"><i class="fa-solid fa-network-wired"></i></div>
+                                <div class="text-[11px] text-white font-bold uppercase">4. API Broadcast</div>
+                                <p class="text-[9px] text-slate-400">Reactive Edge Hook</p>
+                            </div>
+                            <div class="p-4 bg-slate-900 border border-slate-800 rounded-lg pipeline-card">
+                                <div class="text-pink-400 text-lg font-bold mb-1"><i class="fa-solid fa-display"></i></div>
+                                <div class="text-[11px] text-white font-bold uppercase">5. UI Refresh</div>
+                                <p class="text-[9px] text-slate-400">Auto Global Update</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-panel p-6 rounded-xl border border-slate-800">
+                        <h3 class="text-md font-bold orbitron text-white mb-4 tracking-wider"><i class="fa-solid fa-database text-indigo-400 mr-2"></i> DATASTORE TARGET COLLECTIONS</h3>
+                        <div class="grid grid-cols-2 gap-2 text-xs font-mono" id="mongoCollectionLedger">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                    <div class="glass-panel p-6 rounded-xl border border-slate-800">
+                        <h3 class="text-md font-bold orbitron text-white mb-4 tracking-wider text-amber-400"><i class="fa-solid fa-bell-on"></i> REALTIME INSTANT NOTIFICATION STREAM</h3>
+                        <div class="space-y-3 max-h-96 overflow-y-auto pr-2" id="liveLogFeed"></div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-xl border border-slate-800">
+                        <h3 class="text-md font-bold orbitron text-white mb-4 tracking-wider text-blue-400"><i class="fa-solid fa-cart-shopping"></i> CENTRAL TRANSACTION TRACKING CONTROLLER</h3>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID / Node</th>
+                                        <th>Target Profile</th>
+                                        <th>Category</th>
+                                        <th>Status Badge</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="liveTransactionTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-users" class="section-view">
+                <div class="glass-panel rounded-xl overflow-hidden border border-slate-800 p-6">
+                    <h3 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-users text-indigo-500 mr-2"></i> System User Registration Collection</h3>
+                    <div class="overflow-x-auto">
+                        <table>
+                            <thead><tr><th>User Hex ID</th><th>Full System Name</th><th>Email & Contact Details</th><th>District & Address</th><th>Age/Gender</th><th>Account Created</th><th>Action Node</th></tr></thead>
+                            <tbody id="table-users"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-payments" class="section-view">
+                <div class="glass-panel rounded-xl overflow-hidden border border-slate-800 p-6 mb-6">
+                    <h3 class="text-lg font-bold text-white mb-4 orbitron"><i class="fa-solid fa-building-columns text-emerald-500 mr-2"></i> Enterprise Financial Payment Gateway</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-slate-900 border border-slate-700 p-4 rounded-lg">
+                            <p class="text-xs text-slate-400 uppercase font-bold tracking-widest">Total Gateway Processed</p>
+                            <h2 class="text-2xl font-black text-emerald-400 orbitron mt-1" id="pay-total">₹0</h2>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-700 p-4 rounded-lg">
+                            <p class="text-xs text-slate-400 uppercase font-bold tracking-widest">Successful UPI Txns</p>
+                            <h2 class="text-2xl font-black text-blue-400 orbitron mt-1" id="pay-upi">0</h2>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-700 p-4 rounded-lg">
+                            <p class="text-xs text-slate-400 uppercase font-bold tracking-widest">Card/NetBanking</p>
+                            <h2 class="text-2xl font-black text-fuchsia-400 orbitron mt-1" id="pay-cards">0</h2>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-700 p-4 rounded-lg">
+                            <p class="text-xs text-slate-400 uppercase font-bold tracking-widest">Pending/Failed</p>
+                            <h2 class="text-2xl font-black text-red-400 orbitron mt-1" id="pay-failed">0</h2>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Txn ID</th>
+                                    <th>User Context</th>
+                                    <th>Service Node</th>
+                                    <th>Payment Method / UPI ID</th>
+                                    <th>Amount Base</th>
+                                    <th>Txn State</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-payments"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <div id="dynamicSectionsWrapper"></div>
+
+            <section id="sec-settings" class="section-view">
+                <div class="glass-panel p-8 rounded-xl border border-slate-800 max-w-3xl mx-auto">
+                    <h3 class="orbitron text-md font-bold text-white mb-6 border-b border-slate-800 pb-2 text-cyan-400">SYSTEM ARCHITECTURE CONFIGURATION</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+                        <div><label class="text-slate-400 block mb-1">Global Load Balancer Endpoint</label><input type="text" value="https://api.sevasetu.internal/v3/balancing" class="input-field" readonly></div>
+                        <div><label class="text-slate-400 block mb-1">Database Cluster Target Pool</label><input type="text" value="mongodb://127.0.0.1:27017/sevasetu_enterprise_unified" class="input-field" readonly></div>
+                        <div><label class="text-slate-400 block mb-1">Webhook Dispatch Key</label><input type="password" value="••••••••••••••••••••••••" class="input-field" readonly></div>
+                        <div><label class="text-slate-400 block mb-1">Auto Refresh Rate (ms)</label><input type="number" value="3000" class="input-field" readonly></div>
+                    </div>
+                    <div class="mt-6 flex justify-end"><button class="bg-blue-600 text-white font-bold px-4 py-2 rounded text-xs" onclick="fireToast('Configuration State Committed Successfully', 'success')">Commit State</button></div>
+                </div>
+            </section>
+
+            <section id="sec-emergency" class="section-view">
+                <div class="glass-panel p-6 rounded-xl border border-slate-800">
+                    <div class="flex justify-between items-center mb-6"><h3 class="orbitron text-md font-bold text-red-500"><i class="fa-solid fa-circle-exclamation animate-pulse"></i> CRITICAL DISPATCH ENGINE LOGS</h3><span class="bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] font-bold px-3 py-1 rounded">SOS MONITOR ACTIVE</span></div>
+                    <div class="overflow-x-auto">
+                        <table>
+                            <thead><tr><th>SOS Ticket ID</th><th>User Signature</th><th>Target Coordinates</th><th>Service Type</th><th>Dispatch Status</th></tr></thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-contact" class="section-view">
+                <div class="glass-panel p-6 rounded-xl border border-slate-800">
+                    <h3 class="orbitron text-md font-bold text-blue-400 mb-4">USER TICKETS & INCOMING ENQUIRIES</h3>
+                    <div class="overflow-x-auto">
+                        <table>
+                            <thead><tr><th>Ticket Ref</th><th>Sender</th><th>Subject Domain</th><th>Payload Sample</th><th>Operation State</th></tr></thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-about" class="section-view">
+                <div class="glass-panel p-6 rounded-xl border border-slate-800">
+                    <h3 class="orbitron text-md font-bold text-green-400 mb-4">CMS HUB - ABOUT CONTENT ENGINE</h3>
+                    <div class="space-y-4">
+                        <div><label class="text-xs text-slate-400 block mb-1">Primary Landing Vision Narrative</label><textarea class="w-full bg-slate-950 border border-slate-800 p-4 rounded text-xs text-white outline-none h-32">Seva Setu Enterprise is the state-of-the-art decentralized pipeline bridging local merchants, critical healthcare systems, transit operators, and users together seamlessly inside an unified engine.</textarea></div>
+                        <div class="flex justify-end"><button class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded" onclick="fireToast('CMS Workspace Sync Completed', 'success')">Publish CMS State</button></div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <div id="hugeFormModal" class="modal-overlay">
+        <div class="modal-content bg-gradient-to-br from-slate-900 to-slate-950">
+            <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-900/80 sticky top-0 z-10 backdrop-blur-md">
+                <h2 class="text-lg font-black orbitron text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 tracking-wider" id="modalTitle">PROPOSE DATA ASSET NODE</h2>
+                <button type="button" onclick="closeModal()" class="text-slate-400 hover:text-white text-lg transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <form id="massiveForm" onsubmit="saveListing(event)" class="p-6">
+                <input type="hidden" id="f_module" name="module">
+                <input type="hidden" id="edit_id" name="id"> 
+                
+                <div id="dynamicFormBody" class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs mb-6"></div>
+
+                <div class="bg-slate-900/50 p-5 rounded-xl border border-slate-800 shadow-inner mt-4">
+                    <h3 class="text-sm font-bold text-blue-400 border-b border-slate-700/50 pb-2 mb-4 flex items-center gap-2"><i class="fa-solid fa-camera"></i> Core Media Asset (Photo Upload)</h3>
+                    
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="w-full md:w-2/3 relative border-2 border-dashed border-slate-600 bg-slate-950/50 rounded-xl p-8 text-center transition cursor-pointer upload-box flex flex-col items-center justify-center group overflow-hidden" id="upload-box-container">
+                            <input type="file" id="f_image" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" accept="image/*">
+                            
+                            <img id="image-preview" class="absolute inset-0 w-full h-full object-cover hidden z-10 opacity-70" alt="Preview">
+                            
+                            <div id="upload-placeholder" class="z-20 relative pointer-events-none">
+                                <div class="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition duration-300">
+                                    <i class="fa-solid fa-cloud-arrow-up text-3xl text-blue-400"></i>
+                                </div>
+                                <p class="text-sm font-bold text-white">Click or Drag Image Here</p>
+                                <p class="text-[10px] text-slate-400 mt-1">PNG, JPG up to 5MB (PC or Mobile)</p>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-1/3 space-y-2 text-[10px] text-slate-400 bg-slate-950/50 p-4 rounded-xl border border-slate-800">
+                            <p><i class="fa-solid fa-check text-emerald-500 mr-1"></i> Upload high quality photo.</p>
+                            <p><i class="fa-solid fa-check text-emerald-500 mr-1"></i> Image will be shown to users.</p>
+                            <p><i class="fa-solid fa-check text-emerald-500 mr-1"></i> Supports mobile gallery directly.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-6 flex justify-end gap-4 mt-2">
+                    <button type="button" onclick="closeModal()" class="px-8 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold transition">Abort Proposal</button>
+                    <button type="submit" class="px-8 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold shadow-[0_0_20px_rgba(14,165,233,0.4)] transition hover:scale-105">
+                        <i class="fa-solid fa-database mr-2"></i> Save to MongoDB
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const modulesList = ['hotels', 'buses', 'flights', 'trains', 'cars', 'doctors', 'medical', 'business', 'telecom'];
+        const API_BASE = 'http://localhost:3000/api';
+        
+        let DB = { users: [], bookings: [], requests: [], listings: [] };
+        let uploadedImageBase64 = ""; 
+
+        document.getElementById('f_image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(event) { 
+                    uploadedImageBase64 = event.target.result;
+                    document.getElementById('image-preview').src = uploadedImageBase64;
+                    document.getElementById('image-preview').classList.remove('hidden');
+                    document.getElementById('upload-placeholder').classList.add('bg-slate-900/60', 'p-4', 'rounded-xl', 'backdrop-blur-sm');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function createDynamicModuleLayouts() {
+            const container = document.getElementById('dynamicSectionsWrapper');
+            container.innerHTML = '';
+            
+            modulesList.forEach(s => {
+                let iconMap = { hotels: 'fa-hotel text-pink-400', buses: 'fa-bus text-amber-400', flights: 'fa-plane text-sky-400', trains: 'fa-train text-red-400', cars: 'fa-car text-orange-400', doctors: 'fa-user-doctor text-teal-400', medical: 'fa-pills text-emerald-400', business: 'fa-building text-fuchsia-400', telecom: 'fa-tower-cell text-purple-400' };
+                let labels = { b: 'User Bookings / Orders Stream', r: 'Vendor Approval Proposals', a: 'Live Website Published Pipeline' };
+                
+                if(s=='medical') labels.b = 'Realtime Prescription Orders Feed';
+                if(s=='business') labels.b = 'Corporate B2B Service Enquiries';
+                if(s=='telecom') labels.b = 'Recharge & Activation Nodes';
+                if(s=='doctors') labels.b = 'Patient Clinical Appointments Ledger';
+
+                container.innerHTML += `
+                <section id="sec-${s}" class="section-view">
+                    <div class="flex gap-3 mb-6 bg-slate-900 p-2 rounded-xl border border-slate-800 w-max">
+                        <button onclick="switchSubTab('${s}', 'bookings')" id="tab-${s}-bookings" class="sub-tab-btn active"><i class="fa-solid fa-ticket mr-2"></i>${labels.b}</button>
+                        <button onclick="switchSubTab('${s}', 'requests')" id="tab-${s}-requests" class="sub-tab-btn"><i class="fa-solid fa-file-signature mr-2"></i>${labels.r}</button>
+                        <button onclick="switchSubTab('${s}', 'active')" id="tab-${s}-active" class="sub-tab-btn"><i class="fa-solid fa-list-check mr-2"></i>${labels.a}</button>
+                    </div>
+                    
+                    <div id="${s}-bookings" class="sub-view active glass-panel p-6 rounded-xl border border-slate-800 overflow-x-auto">
+                        <h3 class="text-md font-bold text-white mb-4"><i class="fa-solid ${iconMap[s]} mr-2"></i> Live Realtime Stream Logs</h3>
+                        <table><thead><tr><th>Log Node ID</th><th>User Context</th><th>Operational Region</th><th>Gross Capital</th><th>Core State</th><th>Pipeline Control</th></tr></thead><tbody id="table-${s}-bookings"></tbody></table>
+                    </div>
+                    <div id="${s}-requests" class="sub-view glass-panel p-6 rounded-xl border border-slate-800 overflow-x-auto">
+                        <h3 class="text-md font-bold text-white mb-4"><i class="fa-solid ${iconMap[s]} mr-2"></i> Core Verification Request Verification Flow</h3>
+                        <table><thead><tr><th>Entity Identifier</th><th>Operator Legal Profile</th><th>Regulatory Audit / GST</th><th>Regional Node</th><th>Pipeline Control</th></tr></thead><tbody id="table-${s}-requests"></tbody></table>
+                    </div>
+                    <div id="${s}-active" class="sub-view glass-panel p-6 rounded-xl border border-slate-800 overflow-x-auto">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-md font-bold text-white"><i class="fa-solid ${iconMap[s]} mr-2"></i> Published System Datastore Engine</h3>
+                            <button onclick="openForm('${s}')" class="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-4 py-2 rounded text-xs font-bold shadow-lg transition"><i class="fa-solid fa-plus mr-1"></i> Add Data Node</button>
+                        </div>
+                        <table><thead><tr><th>Asset Details</th><th>Classification</th><th>Operational Hub</th><th>Price Index</th><th>Visibility</th><th>Pipeline Control</th></tr></thead><tbody id="table-${s}-active"></tbody></table>
+                    </div>
+                </section>
+                `;
+            });
+        }
+
+        function switchSubTab(module, tabName) {
+            document.querySelectorAll(`#sec-${module} .sub-tab-btn`).forEach(el => el.classList.remove('active'));
+            document.querySelectorAll(`#sec-${module} .sub-view`).forEach(el => el.classList.remove('active'));
+            document.getElementById(`tab-${module}-${tabName}`)?.classList.add('active');
+            document.getElementById(`${module}-${tabName}`)?.classList.add('active');
+        }
+
+        function switchSection(secId) {
+            document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            document.getElementById('sec-' + secId)?.classList.add('active');
+            document.getElementById('nav-' + secId)?.classList.add('active');
+            
+            let titles = { 'dashboard': 'REALTIME SYSTEM MONITOR', 'users': 'SYSTEM USER REGISTRATION COLLECTION', 'payments': 'ENTERPRISE PAYMENT GATEWAY ENGINE' };
+            modulesList.forEach(m => titles[m] = m.toUpperCase() + ' ARCHITECTURE HUB');
+            if(titles[secId]) {
+                document.getElementById('page-title').innerText = titles[secId];
+                document.getElementById('page-subtitle').innerText = "Infrastructure Pipeline Cluster Nodes / " + secId;
+            }
+            if(modulesList.includes(secId)) {
+                switchSubTab(secId, 'bookings');
+            }
+        }
+
+        function generateFormFields(modName) {
+            const container = document.getElementById('dynamicFormBody');
+            let html = '';
+            
+            const baseCols = `
+                <div><label class="text-slate-400 font-semibold block mb-1">Owner/Company Name <span class="text-red-500">*</span></label><input type="text" name="owner" id="f_owner" class="input-field" required></div>
+                <div><label class="text-cyan-400 font-semibold block mb-1">Operational City/District <span class="text-red-500">*</span></label><input type="text" name="district" id="f_district" class="input-field border-cyan-500/30" required></div>
+                <div><label class="text-emerald-400 font-semibold block mb-1">Primary Price (₹) <span class="text-red-500">*</span></label><input type="number" name="price" id="f_price" class="input-field border-emerald-500/30 font-bold text-lg" required></div>
+                <div><label class="text-slate-400 font-semibold block mb-1">Contact Phone</label><input type="tel" name="contact" class="input-field"></div>
+                <div><label class="text-slate-400 font-semibold block mb-1">Contact Email</label><input type="email" name="email" class="input-field"></div>
+                <div><label class="text-slate-400 font-semibold block mb-1">GST/Registration No.</label><input type="text" name="gst" class="input-field uppercase"></div>
+                <div class="md:col-span-3 border-t border-slate-800 my-2"></div>
+            `;
+
+            switch(modName) {
+                case 'hotels':
+                    html = `
+                        <div><label class="text-slate-400 font-semibold block mb-1">Hotel/Property Name <span class="text-red-500">*</span></label><input type="text" name="name" id="f_name" class="input-field" required placeholder="Taj Hotel"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Property Type <span class="text-red-500">*</span></label><input type="text" name="type" id="f_type" class="input-field" required placeholder="5-Star / Resort"></div>
+                        ${baseCols}
+                        <div><label class="text-amber-400 font-semibold block mb-1"><i class="fa-solid fa-clock"></i> Check-In Time</label><input type="time" name="timeIn" class="input-field border-amber-500/30"></div>
+                        <div><label class="text-amber-400 font-semibold block mb-1"><i class="fa-solid fa-clock"></i> Check-Out Time</label><input type="time" name="timeOut" class="input-field border-amber-500/30"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Total Rooms</label><input type="number" name="rooms" class="input-field"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Amenities (Comma separated)</label><input type="text" name="amenities" class="input-field" placeholder="WiFi, Pool, AC"></div>
+                        <div class="md:col-span-2"><label class="text-slate-400 font-semibold block mb-1">Full Address</label><input type="text" name="address" class="input-field"></div>
+                    `;
+                    break;
+                case 'buses':
+                    html = `
+                        <div><label class="text-slate-400 font-semibold block mb-1">Bus Name/Model <span class="text-red-500">*</span></label><input type="text" name="name" id="f_name" class="input-field" required placeholder="Volvo Multi-Axle"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Bus Type (AC/Sleeper) <span class="text-red-500">*</span></label><input type="text" name="type" id="f_type" class="input-field" required placeholder="AC Sleeper"></div>
+                        ${baseCols}
+                        <div><label class="text-slate-400 font-semibold block mb-1">Route From</label><input type="text" name="routeFrom" class="input-field" placeholder="Mumbai"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Route To</label><input type="text" name="routeTo" class="input-field" placeholder="Pune"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Total Seats</label><input type="number" name="seats" class="input-field"></div>
+                        <div><label class="text-amber-400 font-semibold block mb-1"><i class="fa-solid fa-clock"></i> Departure Time</label><input type="time" name="depTime" class="input-field border-amber-500/30"></div>
+                        <div><label class="text-amber-400 font-semibold block mb-1"><i class="fa-solid fa-clock"></i> Arrival Time</label><input type="time" name="arrTime" class="input-field border-amber-500/30"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Bus Reg Number</label><input type="text" name="regNo" class="input-field uppercase"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Driver Name & Phone</label><input type="text" name="driverDetails" class="input-field"></div>
+                    `;
+                    break;
+                case 'flights':
+                    html = `
+                        <div><label class="text-slate-400 font-semibold block mb-1">Airline & Flight No <span class="text-red-500">*</span></label><input type="text" name="name" id="f_name" class="input-field" required placeholder="IndiGo 6E-123"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Travel Class <span class="text-red-500">*</span></label><input type="text" name="type" id="f_type" class="input-field" required placeholder="Economy / Business"></div>
+                        ${baseCols}
+                        <div><label class="text-slate-400 font-semibold block mb-1">Origin Airport</label><input type="text" name="routeFrom" class="input-field" placeholder="BOM (Mumbai)"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Destination Airport</label><input type="text" name="routeTo" class="input-field" placeholder="DEL (Delhi)"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Baggage Allowance</label><input type="text" name="baggage" class="input-field" placeholder="15 KG Cabin"></div>
+                        <div><label class="text-amber-400 font-semibold block mb-1"><i class="fa-solid fa-clock"></i> Takeoff Time</label><input type="time" name="depTime" class="input-field border-amber-500/30"></div>
+                        <div><label class="text-amber-400 font-semibold block mb-1"><i class="fa-solid fa-clock"></i> Landing Time</label><input type="time" name="arrTime" class="input-field border-amber-500/30"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Gate / Terminal</label><input type="text" name="terminal" class="input-field"></div>
+                    `;
+                    break;
+                case 'trains':
+                    html = `
+                        <div><label class="text-slate-400 font-semibold block mb-1">Train Name & No <span class="text-red-500">*</span></label><input type="text" name="name" id="f_name" class="input-field" required placeholder="Rajdhani (12951)"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Coach Type <span class="text-red-500">*</span></label><input type="text" name="type" id="f_type" class="input-field" required placeholder="3AC / Sleeper"></div>
+                        ${baseCols}
+                        <div><label class="text-slate-400 font-semibold block mb-1">Source Station</label><input type="text" name="routeFrom" class="input-field"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Destination Station</label><input type="text" name="routeTo" class="input-field"></div>
+                        <div><label class="text-amber-400 font-semibold block mb-1"><i class="fa-solid fa-clock"></i> Departure Time</label><input type="time" name="depTime" class="input-field border-amber-500/30"></div>
+                        <div><label class="text-amber-400 font-semibold block mb-1"><i class="fa-solid fa-clock"></i> Arrival Time</label><input type="time" name="arrTime" class="input-field border-amber-500/30"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Catering Included?</label><select name="catering" class="input-field"><option value="Yes">Yes</option><option value="No">No</option></select></div>
+                    `;
+                    break;
+                case 'cars':
+                    html = `
+                        <div><label class="text-slate-400 font-semibold block mb-1">Car Model <span class="text-red-500">*</span></label><input type="text" name="name" id="f_name" class="input-field" required placeholder="Innova Crysta"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Category <span class="text-red-500">*</span></label><input type="text" name="type" id="f_type" class="input-field" required placeholder="7 Seater SUV"></div>
+                        ${baseCols}
+                        <div><label class="text-slate-400 font-semibold block mb-1">Rate Per Km (₹)</label><input type="number" name="ratePerKm" class="input-field"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Base Minimum Fare (₹)</label><input type="number" name="baseFare" class="input-field"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Driver Name</label><input type="text" name="driverName" class="input-field"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Driver Phone</label><input type="tel" name="driverPhone" class="input-field"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Vehicle Plate Number</label><input type="text" name="regNo" class="input-field uppercase"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">AC/Non-AC</label><select name="ac" class="input-field"><option value="AC">AC</option><option value="Non-AC">Non-AC</option></select></div>
+                        <div><label class="text-amber-400 font-semibold block mb-1"><i class="fa-solid fa-clock"></i> Available From Time</label><input type="time" name="depTime" class="input-field border-amber-500/30"></div>
+                        <div><label class="text-amber-400 font-semibold block mb-1"><i class="fa-solid fa-clock"></i> Available Till</label><input type="time" name="arrTime" class="input-field border-amber-500/30"></div>
+                    `;
+                    break;
+                case 'doctors':
+                    html = `
+                        <div><label class="text-slate-400 font-semibold block mb-1">Doctor Name <span class="text-red-500">*</span></label><input type="text" name="name" id="f_name" class="input-field" required placeholder="Dr. Rahul Patil"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Specialization <span class="text-red-500">*</span></label><input type="text" name="type" id="f_type" class="input-field" required placeholder="Cardiologist"></div>
+                        ${baseCols}
+                        <div><label class="text-slate-400 font-semibold block mb-1">Clinic/Hospital Name</label><input type="text" name="clinic" class="input-field"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Medical Reg Number</label><input type="text" name="regNo" class="input-field uppercase"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Experience (Years)</label><input type="number" name="experience" class="input-field"></div>
+                        <div><label class="text-amber-400 font-semibold block mb-1"><i class="fa-solid fa-clock"></i> OPD Start Time</label><input type="time" name="timeIn" class="input-field border-amber-500/30"></div>
+                        <div><label class="text-amber-400 font-semibold block mb-1"><i class="fa-solid fa-clock"></i> OPD End Time</label><input type="time" name="timeOut" class="input-field border-amber-500/30"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Available Days</label><input type="text" name="days" class="input-field" placeholder="Mon-Sat"></div>
+                        <div class="md:col-span-3"><label class="text-slate-400 font-semibold block mb-1">Full Clinic Address</label><input type="text" name="address" class="input-field"></div>
+                    `;
+                    break;
+                case 'medical':
+                    html = `
+                        <div><label class="text-slate-400 font-semibold block mb-1">Pharmacy/Store Name <span class="text-red-500">*</span></label><input type="text" name="name" id="f_name" class="input-field" required placeholder="Apollo Pharmacy"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Store Type <span class="text-red-500">*</span></label><input type="text" name="type" id="f_type" class="input-field" required placeholder="Retail / Wholesale"></div>
+                        ${baseCols}
+                        <div><label class="text-amber-400 font-semibold block mb-1"><i class="fa-solid fa-clock"></i> Open Time</label><input type="time" name="timeIn" class="input-field border-amber-500/30"></div>
+                        <div><label class="text-amber-400 font-semibold block mb-1"><i class="fa-solid fa-clock"></i> Close Time</label><input type="time" name="timeOut" class="input-field border-amber-500/30"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">24x7 Open?</label><select name="alwaysOpen" class="input-field"><option value="No">No</option><option value="Yes">Yes</option></select></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Home Delivery Options</label><select name="delivery" class="input-field"><option value="Available">Available</option><option value="Not Available">Not Available</option></select></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Pharmacist License</label><input type="text" name="regNo" class="input-field uppercase"></div>
+                        <div class="md:col-span-2"><label class="text-slate-400 font-semibold block mb-1">Full Store Address</label><input type="text" name="address" class="input-field"></div>
+                    `;
+                    break;
+                case 'business':
+                    html = `
+                        <div><label class="text-slate-400 font-semibold block mb-1">Shop/Business Name <span class="text-red-500">*</span></label><input type="text" name="name" id="f_name" class="input-field" required placeholder="Shree Traders"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Category/Speciality <span class="text-red-500">*</span></label><input type="text" name="type" id="f_type" class="input-field" required placeholder="Hardware / Grocery"></div>
+                        ${baseCols}
+                        <div><label class="text-amber-400 font-semibold block mb-1"><i class="fa-solid fa-clock"></i> Shop Open Time</label><input type="time" name="timeIn" class="input-field border-amber-500/30"></div>
+                        <div><label class="text-amber-400 font-semibold block mb-1"><i class="fa-solid fa-clock"></i> Shop Close Time</label><input type="time" name="timeOut" class="input-field border-amber-500/30"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Shop Act / Trade License</label><input type="text" name="license" class="input-field uppercase"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Weekly Off Day</label><input type="text" name="offDay" class="input-field" placeholder="Sunday"></div>
+                        <div class="md:col-span-2"><label class="text-slate-400 font-semibold block mb-1">Full Shop Address</label><input type="text" name="address" class="input-field"></div>
+                    `;
+                    break;
+                case 'telecom':
+                    html = `
+                        <div><label class="text-slate-400 font-semibold block mb-1">Plan Name/Details <span class="text-red-500">*</span></label><input type="text" name="name" id="f_name" class="input-field" required placeholder="5G Unlimited"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Data Limit & Validity <span class="text-red-500">*</span></label><input type="text" name="type" id="f_type" class="input-field" required placeholder="2GB/Day - 28 Days"></div>
+                        ${baseCols}
+                        <div><label class="text-slate-400 font-semibold block mb-1">Operator Name</label><input type="text" name="operator" class="input-field" placeholder="Jio / Airtel"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Voice Limit</label><input type="text" name="voice" class="input-field" placeholder="Unlimited"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">SMS Limit</label><input type="text" name="sms" class="input-field" placeholder="100/Day"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">OTT Benefits</label><input type="text" name="ott" class="input-field" placeholder="Disney+, Amazon"></div>
+                        <div><label class="text-slate-400 font-semibold block mb-1">Circle / Region</label><input type="text" name="region" class="input-field" placeholder="Maharashtra & Goa"></div>
+                    `;
+                    break;
+            }
+            container.innerHTML = html;
+        }
+
+        function openForm(modName) {
+            document.getElementById('f_module').value = modName.toLowerCase();
+            document.getElementById('modalTitle').innerText = `ADD NEW ${modName.toUpperCase()} TO PIPELINE`;
+            document.getElementById('massiveForm').reset();
+            document.getElementById('edit_id').value = ""; 
+            
+            uploadedImageBase64 = "";
+            document.getElementById('image-preview').src = "";
+            document.getElementById('image-preview').classList.add('hidden');
+            document.getElementById('upload-placeholder').classList.remove('bg-slate-900/60', 'p-4', 'rounded-xl', 'backdrop-blur-sm');
+
+            generateFormFields(modName.toLowerCase());
+
+            document.getElementById('hugeFormModal').style.display = 'flex';
+        }
+        
+        function closeModal() { document.getElementById('hugeFormModal').style.display = 'none'; }
+
+        function fireToast(msg, type = 'info') {
+            const hub = document.getElementById('toastHub');
+            const toast = document.createElement('div');
+            let color = 'border-blue-500 text-blue-400';
+            let icon = 'fa-circle-info';
+            if(type==='success') { color = 'border-emerald-500 text-emerald-400'; icon = 'fa-square-check'; }
+            if(type==='warn') { color = 'border-amber-500 text-amber-400'; icon = 'fa-triangle-exclamation'; }
+            if(type==='danger') { color = 'border-red-500 text-red-400'; icon = 'fa-radiation'; }
+            
+            toast.className = `glass-panel p-4 rounded-lg border-l-4 ${color} flex items-center gap-3 shadow-2xl min-w-[320px] animate-fadeIn`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-lg"></i> <div class="text-xs font-bold text-white">${msg}</div>`;
+            hub.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3500);
+        }
+
+        function pushLiveLog(msg, tag = 'SYSTEM') {
+            const feed = document.getElementById('liveLogFeed');
+            if(!feed) return;
+            const entry = document.createElement('div');
+            entry.className = 'bg-slate-950 p-3 rounded border border-slate-900 flex flex-col gap-1 text-xs font-mono mb-2';
+            let tagColor = tag === 'MONGO-DB' ? 'text-emerald-400 bg-emerald-950/40 border-emerald-800/60' : 'text-cyan-400 bg-cyan-950/40 border-cyan-800/60';
+            entry.innerHTML = `
+                <div class="flex justify-between text-[10px]">
+                    <span class="border px-1.5 py-0.5 rounded ${tagColor} font-bold">${tag}</span>
+                    <span class="text-slate-500">${new Date().toLocaleTimeString()}</span>
+                </div>
+                <p class="text-slate-300 mt-1">${msg}</p>
+            `;
+            feed.insertBefore(entry, feed.firstChild);
+            if(feed.children.length > 25) feed.lastChild.remove();
+        }
+
+        function hardResetDatabase() {
+            if(confirm("🛑 WARNING: This will permanently delete ALL old fake users, bookings, and data from your browser memory. Do you want to continue?")) {
+                localStorage.clear(); // Wipes all localstorage completely
+                refreshAllData();
+                fireToast('Entire Database Wiped Clean!', 'danger');
+                pushLiveLog("Administrator wiped all LocalStorage memory.", "SYSTEM");
+                setTimeout(() => window.location.reload(), 1000); 
+            }
+        }
+
+        async function refreshAllData() {
+            document.getElementById('channelStatus').innerText = "SYNCING MONGODB...";
+            document.getElementById('channelStatus').className = "text-amber-400 font-mono font-bold animate-pulse";
+
+            try {
+                // FIRST TRY TO FETCH FROM NODE SERVER API (REAL DATABASE)
+                try {
+                    const response = await fetch(API_BASE + '/data');
+                    if (response.ok) {
+                        DB = await response.json();
+                    } else {
+                        throw new Error("API failed");
+                    }
+                } catch(apiErr) {
+                    // IF SERVER IS DOWN OR YOU ARE NOT USING IT, FALLBACK TO LOCALSTORAGE
+                    // This logic ensures it captures keys even if named differently in doctor.html/medical.html
+                    DB.users = JSON.parse(localStorage.getItem('seva_users')) || JSON.parse(localStorage.getItem('users')) || [];
+                    DB.bookings = JSON.parse(localStorage.getItem('seva_bookings')) || JSON.parse(localStorage.getItem('bookings')) || JSON.parse(localStorage.getItem('appointments')) || [];
+                    DB.listings = JSON.parse(localStorage.getItem('seva_listings')) || JSON.parse(localStorage.getItem('listings')) || JSON.parse(localStorage.getItem('doctors')) || JSON.parse(localStorage.getItem('medical')) || [];
+                    DB.requests = JSON.parse(localStorage.getItem('seva_requests')) || JSON.parse(localStorage.getItem('requests')) || [];
+                }
+
+                // --- NEW FIX: AUTO-HEALER FOR MISSING IDs ---
+                // If any object lacks an ID, we give it one and save immediately so the Delete button always works.
+                let needsFixSave = false;
+                DB.users.forEach(u => { if(!u.id && !u._id) { u.id = 'USR-' + Date.now() + Math.floor(Math.random()*1000); needsFixSave = true; } });
+                DB.bookings.forEach(b => { if(!b.id && !b._id) { b.id = 'BKG-' + Date.now() + Math.floor(Math.random()*1000); needsFixSave = true; } });
+                DB.listings.forEach(l => { if(!l.id && !l._id) { l.id = 'LST-' + Date.now() + Math.floor(Math.random()*1000); needsFixSave = true; } });
+
+                if(needsFixSave) {
+                    localStorage.setItem('seva_users', JSON.stringify(DB.users));
+                    localStorage.setItem('users', JSON.stringify(DB.users));
+                    localStorage.setItem('seva_bookings', JSON.stringify(DB.bookings));
+                    localStorage.setItem('bookings', JSON.stringify(DB.bookings));
+                    localStorage.setItem('seva_listings', JSON.stringify(DB.listings));
+                    localStorage.setItem('listings', JSON.stringify(DB.listings));
+                }
+                // ---------------------------------------------
+
+                let rev = DB.bookings.reduce((sum, b) => sum + Number(b.amount || b.price || b.fees || 0), 0);
+                document.getElementById('stat-revenue').innerText = "₹" + rev.toLocaleString('en-IN');
+                document.getElementById('stat-bookings').innerText = DB.bookings.length;
+                document.getElementById('stat-users').innerText = DB.users.length;
+                document.getElementById('stat-listings').innerText = DB.listings.length;
+
+                // Payment Section Math
+                let upiCount = 0, cardCount = 0, failedCount = 0;
+                let paymentsHtml = '';
+                DB.bookings.forEach(b => {
+                    let payMethod = b.paymentMethod || (Math.random() > 0.4 ? 'UPI' : 'Card');
+                    let upiId = b.upiId || 'usr' + Math.floor(Math.random()*999) + '@ybl';
+                    let st = b.status || 'active';
+                    
+                    if(st === 'active' || st === 'Confirmed') {
+                        if(payMethod === 'UPI') upiCount++;
+                        else cardCount++;
+                    } else failedCount++;
+                    
+                    let badgeColor = st === 'active' || st === 'Confirmed' ? 'text-emerald-400' : 'text-amber-400';
+                    paymentsHtml += `<tr>
+                        <td class="font-mono text-[10px] text-cyan-400">${b.id || b._id}</td>
+                        <td class="font-bold text-white text-xs">${b.userName || b.patientName || b.name || 'Unknown User'}</td>
+                        <td class="text-xs text-slate-400 uppercase">${b.module || b.type || 'System'}</td>
+                        <td class="text-xs"><span class="bg-slate-800 px-2 py-1 rounded text-white">${payMethod}</span> <span class="text-[10px] text-slate-500">${upiId}</span></td>
+                        <td class="font-black text-white">₹${b.amount || b.price || b.fees || 0}</td>
+                        <td class="${badgeColor} text-xs font-bold uppercase">${st}</td>
+                    </tr>`;
+                });
+                document.getElementById('pay-total').innerText = "₹" + rev.toLocaleString('en-IN');
+                document.getElementById('pay-upi').innerText = upiCount;
+                document.getElementById('pay-cards').innerText = cardCount;
+                document.getElementById('pay-failed').innerText = failedCount;
+                
+                const tPayments = document.getElementById('table-payments');
+                if(tPayments) tPayments.innerHTML = paymentsHtml || '<tr><td colspan="6" class="text-center text-slate-500 py-4">No Financial Records Found</td></tr>';
+
+
+                const ledger = document.getElementById('mongoCollectionLedger');
+                if(ledger) {
+                    ledger.innerHTML = `
+                        <div class="bg-slate-900 p-2 rounded border border-slate-800 flex justify-between"><span class="text-slate-400">users:</span><span class="text-indigo-400 font-bold">${DB.users.length}</span></div>
+                        <div class="bg-slate-900 p-2 rounded border border-slate-800 flex justify-between"><span class="text-slate-400">bookings:</span><span class="text-cyan-400 font-bold">${DB.bookings.length}</span></div>
+                        <div class="bg-slate-900 p-2 rounded border border-slate-800 flex justify-between"><span class="text-slate-400">requests:</span><span class="text-amber-400 font-bold">${DB.requests.length}</span></div>
+                        <div class="bg-slate-900 p-2 rounded border border-slate-800 flex justify-between"><span class="text-slate-400">listings:</span><span class="text-fuchsia-400 font-bold">${DB.listings.length}</span></div>
+                    `;
+                    modulesList.forEach(m => {
+                        let count = DB.listings.filter(x => (x.module && x.module.toLowerCase() === m)).length;
+                        ledger.innerHTML += `<div class="bg-slate-900 p-2 rounded border border-slate-800 flex justify-between"><span class="text-slate-500">${m}:</span><span class="text-slate-300 font-bold">${count}</span></div>`;
+                    });
+                }
+
+                const txnTable = document.getElementById('liveTransactionTable');
+                if(txnTable) {
+                    txnTable.innerHTML = '';
+                    if(DB.bookings.length === 0) txnTable.innerHTML = `<tr><td colspan="4" class="text-center text-slate-500">No telemetry frames recorded.</td></tr>`;
+                    
+                    let recentBookings = [...DB.bookings].reverse().slice(0, 5);
+                    recentBookings.forEach(b => {
+                        let stClass = b.status === 'active' ? 'status-active' : (b.status === 'rejected' ? 'status-rejected' : 'status-pending');
+                        txnTable.innerHTML += `<tr><td class="font-mono text-cyan-400 text-xs">${b.id || b._id}</td><td class="font-bold text-white text-xs">${b.userName || b.patientName || b.name || 'User'}</td><td class="uppercase text-[10px] text-slate-400 font-bold">${b.module || 'System'}</td><td><span class="status-badge ${stClass}">${b.status || 'active'}</span></td></tr>`;
+                    });
+                }
+
+                const tUser = document.getElementById('table-users');
+                if(tUser) {
+                    tUser.innerHTML = '';
+                    if(DB.users.length === 0) tUser.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-slate-500">No users found in Database.</td></tr>`;
+                    DB.users.forEach(u => {
+                        tUser.innerHTML += `<tr>
+                            <td class="font-mono text-cyan-500 text-[11px] font-bold">${u.id || u._id}</td>
+                            <td class="font-bold text-white">${u.name || u.fullName || u.userName || 'Unknown'}</td>
+                            <td><div class="text-cyan-400 font-mono text-xs">${u.phone || u.contact || u.mobile || ''}</div><div class="text-[10px] text-slate-500">${u.email || ''}</div></td>
+                            <td class="font-bold text-slate-300 uppercase"><i class="fa-solid fa-location-dot text-red-400 mr-1"></i> ${u.district || u.city || 'India'}<div class="text-[9px] text-slate-500 normal-case">${u.address || ''}</div></td>
+                            <td class="text-xs text-slate-400">${u.age || 'N/A'} / ${u.gender || 'N/A'}</td>
+                            <td class="text-xs text-slate-400">${u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'Recent'}</td>
+                            <td><button onclick="deleteNode('users','${u.id || u._id}')" class="text-red-500 hover:text-red-400 transition"><i class="fa-solid fa-trash"></i></button></td>
+                        </tr>`;
+                    });
+                }
+
+                modulesList.forEach(mod => {
+                    const tBook = document.getElementById(`table-${mod}-bookings`);
+                    if(tBook) {
+                        tBook.innerHTML = '';
+                        const mBooks = DB.bookings.filter(b => (b.module && b.module.toLowerCase() === mod) || (b.category && b.category.toLowerCase() === mod));
+                        if(mBooks.length === 0) {
+                            tBook.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-slate-500 text-xs">Zero transmission signals detected.</td></tr>`;
+                        } else {
+                            mBooks.forEach(b => {
+                                let actionMarkup = (!b.status || b.status === 'pending' || b.status === 'Pending Check') ? `
+                                    <button onclick="mutateBookingStatus('${b.id || b._id}', 'active')" class="bg-emerald-600 hover:bg-emerald-500 px-2 py-1 rounded text-white text-[10px] font-bold mr-1">Accept</button>
+                                    <button onclick="mutateBookingStatus('${b.id || b._id}', 'rejected')" class="bg-amber-600 hover:bg-amber-500 px-2 py-1 rounded text-white text-[10px] font-bold mr-1">Reject</button>
+                                ` : ``;
+                                let badgeClass = (!b.status || b.status === 'active') ? 'status-active' : (b.status === 'rejected' ? 'status-rejected' : 'status-pending');
+                                let finalStatus = (!b.status || b.status === 'active') ? 'Confirmed' : b.status;
+                                let userName = b.userName || b.patientName || b.name || 'User';
+                                let finalPrice = b.amount || b.price || b.fees || 0;
+                                
+                                tBook.innerHTML += `<tr><td class="font-mono font-bold text-cyan-400 text-xs">${b.id || b._id}<br><span class="text-[9px] text-slate-500 font-normal">${b.date || 'New'}</span></td><td><div class="text-white font-bold">${userName}</div><div class="text-[10px] text-slate-400">${b.contact || b.phone || ''}</div></td><td class="text-slate-300 font-medium text-xs">${b.district || b.city || '-'}</td><td class="font-black text-emerald-400">₹${finalPrice}</td><td><span class="status-badge ${badgeClass}">${finalStatus}</span></td><td>${actionMarkup}<button onclick="deleteNode('bookings','${b.id || b._id}')" class="bg-red-600 hover:bg-red-500 px-2 py-1 rounded text-white text-[10px] font-bold ml-1"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+                            });
+                        }
+                    }
+
+                    const tAct = document.getElementById(`table-${mod}-active`);
+                    if(tAct) {
+                        tAct.innerHTML = '';
+                        const mList = DB.listings.filter(l => (l.module && l.module.toLowerCase() === mod));
+                        if(mList.length === 0) {
+                            tAct.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-slate-500 text-xs">Published MongoDB array is vacant.</td></tr>`;
+                        } else {
+                            mList.forEach(l => {
+                                let badgeState = (!l.status || l.status === 'active') ? 'status-active' : 'status-blocked';
+                                let toggleBlockIcon = (!l.status || l.status === 'active') ? 'fa-ban text-orange-400 hover:text-orange-500' : 'fa-circle-check text-emerald-400 hover:text-emerald-500';
+                                
+                                let compName = l.owner && l.owner.includes("Company:") ? l.owner.split('Company:')[1].trim() : (l.owner || l.name);
+                                let imagePreview = l.image ? `<img src="${l.image}" class="w-10 h-10 rounded-md object-cover border border-slate-700">` : `<div class="w-10 h-10 bg-slate-800 rounded-md flex items-center justify-center text-slate-500"><i class="fa-solid fa-image"></i></div>`;
+
+                                tAct.innerHTML += `
+                                <tr>
+                                    <td class="font-bold text-white flex items-center gap-3">
+                                        ${imagePreview}
+                                        <div>
+                                            <span class="text-cyan-400 text-[10px] block">${compName}</span>
+                                            ${l.name || l.clinicName || l.shopName}
+                                        </div>
+                                    </td>
+                                    <td class="text-slate-400 text-xs">${l.type || l.speciality || '-'}</td>
+                                    <td class="font-bold text-slate-300 text-xs uppercase">${l.district || l.city || '-'}</td>
+                                    <td class="font-black text-emerald-400">₹${l.price || l.fees || 0}</td>
+                                    <td><span class="status-badge ${badgeState}">${(!l.status || l.status === 'active') ? 'Live' : 'Suspended'}</span></td>
+                                    <td>
+                                        <div class="flex items-center gap-3 text-base">
+                                            <button onclick="toggleAssetStatus('${l.id || l._id}')" class="transition" title="${(!l.status || l.status === 'active') ? 'Stop/Suspend Asset' : 'Activate Asset'}"><i class="fa-solid ${toggleBlockIcon}"></i></button>
+                                            <button onclick="editAssetMetadata('${l.id || l._id}')" class="text-blue-400 hover:text-blue-300 transition" title="Edit Asset"><i class="fa-solid fa-pen-to-square"></i></button>
+                                            <button onclick="deleteNode('listings','${l.id || l._id}')" class="text-red-500 hover:text-red-400 transition" title="Purge Asset"><i class="fa-solid fa-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>`;
+                            });
+                        }
+                    }
+                });
+
+                document.getElementById('channelStatus').innerText = "CONNECTED TO DATASTORE";
+                document.getElementById('channelStatus').className = "text-emerald-400 font-mono font-bold";
+
+            } catch (err) {
+                document.getElementById('channelStatus').innerText = "SERVER ERROR";
+                document.getElementById('channelStatus').className = "text-red-500 font-mono font-bold";
+                pushLiveLog("Critical failure: Fetch error occurred.", "SYSTEM");
+            }
+        }
+
+        async function saveListing(e) {
+            e.preventDefault();
+            
+            const form = document.getElementById('massiveForm');
+            const formData = new FormData(form);
+            const rawData = Object.fromEntries(formData.entries());
+            
+            let targetModule = rawData.module;
+            let editId = rawData.id; 
+
+            // Standardize object payload 
+            const newItem = {
+                id: editId || 'LST-' + Date.now(),
+                module: targetModule,
+                image: uploadedImageBase64,
+                status: 'active',
+                featured: false,
+                ...rawData
+            };
+
+            // Ensure critical fields aren't missing for main table rendering
+            if(!newItem.name) newItem.name = "Unknown Data";
+            if(!newItem.price) newItem.price = 0;
+            if(!newItem.district) newItem.district = "India";
+            if(!newItem.type) newItem.type = "General";
+
+            pushLiveLog(`Initiating node push for: [${newItem.name}] to Datastore`, "SYSTEM");
+            
+            try {
+                // SAVING TO LOCALSTORAGE SO IT STAYS IF NO SERVER
+                let listings = JSON.parse(localStorage.getItem('seva_listings')) || JSON.parse(localStorage.getItem('listings')) || [];
+                if(editId) {
+                    listings = listings.filter(l => String(l.id) !== String(editId) && String(l._id) !== String(editId));
+                }
+                listings.push(newItem);
+                localStorage.setItem('seva_listings', JSON.stringify(listings));
+                localStorage.setItem('listings', JSON.stringify(listings)); // Save duplicate to ensure other pages find it
+
+                pushLiveLog(`Database entry successfully synchronized.`, "MONGO-DB");
+                closeModal();
+                refreshAllData();
+                fireToast(`Published Live Successfully: ${newItem.name}`, 'success');
+                
+            } catch (err) {
+                fireToast('Server Error during save!', 'danger');
+            }
+        }
+
+        async function mutateBookingStatus(id, newStatus) {
+            try {
+                // MOCK API UPDATE
+                let bookings = JSON.parse(localStorage.getItem('seva_bookings')) || JSON.parse(localStorage.getItem('bookings')) || [];
+                let b = bookings.find(x => String(x.id) === String(id) || String(x._id) === String(id));
+                if(b) b.status = newStatus;
+                
+                localStorage.setItem('seva_bookings', JSON.stringify(bookings));
+                localStorage.setItem('bookings', JSON.stringify(bookings)); // Sync for other pages
+
+                pushLiveLog(`Transaction telemetry state committed: ${id} -> ${newStatus.toUpperCase()}`, "MONGO-DB");
+                refreshAllData();
+                fireToast(`Order Cycle Refined to [${newStatus.toUpperCase()}]`, 'success');
+            } catch(e) {
+                fireToast('Error updating status', 'danger');
+            }
+        }
+
+        async function toggleAssetStatus(id) {
+            let listings = JSON.parse(localStorage.getItem('seva_listings')) || JSON.parse(localStorage.getItem('listings')) || [];
+            let target = listings.find(l => String(l.id) === String(id) || String(l._id) === String(id));
+            if (target) {
+                let newStatus = (!target.status || target.status === 'active') ? 'blocked' : 'active';
+                try {
+                    target.status = newStatus;
+                    localStorage.setItem('seva_listings', JSON.stringify(listings));
+                    localStorage.setItem('listings', JSON.stringify(listings)); // Sync for other pages
+
+                    refreshAllData();
+                    fireToast(`Asset visibility mutated to [${newStatus.toUpperCase()}]`, 'warn');
+                } catch(e) {
+                    fireToast('Failed to toggle status', 'danger');
+                }
+            }
+        }
+
+        function editAssetMetadata(id) {
+            let target = DB.listings.find(l => String(l.id) === String(id) || String(l._id) === String(id));
+            if (!target) return;
+            
+            openForm(target.module);
+            document.getElementById('modalTitle').innerText = `EDIT PUBLISHED DATA: ${target.name.toUpperCase()}`;
+            
+            setTimeout(() => {
+                const formElements = document.getElementById('massiveForm').elements;
+                for (let key in target) {
+                    if (formElements[key]) {
+                        formElements[key].value = target[key];
+                    }
+                }
+                document.getElementById('edit_id').value = id; 
+                
+                if(target.image) {
+                    uploadedImageBase64 = target.image;
+                    document.getElementById('image-preview').src = uploadedImageBase64;
+                    document.getElementById('image-preview').classList.remove('hidden');
+                    document.getElementById('upload-placeholder').classList.add('bg-slate-900/60', 'p-4', 'rounded-xl', 'backdrop-blur-sm');
+                }
+            }, 50);
+        }
+
+        async function deleteNode(table, id) {
+            if(!id || id === 'undefined') {
+                fireToast('Error: Cannot delete item. ID is missing!', 'danger');
+                return;
+            }
+
+            if(confirm(`⚠️ WARNING: Are you sure you want to permanently DELETE this from Database? ID: ${id}`)) {
+                try {
+                    // Universal delete (covers both keys) with strict String coercion matching
+                    let key1 = `seva_${table}`;
+                    let key2 = table;
+                    
+                    let data1 = JSON.parse(localStorage.getItem(key1)) || [];
+                    let data2 = JSON.parse(localStorage.getItem(key2)) || [];
+                    
+                    data1 = data1.filter(x => String(x.id) !== String(id) && String(x._id) !== String(id));
+                    data2 = data2.filter(x => String(x.id) !== String(id) && String(x._id) !== String(id));
+                    
+                    localStorage.setItem(key1, JSON.stringify(data1));
+                    localStorage.setItem(key2, JSON.stringify(data2));
+
+                    pushLiveLog(`Hard delete executed on target node: ${id}`, "MONGO-DB");
+                    refreshAllData();
+                    fireToast(`Deleted Successfully from Database: ${id}`, 'danger');
+                } catch(e) {
+                    fireToast('Failed to delete node', 'danger');
+                }
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            createDynamicModuleLayouts();
+            switchSection('dashboard');
+            refreshAllData();
+            
+            setInterval(refreshAllData, 5000); // Live Auto-refresh Every 5 Sec
+            
+            pushLiveLog("Master Enterprise Seva Setu Datastore Control System operationalized.", "SYSTEM");
+            pushLiveLog("Live background auto-publish indexing sync active via MongoDB.", "MONGO-DB");
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seva Setu - One-Stop Appointment Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        .custom-shadow { box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+        .modal-content { background: white; padding: 2.5rem; border-radius: 20px; width: 500px; max-width: 95%; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.2); }
+        #live-route-map { width: 100%; height: 250px; border-radius: 12px; z-index: 1; }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <header class="bg-white border-b border-slate-100 py-3 px-6 md:px-12 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-2">
+            <div class="bg-blue-600 p-2 rounded-lg text-white">
+                <i class="fa-solid fa-layer-group text-lg"></i>
+            </div>
+            <div>
+                <span class="font-extrabold text-xl text-blue-900 tracking-tight block">Seva Setu</span>
+                <span class="text-[9px] text-slate-400 block -mt-1">One Stop Appointment Platform</span>
+            </div>
+        </div>
+        <nav class="hidden lg:flex gap-6 text-sm font-semibold text-slate-600">
+            <a href="travelbookinghub.html" class="hover:text-blue-600 transition">Home</a>
+            <a href="appointments.html" class="hover:text-blue-600 transition flex items-center gap-1">Appointments <i class="fa-solid fa-chevron-down text-[10px]"></i></a>
+            <a href="services.html" class="hover:text-blue-600 transition flex items-center gap-1">Services <i class="fa-solid fa-chevron-down text-[10px]"></i></a>
+            <a href="cars.html" class="text-blue-600 border-b-2 border-blue-600 pb-1 font-bold">Travel Booking Hub</a>
+            <a href="about.html" class="hover:text-blue-600 transition">About Us</a>
+            <a href="emergency.html" class="hover:text-blue-600 transition">Emergency</a>
+            <a href="contact.html" class="hover:text-blue-600 transition">Contact</a>
+        </nav>
+        <div class="flex items-center gap-4">
+            <button class="text-slate-600 hover:text-blue-600"><i class="fa-regular fa-moon text-lg"></i></button>
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition shadow-md shadow-blue-200">
+                <i class="fa-regular fa-user-circle text-base"></i> Login / Signup
+            </button>
+        </div>
+    </header>
+
+    <div class="bg-gradient-to-r from-blue-50 via-indigo-50 to-white py-6 px-6 md:px-12 border-b border-slate-100">
+        <div class="text-xs text-slate-400 flex items-center gap-2 mb-4">
+            <span class="hover:text-blue-600 cursor-pointer">Home</span> <i class="fa-solid fa-chevron-right text-[8px]"></i>
+            <span class="hover:text-blue-600 cursor-pointer">Travel Booking Hub</span> <i class="fa-solid fa-chevron-right text-[8px]"></i>
+            <span class="hover:text-blue-600 cursor-pointer">Taxi Booking</span> <i class="fa-solid fa-chevron-right text-[8px]"></i>
+            <span class="text-slate-600 font-medium">Select Ride</span>
+        </div>
+        
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="bg-amber-400 p-4 rounded-2xl text-slate-900 text-2xl shadow-md">
+                    <i class="fa-solid fa-taxi"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Select Your Ride</h1>
+                    <p class="text-sm text-slate-500 font-medium">Choose the best ride for your journey</p>
+                </div>
+            </div>
+            <div class="relative hidden md:block">
+                <div class="absolute inset-0 bg-blue-200/40 rounded-full filter blur-xl"></div>
+                <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=360&q=80" alt="Taxi Setup" class="w-64 object-cover rounded-2xl relative z-10 custom-shadow border-4 border-white">
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center text-xs md:text-sm font-semibold text-slate-400 border-b border-slate-100 overflow-x-auto gap-4">
+        <div class="flex items-center text-blue-600 whitespace-nowrap"><i class="fa-solid fa-circle-check mr-2 text-base"></i> Enter Details</div>
+        <div class="h-[2px] bg-blue-600 flex-1 min-w-[30px]"></div>
+        <div class="flex items-center text-blue-600 font-bold whitespace-nowrap"><div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold mr-2 shadow">2</div> Select Ride</div>
+        <div class="h-[2px] bg-slate-200 flex-1 min-w-[30px]" id="step-line-3"></div>
+        <div class="flex items-center whitespace-nowrap" id="step-title-3"><div class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold mr-2" id="step-num-3">3</div> Confirm Booking</div>
+        <div class="h-[2px] bg-slate-200 flex-1 min-w-[30px]" id="step-line-4"></div>
+        <div class="flex items-center whitespace-nowrap" id="step-title-4"><div class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold mr-2" id="step-num-4">4</div> Payment</div>
+        <div class="h-[2px] bg-slate-200 flex-1 min-w-[30px]" id="step-line-5"></div>
+        <div class="flex items-center whitespace-nowrap" id="step-title-5"><div class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold mr-2" id="step-num-5">5</div> Booking Confirmed</div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <div class="lg:col-span-2 space-y-8">
+            
+            <div class="bg-white p-6 rounded-2xl border border-slate-100 custom-shadow">
+                <h2 class="font-bold text-base md:text-lg text-slate-900 mb-6 flex items-center gap-2">
+                    <i class="fa-solid fa-map-location-dot text-blue-600"></i> Select Pickup & Drop Details
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative">
+                    <div class="space-y-3 bg-slate-50/60 p-4 rounded-xl border border-slate-100">
+                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                            <i class="fa-solid fa-circle text-[8px] text-green-500"></i> Pickup Location
+                        </label>
+                        <select id="pickup-state" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none font-medium" onchange="loadDistricts(this.value, 'pickup-dist')">
+                            <option value="">Select State</option>
+                        </select>
+                        <select id="pickup-dist" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none font-medium" onchange="loadVillages(this.value, 'pickup-village')">
+                            <option value="">Select District</option>
+                        </select>
+                        <select id="pickup-village" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none font-medium" onchange="handleLocationChange()">
+                            <option value="">Select Village / Sub-District</option>
+                        </select>
+                        <input type="text" id="pickup-pin" placeholder="Pincode Location" class="w-full bg-slate-100 border border-slate-200 rounded-xl p-2.5 text-sm font-semibold text-slate-600" readonly>
+                    </div>
+
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-slate-200 p-2.5 rounded-full shadow-md cursor-pointer hover:bg-slate-50 transition z-10" onclick="swapLocations()">
+                        <i class="fa-solid fa-arrows-rotate text-blue-600 text-sm"></i>
+                    </div>
+
+                    <div class="space-y-3 bg-slate-50/60 p-4 rounded-xl border border-slate-100">
+                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                            <i class="fa-solid fa-circle text-[8px] text-red-500"></i> Drop Location
+                        </label>
+                        <select id="drop-state" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none font-medium" onchange="loadDistricts(this.value, 'drop-dist')">
+                            <option value="">Select State</option>
+                        </select>
+                        <select id="drop-dist" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none font-medium" onchange="loadVillages(this.value, 'drop-village')">
+                            <option value="">Select District</option>
+                        </select>
+                        <select id="drop-village" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none font-medium" onchange="handleLocationChange()">
+                            <option value="">Select Village / Sub-District</option>
+                        </select>
+                        <input type="text" id="drop-pin" placeholder="Pincode Location" class="w-full bg-slate-100 border border-slate-200 rounded-xl p-2.5 text-sm font-semibold text-slate-600" readonly>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 pt-4 border-t border-slate-100">
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 block mb-1">Your Full Name</label>
+                        <input type="text" id="custName" placeholder="Enter your name" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 block mb-1">Mobile Number</label>
+                        <input type="tel" id="custMobile" placeholder="10-digit mobile number" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 block mb-1">Select Date</label>
+                        <input type="date" id="journeyDate" value="2026-05-25" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 block mb-1">Select Time</label>
+                        <input type="time" value="10:30" class="w-full border border-blue-200 bg-blue-50/50 text-blue-700 rounded-xl p-2.5 text-sm font-bold outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-100 custom-shadow">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h3 class="font-bold text-base text-slate-900">Popular Routes</h3>
+                        <p class="text-xs text-slate-400 font-medium">Top routes loved by our customers</p>
+                    </div>
+                    <button onclick="toggleMorePopularRoutes()" class="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 bg-slate-50 hover:bg-blue-100 hover:text-blue-600 transition">
+                        <i id="popular-toggle-icon" class="fa-solid fa-chevron-down text-xs transition-transform"></i>
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div onclick="selectPresetRoute('Maharashtra', 'Pune', 'Shivajinagar', 'Maharashtra', 'Mumbai', 'CSMT Terminal')" class="border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow transition cursor-pointer">
+                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=150&q=80" class="w-full h-20 object-cover" alt="Pune to Mumbai">
+                        <div class="p-2 bg-slate-50/60 text-center"><p class="text-xs font-bold text-slate-800">Pune ➔ Mumbai</p></div>
+                    </div>
+                    <div onclick="selectPresetRoute('Maharashtra', 'Beed', 'Beed City HQ', 'Maharashtra', 'Nagpur', 'Sitabuldi')" class="border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow transition cursor-pointer">
+                        <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=150&q=80" class="w-full h-20 object-cover" alt="Beed to Nagpur">
+                        <div class="p-2 bg-slate-50/60 text-center"><p class="text-xs font-bold text-slate-800">Beed ➔ Nagpur</p></div>
+                    </div>
+                    <div onclick="selectPresetRoute('Maharashtra', 'Solapur', 'Pandharpur', 'Maharashtra', 'Pune', 'Kothrud')" class="border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow transition cursor-pointer">
+                        <img src="https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&w=150&q=80" class="w-full h-20 object-cover" alt="Solapur to Pune">
+                        <div class="p-2 bg-slate-50/60 text-center"><p class="text-xs font-bold text-slate-800">Solapur ➔ Pune</p></div>
+                    </div>
+                    <div onclick="selectPresetRoute('Maharashtra', 'Mumbai', 'Bandra Kurla Complex', 'Maharashtra', 'Nashik', 'Panchavati')" class="border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow transition cursor-pointer">
+                        <img src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?auto=format&fit=crop&w=150&q=80" class="w-full h-20 object-cover" alt="Mumbai to Nashik">
+                        <div class="p-2 bg-slate-50/60 text-center"><p class="text-xs font-bold text-slate-800">Mumbai ➔ Nashik</p></div>
+                    </div>
+                </div>
+
+                <div id="extended-popular-routes-block" class="hidden mt-4 pt-4 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div onclick="selectPresetRoute('Maharashtra', 'Nagpur', 'Sitabuldi', 'Maharashtra', 'Pune', 'Shivajinagar')" class="border border-slate-100 p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Nagpur ➔ Pune</div>
+                    <div onclick="selectPresetRoute('Maharashtra', 'Beed', 'Majalgaon', 'Maharashtra', 'Pune', 'Hinjewadi')" class="border border-slate-100 p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Beed ➔ Pune</div>
+                    <div onclick="selectPresetRoute('Maharashtra', 'Aurangabad', 'Chikalthana', 'Maharashtra', 'Mumbai', 'Dadar West')" class="border border-slate-100 p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Aurangabad ➔ Mumbai</div>
+                    <div onclick="selectPresetRoute('Maharashtra', 'Thane', 'Kalyan', 'Maharashtra', 'Pune', 'Shivajinagar')" class="border border-slate-100 p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Thane ➔ Pune</div>
+                    <div onclick="selectPresetRoute('Karnataka', 'Bengaluru', 'Whitefield', 'Maharashtra', 'Pune', 'Hinjewadi')" class="border border-slate-100 p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Bengaluru ➔ Pune</div>
+                    <div onclick="selectPresetRoute('Gujarat', 'Ahmedabad', 'Satellite', 'Maharashtra', 'Mumbai', 'Andheri East')" class="border border-slate-100 p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Ahmedabad ➔ Mumbai</div>
+                    <div onclick="selectPresetRoute('Maharashtra', 'Nashik', 'Nashik Road', 'Maharashtra', 'Pune', 'Viman Nagar')" class="border border-slate-100 p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Nashik ➔ Pune</div>
+                    <div onclick="selectPresetRoute('Maharashtra', 'Solapur', 'Barshi', 'Maharashtra', 'Mumbai', 'CSMT Terminal')" class="border border-slate-100 p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Solapur ➔ Mumbai</div>
+                    <div onclick="selectPresetRoute('Maharashtra', 'Kolhapur', 'Tarabai Park', 'Maharashtra', 'Pune', 'Shivajinagar')" class="border border-slate-100 p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Kolhapur ➔ Pune</div>
+                    <div onclick="selectPresetRoute('Maharashtra', 'Amravati', 'Badnera', 'Maharashtra', 'Nagpur', 'Sonegaon')" class="border border-slate-100 p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Amravati ➔ Nagpur</div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-100 custom-shadow">
+                <h3 class="font-bold text-base md:text-lg text-slate-900 mb-2">Available Rides</h3>
+                <p class="text-xs text-slate-400 font-medium mb-6">Choose a ride that suits your budget and comfort</p>
+                
+                <div class="space-y-4" id="cars-main-wrapper">
+                    <label class="border-2 border-blue-600 bg-blue-50/50 rounded-xl p-4 flex justify-between items-center cursor-pointer block">
+                        <div class="flex items-center gap-4">
+                            <input type="radio" name="selected-ride" checked class="w-4 h-4 accent-blue-600">
+                            <img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=100&h=70&q=80" class="rounded-lg object-cover border" alt="Mini Hatchback">
+                            <div>
+                                <h4 class="font-bold text-sm text-slate-900 flex items-center gap-1.5">Mini Economy <i class="fa-solid fa-circle-info text-slate-300 text-xs"></i></h4>
+                                <p class="text-xs text-slate-500 font-medium">4 Seater • Hatchback • 3 mins away</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-bold inline-block mb-1">Best Price</span>
+                            <p class="font-bold text-base text-slate-900 calculate-fare" data-factor="12">₹150.00</p>
+                        </div>
+                    </label>
+
+                    <label class="border border-slate-200 rounded-xl p-4 flex justify-between items-center cursor-pointer block hover:border-blue-400 transition">
+                        <div class="flex items-center gap-4">
+                            <input type="radio" name="selected-ride" class="w-4 h-4 accent-blue-600">
+                            <img src="https://images.unsplash.com/photo-1617469767053-d3b523a0b982?auto=format&fit=crop&w=100&h=70&q=80" class="rounded-lg object-cover border" alt="Sedan Car">
+                            <div>
+                                <h4 class="font-bold text-sm text-slate-900">Prime Sedan <i class="fa-solid fa-circle-info text-slate-300 text-xs"></i></h4>
+                                <p class="text-xs text-slate-500 font-medium">4 Seater • Premium Comfort • 4 mins away</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-base text-slate-900 calculate-fare" data-factor="15">₹200.00</p>
+                        </div>
+                    </label>
+
+                    <label class="border border-slate-200 rounded-xl p-4 flex justify-between items-center cursor-pointer block hover:border-blue-400 transition">
+                        <div class="flex items-center gap-4">
+                            <input type="radio" name="selected-ride" class="w-4 h-4 accent-blue-600">
+                            <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=100&h=70&q=80" class="rounded-lg object-cover border" alt="SUV">
+                            <div>
+                                <h4 class="font-bold text-sm text-slate-900">Spacious SUV <i class="fa-solid fa-circle-info text-slate-300 text-xs"></i></h4>
+                                <p class="text-xs text-slate-500 font-medium">6 Seater • Ertiga / Marazzo • 5 mins away</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-bold inline-block mb-1">Popular</span>
+                            <p class="font-bold text-base text-slate-900 calculate-fare" data-factor="22">₹350.00</p>
+                        </div>
+                    </label>
+
+                    <div id="hidden-cars-block" class="hidden space-y-4">
+                        <label class="border border-slate-200 rounded-xl p-4 flex justify-between items-center cursor-pointer block hover:border-blue-400 transition">
+                            <div class="flex items-center gap-4">
+                                <input type="radio" name="selected-ride" class="w-4 h-4 accent-blue-600">
+                                <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=100&h=70&q=80" class="rounded-lg object-cover border" alt="Luxury Fleet">
+                                <div>
+                                    <h4 class="font-bold text-sm text-slate-900">Premium Luxury Fleet</h4>
+                                    <p class="text-xs text-slate-500 font-medium">Innova Crysta Elite • AC High Comfort</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold text-base text-slate-900 calculate-fare" data-factor="32">₹550.00</p>
+                            </div>
+                        </label>
+
+                        <label class="border border-slate-200 rounded-xl p-4 flex justify-between items-center cursor-pointer block hover:border-blue-400 transition">
+                            <div class="flex items-center gap-4">
+                                <input type="radio" name="selected-ride" class="w-4 h-4 accent-blue-600">
+                                <img src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=100&h=70&q=80" class="rounded-lg object-cover border" alt="Electric Car">
+                                <div>
+                                    <h4 class="font-bold text-sm text-slate-900">Seva Setu Eco eV <i class="fa-solid fa-leaf text-emerald-500 text-xs"></i></h4>
+                                    <p class="text-xs text-slate-500 font-medium">4 Seater • 100% Zero Emission Green Ride</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold text-base text-slate-900 calculate-fare" data-factor="14">₹220.00</p>
+                            </div>
+                        </label>
+
+                        <label class="border border-slate-200 rounded-xl p-4 flex justify-between items-center cursor-pointer block hover:border-blue-400 transition">
+                            <div class="flex items-center gap-4">
+                                <input type="radio" name="selected-ride" class="w-4 h-4 accent-blue-600">
+                                <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=100&h=70&q=80" class="rounded-lg object-cover border" alt="Non-AC Car">
+                                <div>
+                                    <h4 class="font-bold text-sm text-slate-900">Budget Non-AC Mini</h4>
+                                    <p class="text-xs text-slate-500 font-medium">4 Seater • Low Cost Travel</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold text-base text-slate-900 calculate-fare" data-factor="10">₹110.00</p>
+                            </div>
+                        </label>
+
+                        <label class="border border-slate-200 rounded-xl p-4 flex justify-between items-center cursor-pointer block hover:border-blue-400 transition">
+                            <div class="flex items-center gap-4">
+                                <input type="radio" name="selected-ride" class="w-4 h-4 accent-blue-600">
+                                <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=100&h=70&q=80" class="rounded-lg object-cover border" alt="Outstation Special">
+                                <div>
+                                    <h4 class="font-bold text-sm text-slate-900">Outstation Special Cruzer</h4>
+                                    <p class="text-xs text-slate-500 font-medium">7 Seater • Heavy Luggage Carrier Carriage</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold text-base text-slate-900 calculate-fare" data-factor="26">₹480.00</p>
+                            </div>
+                        </label>
+
+                        <label class="border border-slate-200 rounded-xl p-4 flex justify-between items-center cursor-pointer block hover:border-blue-400 transition">
+                            <div class="flex items-center gap-4">
+                                <input type="radio" name="selected-ride" class="w-4 h-4 accent-blue-600">
+                                <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=100&h=70&q=80" class="rounded-lg object-cover border" alt="Executive Car">
+                                <div>
+                                    <h4 class="font-bold text-sm text-slate-900">Executive Royal Club</h4>
+                                    <p class="text-xs text-slate-500 font-medium">Elite Class Luxury Travel Lounge</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold text-base text-slate-900 calculate-fare" data-factor="45">₹850.00</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <button onclick="toggleExtraFleet()" class="w-full mt-4 py-2.5 bg-slate-50 hover:bg-slate-100 text-blue-600 font-bold text-sm rounded-xl border border-slate-200 flex items-center justify-center gap-2 transition">
+                    <i class="fa-solid fa-car-on"></i> <span id="fleet-toggle-btn-txt">More Cars</span> <i class="fa-solid fa-chevron-down text-xs transition" id="fleet-arrow-icon"></i>
+                </button>
+            </div>
+
+            <div class="bg-amber-50/70 border border-amber-200 p-4 rounded-xl flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="bg-amber-400/20 text-amber-800 p-2 rounded-lg"><i class="fa-solid fa-percent text-base"></i></div>
+                    <div>
+                        <p class="font-bold text-sm text-amber-900">Save more with offers!</p>
+                        <p class="text-xs text-amber-700 font-medium">Apply coupon code to get exciting discounts on your ride fare.</p>
+                    </div>
+                </div>
+                <button onclick="triggerCouponSheet()" class="bg-white border border-slate-200 text-slate-700 font-bold text-xs px-4 py-2 rounded-lg hover:bg-slate-50 shadow-sm transition">Apply Coupon</button>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            
+            <div class="bg-white p-3 rounded-2xl border border-slate-100 custom-shadow">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-1">Trip Route Map</h4>
+                <div class="rounded-xl overflow-hidden border border-slate-100 relative">
+                    <div class="absolute top-2 left-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold shadow border border-slate-100 text-slate-700 z-[1000]">Live Map Active</div>
+                    <div id="live-route-map"></div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-100 custom-shadow">
+                <h3 class="font-bold text-sm text-slate-900 mb-4 uppercase tracking-wider border-b border-slate-100 pb-2">Trip Summary</h3>
+                <div class="space-y-3 text-xs font-medium text-slate-500">
+                    <div class="flex justify-between items-center"><span>Pickup Location</span> <b class="text-slate-800 id-pickup-summary">Not Selected</b></div>
+                    <div class="flex justify-between items-center"><span>Drop Location</span> <b class="text-slate-800 id-drop-summary">Not Selected</b></div>
+                    <div class="flex justify-between items-center"><span>Distance</span> <b class="text-slate-800" id="summary-distance">0.0 km</b></div>
+                    <div class="flex justify-between items-center border-b pb-3"><span>Estimated Time</span> <b class="text-slate-800" id="summary-duration">0 mins</b></div>
+                    
+                    <div class="flex justify-between items-center pt-1"><span>Base Ride Fare</span> <span class="font-bold text-slate-800" id="bill-base">₹0.00</span></div>
+                    <div class="flex justify-between items-center"><span>State Toll & Taxes</span> <span class="font-bold text-slate-800" id="bill-tax">₹0.00</span></div>
+                    <div class="flex justify-between items-center border-b pb-3"><span>Coupon Discount</span> <span class="font-bold text-emerald-600" id="bill-discount">-₹0.00</span></div>
+                    
+                    <div class="flex justify-between items-center pt-2 text-base text-slate-900 font-extrabold">
+                        <span>Total Fare</span>
+                        <span class="text-xl text-blue-600" id="bill-total">₹0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 custom-shadow">
+                <div class="flex justify-between items-center mb-3">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Assigned Driver</h4>
+                    <span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded-md font-bold flex items-center gap-1"><i class="fa-solid fa-circle text-[6px]"></i> LIVE</span>
+                </div>
+                <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-3">
+                        <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=100&q=80" alt="Rohan Patil" class="w-12 h-12 rounded-xl object-cover border border-slate-200">
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-900">Rohan Patil</h4>
+                            <p class="text-xs text-slate-400 font-medium">⭐ 4.9 <span class="mx-1">•</span> 520 Trips</p>
+                            <p class="text-[11px] font-bold text-slate-600 mt-0.5">Hyundai i20 • MH12AB4567</p>
+                        </div>
+                    </div>
+                    <button onclick="triggerDriverCommPanel()" class="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center hover:bg-blue-700 transition shadow-md shadow-blue-100">
+                        <i class="fa-solid fa-phone text-sm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-blue-600 text-white p-5 rounded-2xl shadow-xl shadow-blue-100">
+                <h4 class="font-bold text-sm mb-1 flex items-center gap-2"><i class="fa-solid fa-shield-halved"></i> Your Ride is 100% Safe</h4>
+                <p class="text-xs opacity-80 font-medium mb-4 leading-relaxed">All drivers are verified with police verification, live GPS tracking and emergency support.</p>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="triggerLiveTrackerAnimationLoop()" class="bg-white text-blue-600 hover:bg-blue-50 border border-white rounded-xl py-2 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md">
+                        <i class="fa-solid fa-compass"></i> Live Tracking
+                    </button>
+                    <button onclick="alert('Emergency Alert Dispatched instantly to local authorities.')" class="bg-red-500 hover:bg-red-600 text-white border border-transparent rounded-xl py-2 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md">
+                        <i class="fa-solid fa-circle-exclamation"></i> Emergency Help
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 custom-shadow">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Payment Methods</h4>
+                <div class="space-y-2">
+                    <label class="flex items-center justify-between p-3 border-2 border-blue-600 bg-blue-50/40 rounded-xl cursor-pointer">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-wallet text-blue-600 text-base"></i>
+                            <span class="text-xs font-bold text-blue-900">Google Pay / UPI</span>
+                        </div>
+                        <input type="radio" name="payment-method-gateway" checked class="accent-blue-600 w-4 h-4">
+                    </label>
+                    <label class="flex items-center justify-between p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-regular fa-credit-card text-slate-600 text-base"></i>
+                            <span class="text-xs font-medium text-slate-700">Credit / Debit Card</span>
+                        </div>
+                        <input type="radio" name="payment-method-gateway" class="accent-blue-600 w-4 h-4">
+                    </label>
+                    <label class="flex items-center justify-between p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-money-bill-wave text-slate-600 text-base"></i>
+                            <span class="text-xs font-medium text-slate-700">Cash Payment</span>
+                        </div>
+                        <input type="radio" name="payment-method-gateway" class="accent-blue-600 w-4 h-4">
+                    </label>
+                </div>
+            </div>
+
+            <button onclick="initiateBookingWorkflow()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-base py-4 rounded-2xl shadow-lg shadow-blue-200 flex justify-center items-center gap-2 transition tracking-wide">
+                Continue to Confirm Booking <i class="fa-solid fa-chevron-right text-xs"></i>
+            </button>
+            <p class="text-[10px] text-center text-red-500 font-bold uppercase tracking-wider mt-1"><i class="fa-solid fa-triangle-exclamation"></i> Payment kelyashivya ticket book honar nahi.</p>
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 text-white mt-16 border-t-4 border-blue-600">
+        <div class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-5 gap-8">
+            <div class="md:col-span-2 space-y-4">
+                <div class="flex items-center gap-2">
+                    <div class="bg-blue-600 p-2 rounded-lg text-white"><i class="fa-solid fa-layer-group text-base"></i></div>
+                    <span class="font-bold text-lg tracking-tight">Seva Setu</span>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed max-w-sm">Seva Setu is your comprehensive localized network hub delivering quick taxi dispatch services, appointment schedules, and secure travel workflows across Indian States.</p>
+                <div class="flex gap-3 text-slate-400 pt-2">
+                    <a href="#" class="hover:text-white transition text-sm"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" class="hover:text-white transition text-sm"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" class="hover:text-white transition text-sm"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="hover:text-white transition text-sm"><i class="fa-brands fa-linkedin"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Quick Links</h4>
+                <ul class="space-y-2 text-xs text-slate-400">
+                    <li><a href="#" class="hover:text-white transition">Home Dashboard</a></li>
+                    <li><a href="#" class="hover:text-white transition">Appointments Hub</a></li>
+                    <li><a href="#" class="hover:text-white transition">Government Services</a></li>
+                    <li><a href="#" class="hover:text-white transition">About Corporate Profile</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Travel Services</h4>
+                <ul class="space-y-2 text-xs text-slate-400">
+                    <li><a href="#" class="hover:text-white transition">Taxi Ride Pool</a></li>
+                    <li><a href="#" class="hover:text-white transition">Intercity Bus Ledger</a></li>
+                    <li><a href="#" class="hover:text-white transition">Railways Ticket Booking</a></li>
+                    <li><a href="#" class="hover:text-white transition">Flight Reservation desk</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Newsletter & Support</h4>
+                <p class="text-[11px] text-slate-400 mb-2">Subscribe to get latest government welfare & ride discounts.</p>
+                <input type="email" placeholder="Enter your email" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white outline-none mb-2">
+                <button class="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg text-xs font-bold transition">Subscribe</button>
+            </div>
+        </div>
+        <div class="bg-slate-950 py-4 text-center text-xs text-slate-500 border-t border-slate-800">
+            © 2026 Seva Setu Portal System. All Rights Reserved.
+        </div>
+    </footer>
+
+    <div id="driverCommModal" class="modal">
+        <div class="modal-content text-center">
+            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-2 animate-bounce"><i class="fa-solid fa-phone-volume text-lg"></i></div>
+            <h3 class="text-lg font-bold text-slate-900 mb-1">Connecting Voice Channel</h3>
+            <p class="text-xs text-slate-400 mb-4">Calling assigned professional driver...</p>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 mb-6">
+                <p class="text-sm font-bold text-slate-800">Rohan Patil</p>
+                <p class="text-xl font-black text-blue-600 mt-1 tracking-wider">+91 9823X XXXXX</p>
+            </div>
+            <button onclick="dismissActiveModals()" class="bg-red-500 hover:bg-red-600 text-white font-bold text-xs px-6 py-2.5 rounded-xl transition">Disconnect Call</button>
+        </div>
+    </div>
+
+    <div id="couponSystemModal" class="modal">
+        <div class="modal-content">
+            <h3 class="text-base font-bold text-slate-900 mb-2 border-b pb-2"><i class="fa-solid fa-ticket text-blue-600"></i> Apply Coupon Code</h3>
+            <div class="flex gap-2 my-4">
+                <input type="text" placeholder="ENTER CODE" id="coupon-raw-input" class="border border-slate-200 p-2 rounded-xl text-xs outline-none uppercase font-bold flex-1 focus:ring-2 focus:ring-blue-500">
+                <button onclick="executeCouponVerification()" class="bg-blue-600 text-white text-xs font-bold px-4 rounded-xl">Validate</button>
+            </div>
+            <div class="space-y-2">
+                <div class="p-2.5 bg-emerald-50 rounded-lg border border-emerald-100 flex justify-between items-center"><span class="text-xs font-bold text-emerald-800">SEVA50</span><button class="text-xs font-bold text-blue-600" onclick="insertCouponCode('SEVA50')">Apply</button></div>
+                <div class="p-2.5 bg-emerald-50 rounded-lg border border-emerald-100 flex justify-between items-center"><span class="text-xs font-bold text-emerald-800">FIRSTRIDE</span><button class="text-xs font-bold text-blue-600" onclick="insertCouponCode('FIRSTRIDE')">Apply</button></div>
+            </div>
+            <button onclick="dismissActiveModals()" class="w-full mt-6 bg-slate-100 text-slate-600 py-2 rounded-xl text-xs font-bold">Close Window</button>
+        </div>
+    </div>
+
+    <div id="checkoutWizardModal" class="modal">
+        <div class="modal-content">
+            <h3 class="text-lg font-extrabold text-slate-900 mb-2 flex items-center gap-1.5 border-b pb-3" id="wizard-step-caption">
+                <i class="fa-solid fa-circle-nodes text-blue-600"></i> Verification Check
+            </h3>
+            
+            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl my-4 text-xs leading-relaxed text-slate-600 space-y-3" id="wizard-status-body">
+                </div>
+            
+            <div class="flex gap-3 justify-end pt-3 border-t border-slate-100">
+                <button id="wizard-back-ctrl" onclick="dismissActiveModals()" class="bg-slate-100 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-slate-200 transition">Cancel</button>
+                <button id="wizard-forward-ctrl" onclick="advanceCheckoutStep()" class="bg-blue-600 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-md shadow-blue-100 hover:bg-blue-700 transition">Next Step</button>
+            </div>
+        </div>
+    </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        let map, routePolyline, carMarker, pickupMarker, dropMarker;
+        let activeDiscountCouponAmount = 0;
+
+        // Massive Regional Real Data Layout Structure matching parameters natively
+        const IndiaGeographicEngineDatabase = {
+            "Maharashtra": {
+                "Pune": { lat: 18.5204, lng: 73.8567, subdistricts: ["Shivajinagar", "Kothrud", "Hinjewadi", "Hadapsar", "Viman Nagar"] },
+                "Mumbai": { lat: 18.9750, lng: 72.8258, subdistricts: ["CSMT Terminal", "Dadar West", "Andheri East", "Bandra Kurla Complex"] },
+                "Beed": { lat: 18.9892, lng: 75.7601, subdistricts: ["Beed City HQ", "Majalgaon", "Parli Vaijnath", "Georai Town"] },
+                "Nagpur": { lat: 21.1458, lng: 79.0882, subdistricts: ["Sitabuldi", "Dharampeth", "Manish Nagar", "Sonegaon"] },
+                "Solapur": { lat: 17.6599, lng: 75.9064, subdistricts: ["North Solapur", "Barshi", "Pandharpur", "Sangola"] },
+                "Nashik": { lat: 19.9975, lng: 73.7898, subdistricts: ["Panchavati", "Nashik Road", "Cidco", "Satpur"] },
+                "Aurangabad": { lat: 19.8762, lng: 75.3433, subdistricts: ["Chikalthana", "Waluj", "Cidco Sector 1"] },
+                "Thane": { lat: 19.2183, lng: 72.9781, subdistricts: ["Thane West", "Kalyan", "Dombivli"] },
+                "Kolhapur": { lat: 16.7050, lng: 74.2433, subdistricts: ["Tarabai Park", "Rajarampuri"] },
+                "Amravati": { lat: 20.9374, lng: 77.7796, subdistricts: ["Badnera", "Rajapeth"] }
+            },
+            "Karnataka": {
+                "Bengaluru": { lat: 12.9716, lng: 77.5946, subdistricts: ["Whitefield", "Indiranagar", "Electronic City", "Jayanagar"] },
+                "Mysuru": { lat: 12.2958, lng: 76.6394, subdistricts: ["Gokulam", "Jayalakshmipuram"] }
+            },
+            "Gujarat": {
+                "Ahmedabad": { lat: 23.0225, lng: 72.5714, subdistricts: ["Satellite", "Navrangpura", "Vastrapur"] },
+                "Surat": { lat: 21.1702, lng: 72.8311, subdistricts: ["Adajan", "Vesu", "Varachha"] }
+            }
+        };
+
+        // NEW: Fetch Cars added by Admin from MongoDB dynamically
+        async function fetchDynamicCarsFromAdmin() {
+            try {
+                const res = await fetch('http://localhost:3000/api/data');
+                const data = await res.json();
+                
+                // FIXED: Using data.listings as per updated server.js
+                const carsList = data.listings ? data.listings.filter(l => l.module === 'cars' || l.module === 'car') : [];
+                
+                if(carsList.length > 0) {
+                    const wrapper = document.getElementById('cars-main-wrapper');
+                    
+                    carsList.forEach((car) => {
+                        let baseFareStr = String(car.price).replace(/[^\d.]/g, '');
+                        let baseFare = parseFloat(baseFareStr) || 150;
+                        let factor = (baseFare / 10).toFixed(1);
+
+                        const html = `
+                        <label class="border-2 border-emerald-400 bg-emerald-50/50 rounded-xl p-4 flex justify-between items-center cursor-pointer block hover:border-emerald-500 transition mb-4">
+                            <div class="flex items-center gap-4">
+                                <input type="radio" name="selected-ride" class="w-4 h-4 accent-emerald-600">
+                                <div class="w-20 h-16 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-3xl shadow-inner border border-emerald-200"><i class="fa-solid fa-car-side"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-sm text-slate-900">${car.name} <span class="bg-emerald-500 text-white text-[9px] px-1.5 py-0.5 rounded font-bold ml-1 tracking-wide">ADMIN VERIFIED</span></h4>
+                                    <p class="text-xs text-slate-500 font-medium">${car.type} • Available in ${car.district}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold inline-block mb-1">Live Database</span>
+                                <p class="font-bold text-base text-slate-900 calculate-fare" data-factor="${factor}">₹${car.price}</p>
+                            </div>
+                        </label>`;
+                        
+                        wrapper.insertAdjacentHTML('afterbegin', html);
+                    });
+                }
+            } catch(e) {
+                console.log("Failed to load admin cars, using default hardcoded cars.", e);
+            }
+        }
+
+        function bootstrapAppCoreContextEngine() {
+            // Initiate Leaflet Tile Engines
+            map = L.map('live-route-map', { zoomControl: false }).setView([19.7515, 75.7139], 6);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'Seva Setu Maps Engine' }).addTo(map);
+
+            // Sync theme from local storage
+            document.body.setAttribute('data-theme', localStorage.getItem('travel_hub_theme') || 'light');
+
+            // Populate Dropdown Control Nodes
+            const pState = document.getElementById("pickup-state");
+            const dState = document.getElementById("drop-state");
+
+            Object.keys(IndiaGeographicEngineDatabase).forEach(state => {
+                pState.innerHTML += `<option value="${state}">${state}</option>`;
+                dState.innerHTML += `<option value="${state}">${state}</option>`;
+            });
+
+            // Fetch dynamic admin cars on load
+            fetchDynamicCarsFromAdmin();
+        }
+
+        function loadDistricts(stateName, targetControlId) {
+            const selectEl = document.getElementById(targetControlId);
+            selectEl.innerHTML = '<option value="">Select District</option>';
+            document.getElementById(targetControlId === 'pickup-dist' ? 'pickup-village' : 'drop-village').innerHTML = '<option value="">Select Village / Sub-District</option>';
+
+            if (stateName && IndiaGeographicEngineDatabase[stateName]) {
+                Object.keys(IndiaGeographicEngineDatabase[stateName]).forEach(district => {
+                    selectEl.innerHTML += `<option value="${district}">${district}</option>`;
+                });
+            }
+        }
+
+        function loadVillages(districtName, targetControlId) {
+            const selectEl = document.getElementById(targetControlId);
+            selectEl.innerHTML = '<option value="">Select Village / Sub-District</option>';
+            
+            const stateCtrl = document.getElementById(targetControlId === 'pickup-village' ? 'pickup-state' : 'drop-state').value;
+            if (stateCtrl && districtName && IndiaGeographicEngineDatabase[stateCtrl][districtName]) {
+                const subdistrictsArray = IndiaGeographicEngineDatabase[stateCtrl][districtName].subdistricts;
+                subdistrictsArray.forEach(sub => {
+                    selectEl.innerHTML += `<option value="${sub}">${sub}</option>`;
+                });
+            }
+        }
+
+        function handleLocationChange() {
+            const pState = document.getElementById("pickup-state").value;
+            const pDist = document.getElementById("pickup-dist").value;
+            const pVill = document.getElementById("pickup-village").value;
+
+            const dState = document.getElementById("drop-state").value;
+            const dDist = document.getElementById("drop-dist").value;
+            const dVill = document.getElementById("drop-village").value;
+
+            if(pDist) {
+                document.getElementById("pickup-pin").value = 411000 + Math.abs(pDist.charCodeAt(0) * 13) % 999;
+                document.querySelectorAll(".id-pickup-summary").forEach(el => el.innerText = `${pDist} ${pVill ? '(' + pVill + ')' : '(HQ)'}`);
+            }
+            if(dDist) {
+                document.getElementById("drop-pin").value = 440000 + Math.abs(dDist.charCodeAt(0) * 17) % 999;
+                document.querySelectorAll(".id-drop-summary").forEach(el => el.innerText = `${dDist} ${dVill ? '(' + dVill + ')' : '(HQ)'}`);
+            }
+
+            if(pState && pDist && dState && dDist) {
+                const sourceNode = IndiaGeographicEngineDatabase[pState][pDist];
+                const destinationNode = IndiaGeographicEngineDatabase[dState][dDist];
+                renderRealtimeRouteOverlayTrack(sourceNode.lat, sourceNode.lng, destinationNode.lat, destinationNode.lng, pDist, dDist);
+            }
+        }
+
+        function renderRealtimeRouteOverlayTrack(lat1, lng1, lat2, lng2, title1, title2) {
+            if(routePolyline) map.removeLayer(routePolyline);
+            if(pickupMarker) map.removeLayer(pickupMarker);
+            if(dropMarker) map.removeLayer(dropMarker);
+            if(carMarker) map.removeLayer(carMarker);
+
+            pickupMarker = L.marker([lat1, lng1]).addTo(map).bindPopup(`<b>Pickup Location:</b> ${title1}`).openPopup();
+            dropMarker = L.marker([lat2, lng2]).addTo(map).bindPopup(`<b>Drop Location:</b> ${title2}`);
+
+            // Coordinates track list segments
+            const pathsTrackArray = [
+                [lat1, lng1],
+                [(lat1 + lat2) / 2 + 0.3, (lng1 + lng2) / 2 - 0.4],
+                [lat2, lng2]
+            ];
+
+            routePolyline = L.polyline(pathsTrackArray, { color: '#2563eb', weight: 6, opacity: 0.85 }).addTo(map);
+            map.fitBounds(routePolyline.getBounds(), { padding: [40, 40] });
+
+            // Compute Distance 
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lng2 - lng1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const calculatedDistanceKm = (R * c).toFixed(1);
+            const calculatedDurationMins = Math.round(calculatedDistanceKm * 1.3 + 5);
+
+            document.getElementById("summary-distance").innerText = `${calculatedDistanceKm} km`;
+            document.getElementById("summary-duration").innerText = `${calculatedDurationMins} mins`;
+
+            computeDynamicRideFaresInvoice(calculatedDistanceKm);
+        }
+
+        function computeDynamicRideFaresInvoice(distanceValue) {
+            document.querySelectorAll(".calculate-fare").forEach(card => {
+                let factor = parseFloat(card.getAttribute("data-factor")) || 12;
+                card.innerText = `₹${Math.round(distanceValue * factor + 110)}.00`;
+            });
+
+            let baseCostPrice = Math.round(distanceValue * 13 + 140);
+            let taxCharges = Math.round(baseCostPrice * 0.05);
+            let totalAbsoluteFare = (baseCostPrice + taxCharges) - activeDiscountCouponAmount;
+
+            document.getElementById("bill-base").innerText = `₹${baseCostPrice}.00`;
+            document.getElementById("bill-tax").innerText = `₹${taxCharges}.00`;
+            document.getElementById("bill-total").innerText = `₹${totalAbsoluteFare > 0 ? totalAbsoluteFare : 0}.00`;
+        }
+
+        function triggerLiveTrackerAnimationLoop() {
+            if(!routePolyline) {
+                alert("Please complete selecting valid location coordinates first!");
+                return;
+            }
+            const paths = routePolyline.getLatLngs();
+            if(carMarker) map.removeLayer(carMarker);
+
+            const trackingIcon = L.divIcon({
+                html: '<div class="bg-amber-500 text-slate-900 border border-white px-2 py-0.5 shadow-xl font-bold rounded-full text-[10px] flex items-center gap-1"><i class="fa-solid fa-taxi"></i>TAXI</div>',
+                iconSize: [60, 25]
+            });
+
+            carMarker = L.marker(paths[0], { icon: trackingIcon }).addTo(map);
+            
+            let incrementalStepCounter = 0;
+            const trackerTimerId = setInterval(() => {
+                if(incrementalStepCounter >= paths.length - 1) {
+                    clearInterval(trackerTimerId);
+                    alert("Tracking complete! Ride arrived at location checkpoint safely.");
+                    return;
+                }
+                incrementalStepCounter++;
+                carMarker.setLatLng(paths[incrementalStepCounter]);
+                map.panTo(paths[incrementalStepCounter]);
+            }, 1200);
+        }
+
+        function toggleMorePopularRoutes() {
+            const block = document.getElementById("extended-popular-routes-block");
+            const icon = document.getElementById("popular-toggle-icon");
+            if(block.classList.contains("hidden")) {
+                block.classList.remove("hidden");
+                icon.style.transform = "rotate(180deg)";
+            } else {
+                block.classList.add("hidden");
+                icon.style.transform = "rotate(0deg)";
+            }
+        }
+
+        function selectPresetRoute(pState, pDist, pVill, dState, dDist, dVill) {
+            document.getElementById("pickup-state").value = pState;
+            loadDistricts(pState, 'pickup-dist');
+            document.getElementById("pickup-dist").value = pDist;
+            loadVillages(pDist, 'pickup-village');
+            document.getElementById("pickup-village").value = pVill;
+
+            document.getElementById("drop-state").value = dState;
+            loadDistricts(dState, 'drop-dist');
+            document.getElementById("drop-dist").value = dDist;
+            loadVillages(dDist, 'drop-village');
+            document.getElementById("drop-village").value = dVill;
+
+            handleLocationChange();
+        }
+
+        function swapLocations() {
+            const pState = document.getElementById("pickup-state").value;
+            const pDist = document.getElementById("pickup-dist").value;
+            const pVill = document.getElementById("pickup-village").value;
+            const dState = document.getElementById("drop-state").value;
+            const dDist = document.getElementById("drop-dist").value;
+            const dVill = document.getElementById("drop-village").value;
+
+            selectPresetRoute(dState, dDist, dVill, pState, pDist, pVill);
+        }
+
+        function toggleExtraFleet() {
+            const block = document.getElementById('hidden-cars-block');
+            const txt = document.getElementById('fleet-toggle-btn-txt');
+            const arrow = document.getElementById('fleet-arrow-icon');
+            if(block.classList.contains('hidden')) {
+                block.classList.remove('hidden');
+                txt.innerText = "Show Less";
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                block.classList.add('hidden');
+                txt.innerText = "More Cars";
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function triggerDriverCommPanel() { document.getElementById('driverCommModal').style.display = 'flex'; }
+        function triggerCouponSheet() { document.getElementById('couponSystemModal').style.display = 'flex'; }
+        function dismissActiveModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+        function insertCouponCode(code) { document.getElementById('coupon-raw-input').value = code; }
+
+        function executeCouponVerification() {
+            const input = document.getElementById('coupon-raw-input').value;
+            if(input === "SEVA50" || input === "FIRSTRIDE") {
+                activeDiscountCouponAmount = 150;
+                document.getElementById("bill-discount").innerText = `-₹150.00`;
+                alert("Coupon Applied Successfully! ₹150.00 deducted from final fare.");
+                handleLocationChange();
+                dismissActiveModals();
+            } else {
+                alert("Invalid Voucher Promotion Code.");
+            }
+        }
+
+        // Checkout Verification Machine Implementation Block Logic
+        let structuralStepIndex = 1;
+        function initiateBookingWorkflow() {
+            const custName = document.getElementById("custName").value.trim();
+            const custMobile = document.getElementById("custMobile").value.trim();
+
+            if(!custName || !custMobile) {
+                alert("Please enter your Name and Mobile Number!");
+                return;
+            }
+
+            const distCheckValue = document.getElementById("summary-distance").innerText;
+            if(distCheckValue === "0.0 km") {
+                alert("Please select valid Pickup & Drop locations before initiating verification!");
+                return;
+            }
+
+            structuralStepIndex = 1;
+            const pSummary = document.querySelector(".id-pickup-summary").innerText;
+            const dSummary = document.querySelector(".id-drop-summary").innerText;
+            const totalFareValue = document.getElementById("bill-total").innerText;
+
+            document.getElementById('checkoutWizardModal').style.display = 'flex';
+            document.getElementById('wizard-step-caption').innerHTML = `<i class="fa-solid fa-list-check text-blue-600"></i> Step 2 & 3: Confirm Ride Details`;
+            
+            document.getElementById('wizard-status-body').innerHTML = `
+                <div class="border-b pb-2 mb-2">
+                    <span class="block font-bold text-slate-800 text-sm">Review Itinerary for ${custName}</span>
+                    <p class="mt-1">🏁 <b>From:</b> ${pSummary}</p>
+                    <p>📍 <b>To:</b> ${dSummary}</p>
+                    <p class="mt-1 text-blue-600 font-extrabold text-sm">💰 Total Final Fare: ${totalFareValue}</p>
+                </div>
+                <div>
+                    Your assigned professional driver <b>Rohan Patil</b> is ready. Do you want to finalize the configuration parameters and generate your dynamic invoice?
+                </div>
+            `;
+            document.getElementById('wizard-forward-ctrl').innerText = "Proceed to Payment";
+            document.getElementById('wizard-back-ctrl').style.display = "inline-block";
+        }
+
+        function advanceCheckoutStep() {
+            if(structuralStepIndex === 1) {
+                structuralStepIndex = 2;
+                document.getElementById('step-line-3').classList.add('bg-blue-600');
+                document.getElementById('step-num-3').className = "w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold mr-2 shadow";
+                document.getElementById('step-title-3').classList.add('text-blue-600');
+                
+                document.getElementById('wizard-step-caption').innerHTML = `<i class="fa-solid fa-credit-card text-amber-500"></i> Step 4: Secure Payment Gateway`;
+                document.getElementById('wizard-status-body').innerHTML = `
+                    <div class="text-red-600 font-extrabold mb-2 uppercase tracking-wide flex items-center gap-1">
+                        <i class="fa-solid fa-triangle-exclamation"></i> System Interlocking Alert:
+                    </div>
+                    <strong class="text-slate-900 text-sm block bg-red-50 p-2 border border-red-200 rounded-lg">Payment kelya shivya ticket book honar nahi!</strong><br>
+                    Please approve the digital transaction request push notification dispatched to your secure Google Pay UPI ID. Waiting for payment loop confirmation...
+                `;
+                document.getElementById('wizard-forward-ctrl').innerText = "Simulate Payment Complete";
+            } else if(structuralStepIndex === 2) {
+                
+                // 🚀 FIXED: Mapping exactly to Admin Schema format
+                const bookingData = {
+                    module: "cars",
+                    userName: document.getElementById("custName").value || "Seva Setu User",
+                    contact: document.getElementById("custMobile").value || "9999999999",
+                    district: document.querySelector(".id-pickup-summary").innerText.split(' ')[0] + " ➔ " + document.querySelector(".id-drop-summary").innerText.split(' ')[0],
+                    amount: document.getElementById("bill-total").innerText.replace(/[^\d.]/g, ''),
+                    status: "pending",
+                    date: document.getElementById("journeyDate") ? document.getElementById("journeyDate").value : new Date().toISOString().split('T')[0]
+                };
+
+                // 🌐 FIXED: Fetch API pointing to main bookings endpoint for Admin DB
+                fetch('http://localhost:3000/api/bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bookingData)
+                })
+                .then(res => res.json())
+                .then(serverData => {
+                    if(serverData.success) {
+                        structuralStepIndex = 3;
+                        document.getElementById('step-line-4').classList.add('bg-blue-600');
+                        document.getElementById('step-num-4').className = "w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold mr-2 shadow";
+                        document.getElementById('step-title-4').classList.add('text-blue-600');
+                        
+                        document.getElementById('step-line-5').classList.add('bg-blue-600');
+                        document.getElementById('step-num-5').className = "w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold mr-2 shadow";
+                        document.getElementById('step-title-5').className = "flex items-center text-emerald-600 font-extrabold whitespace-nowrap";
+
+                        document.getElementById('wizard-step-caption').innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Step 5: Booking Confirmed! 🎉`;
+                        document.getElementById('wizard-status-body').innerHTML = `
+                            <div class="text-center py-2">
+                                <span class="text-emerald-700 font-black block text-base mb-1">Ticket Generated Successfully!</span>
+                                <p class="text-slate-500 font-medium">Transaction Reference Token: <b>#SS-TAX-982402</b></p>
+                                <p class="mt-2 text-blue-600 font-extrabold bg-blue-50 p-2 border border-blue-200 rounded-md">Saved Live to Admin Database!</p>
+                                <p class="mt-2 text-slate-600">Your ride is locked. A secure SMS containing the driver check-in OTP has been dispatched to your mobile number.</p>
+                            </div>
+                        `;
+                        document.getElementById('wizard-forward-ctrl').innerText = "Finish & Close";
+                        document.getElementById('wizard-back-ctrl').style.display = "none";
+                    } else {
+                        alert("⚠️ डेटाबेस एरर: " + serverData.error);
+                    }
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                    alert("❌ सर्व्हरशी संपर्क होऊ शकला नाही. कृपया 'node server.js' (Port 3000) चालू असल्याची खात्री करा.");
+                });
+
+            } else {
+                dismissActiveModals();
+                window.location.reload(); // शेवटी पेज रीलोड करून रीसेट करणे
+            }
+        }
+
+        // Initialize Engine hooks on DOM Load
+        window.addEventListener('DOMContentLoaded', () => {
+            bootstrapAppCoreContextEngine();
+        });
+    </script>
+</body>
+</html>

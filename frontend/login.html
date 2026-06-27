@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Seva Setu Ultra Premium - Enterprise Gate</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#030712' },
+                        indigo: { 950: '#0c0a3e' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: #4f46e5 #020617;
+        }
+        body {
+            background: #020617;
+            overflow-x: hidden;
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        /* PREMIUM NEON BACKGROUND BLURS */
+        .bg-blur-1 {
+            position: absolute; width: 650px; height: 650px; background: radial-gradient(circle, #4f46e5 0%, transparent 70%);
+            filter: blur(100px); opacity: 0.22; border-radius: 50%; top: -200px; left: -200px; animation: float1 14s ease-in-out infinite; pointer-events: none;
+        }
+        .bg-blur-2 {
+            position: absolute; width: 650px; height: 650px; background: radial-gradient(circle, #ec4899 0%, transparent 70%);
+            filter: blur(100px); opacity: 0.20; border-radius: 50%; bottom: -200px; right: -200px; animation: float2 14s ease-in-out infinite; pointer-events: none;
+        }
+        .bg-blur-3 {
+            position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, #06b6d4 0%, transparent 70%);
+            filter: blur(120px); opacity: 0.15; border-radius: 50%; top: 35%; left: 35%; animation: float3 16s ease-in-out infinite; pointer-events: none;
+        }
+        @keyframes float1 { 0%, 100% { transform: translateY(0px) scale(1); } 50% { transform: translateY(40px) scale(1.1); } }
+        @keyframes float2 { 0%, 100% { transform: translateX(0px) scale(1); } 50% { transform: translateX(-40px) scale(1.05); } }
+        @keyframes float3 { 0%, 100% { transform: scale(1) translate(0px, 0px); } 50% { transform: scale(1.2) translate(-20px, 30px); } }
+
+        /* GLASSMORPHISM UTILITIES */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glass-input {
+            background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-input:focus {
+            border-color: #6366f1; box-shadow: 0 0 25px rgba(99, 102, 241, 0.35); transform: translateY(-1px);
+        }
+        .neon-glow-indigo { box-shadow: 0 0 40px rgba(99, 102, 241, 0.25); }
+        .neon-glow-pink { box-shadow: 0 0 40px rgba(236, 72, 153, 0.25); }
+
+        /* ADVANCED ANIMATIONS */
+        .pulse-fast { animation: pulseS 1.5s infinite alternate; }
+        @keyframes pulseS { 0% { opacity: 0.4; } 100% { opacity: 1; } }
+        .shimmer-effect {
+            position: relative; overflow: hidden;
+        }
+        .shimmer-effect::after {
+            content: ''; position: absolute; top: -50%; left: -60%; width: 30%; height: 200%; background: rgba(255, 255, 255, 0.13); transform: rotate(30deg); transition: none; animation: shimmery 4s infinite linear;
+        }
+        @keyframes shimmery { 0% { left: -60%; } 30% { left: 140%; } 100% { left: 140%; } }
+        .scanning-line {
+            width: 100%; height: 3px; background: linear-gradient(90deg, transparent, #3b82f6, transparent); position: absolute; animation: scanAnim 2.5s ease-in-out infinite;
+        }
+        @keyframes scanAnim { 0% { top: 0%; } 50% { top: 100%; } 100% { top: 0%; } }
+
+        /* MATRIX PARTICLES */
+        .matrix-dot {
+            position: absolute; width: 4px; height: 4px; background: #818cf8; border-radius: 50%; opacity: 0.15; animation: microRise 20s linear infinite;
+        }
+        @keyframes microRise { 0% { transform: translateY(105vh) scale(0.8); opacity: 0; } 10% { opacity: 0.3; } 90% { opacity: 0.3; } 100% { transform: translateY(-5vh) scale(1.2); opacity: 0; } }
+
+        /* CUSTOM CODE FONT */
+        .font-mono-tech { font-family: 'JetBrains Mono', monospace; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-blur-1"></div>
+    <div class="bg-blur-2"></div>
+    <div class="bg-blur-3"></div>
+
+    <div class="matrix-dot" style="left: 5%; animation-delay: 1s; animation-duration: 14s;"></div>
+    <div class="matrix-dot" style="left: 15%; animation-delay: 4s; animation-duration: 18s;"></div>
+    <div class="matrix-dot" style="left: 28%; animation-delay: 0s; animation-duration: 22s;"></div>
+    <div class="matrix-dot" style="left: 42%; animation-delay: 7s; animation-duration: 16s;"></div>
+    <div class="matrix-dot" style="left: 59%; animation-delay: 3s; animation-duration: 25s;"></div>
+    <div class="matrix-dot" style="left: 73%; animation-delay: 9s; animation-duration: 13s;"></div>
+    <div class="matrix-dot" style="left: 86%; animation-delay: 2s; animation-duration: 19s;"></div>
+    <div class="matrix-dot" style="left: 95%; animation-delay: 6s; animation-duration: 21s;"></div>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function SevaSetuEngine() {
+            // 🟢 PORT 3000 नुसार परफेक्ट API BASE URL सेटअप
+            const API_BASE_URL = "http://localhost:3000/api/users";
+
+            // SYSTEM NAVIGATION & STATE ROUTING CENTRAL
+            const [isLoginTab, setIsLoginTab] = useState(true);
+            const [authRole, setAuthRole] = useState('user'); // user, admin
+            
+            // FORM INPUT BINDINGS
+            const [loginIdentifier, setLoginIdentifier] = useState('');
+            const [loginPassword, setLoginPassword] = useState('');
+            const [regFullName, setRegFullName] = useState('');
+            const [regUsername, setRegUsername] = useState('');
+            const [regEmail, setRegEmail] = useState('');
+            const [regPhone, setRegPhone] = useState('');
+            const [regPassword, setRegPassword] = useState('');
+            const [regConfirmPassword, setRegConfirmPassword] = useState('');
+
+            // FORGOT PASSWORD WORKFLOW FLOW STATES
+            const [forgotStep, setForgotStep] = useState('request'); 
+            const [forgotIdentifier, setForgotIdentifier] = useState('');
+            const [generatedOtp, setGeneratedOtp] = useState('');
+            const [enteredOtp, setEnteredOtp] = useState('');
+            const [resetNewPassword, setResetNewPassword] = useState('');
+            const [resetConfirmPassword, setResetConfirmPassword] = useState('');
+            const [showForgotModal, setShowForgotModal] = useState(false);
+
+            // GLOBAL UTILITY STATES
+            const [showPassword, setShowPassword] = useState(false);
+            const [isProcessing, setIsProcessing] = useState(false);
+            const [rememberMe, setRememberMe] = useState(true);
+            const [securityLogs, setSecurityLogs] = useState([]);
+            const [passwordStrength, setPasswordStrength] = useState({ score: 0, text: 'Weak', color: 'bg-rose-500' });
+            
+            // BIOMETRIC SCANNING SYSTEM STATE
+            const [biometricActive, setBiometricActive] = useState(false);
+            const [biometricStatus, setBiometricStatus] = useState('Ready for scanning...');
+
+            // LIFECYCLE INITIALIZER (CORE DATA HYDRATION)
+            useEffect(() => {
+                const logs = JSON.parse(localStorage.getItem('seva_v2_logs')) || [
+                    { event: "System Boot Securely", time: "2026-05-28 00:00:01", status: "SUCCESS", ip: "127.0.0.1" },
+                    { event: "Firewall Node Guard Online", time: "2026-05-28 00:00:05", status: "SECURE", ip: "192.168.1.1" }
+                ];
+                setSecurityLogs(logs);
+            }, []);
+
+            // PASSWORD COMPLIANCE AND STRENGTH CALCULATOR
+            useEffect(() => {
+                if (!regPassword) {
+                    setPasswordStrength({ score: 0, text: 'Empty', color: 'bg-slate-700' });
+                    return;
+                }
+                let score = 0;
+                if (regPassword.length >= 6) score++;
+                if (regPassword.length >= 10) score++;
+                if (/[A-Z]/.test(regPassword)) score++;
+                if (/[0-9]/.test(regPassword)) score++;
+                if (/[@$!%*#?&]/.test(regPassword)) score++;
+
+                let text = 'Weak';
+                let color = 'bg-rose-500';
+                if (score >= 4) { text = 'Ultra Secure'; color = 'bg-emerald-500'; }
+                else if (score >= 2) { text = 'Moderate'; color = 'bg-amber-500'; }
+
+                setPasswordStrength({ score, text, color });
+            }, [regPassword]);
+
+            // SYSTEM AUDIT LOGGER LOGIC
+            const appendAuditLog = (event, status, userIdent) => {
+                const newLog = {
+                    event: event,
+                    time: new Date().toISOString().replace('T', ' ').substring(0, 19),
+                    status: status,
+                    ip: `192.168.${Math.floor(Math.random() * 254)}.${Math.floor(Math.random() * 254)}`,
+                    user: userIdent || 'Guest'
+                };
+                const updated = [newLog, ...securityLogs];
+                setSecurityLogs(updated);
+                localStorage.setItem('seva_v2_logs', JSON.stringify(updated));
+            };
+
+            // 🟢 सुधारलेला आणि अचूक बॅकएंड लॉगिन हँडलर
+            const triggerSecureLogin = async (e) => {
+                if (e) e.preventDefault();
+                if (!loginIdentifier || !loginPassword) return;
+
+                setIsProcessing(true);
+
+                try {
+                    // System Admin Check
+                    if (authRole === 'admin') {
+                        if (loginIdentifier === 'admin' && loginPassword === 'admin') {
+                            appendAuditLog("Admin Portal Access Approved", "SUCCESS", "admin");
+                            localStorage.setItem('seva_v2_active_session', 'admin');
+                            localStorage.setItem('seva_v2_session_role', 'admin');
+                            setIsProcessing(false);
+                            alert("👑 Admin Login Successful! Loading Cloud Grid Panel...");
+                            window.location.href = "dashboard.html";
+                        } else {
+                            appendAuditLog("Unauthorized Admin Attempt", "CRITICAL FAILURE", loginIdentifier);
+                            alert("❌ Unauthorized Matrix Match! Invalid Admin Credentials.");
+                            setIsProcessing(false);
+                        }
+                        return;
+                    }
+
+                    // 🟢 डेटाबेसमधून थेट पडताळणी करण्यासाठी '/all' वरून युझर शोधणे
+                    const response = await fetch(`${API_BASE_URL}/all`, { method: 'GET' });
+                    const result = await response.json();
+
+                    if (result.success && result.users) {
+                        // नाव किंवा ईमेल किंवा फोन वरून युझर मॅच करणे
+                        const userMatch = result.users.find(
+                            u => (u.email === loginIdentifier || u.phone === loginIdentifier || u.name === loginIdentifier)
+                        );
+
+                        if (userMatch && userMatch.password === loginPassword) {
+                            appendAuditLog("User Gateway Session Created", "SUCCESS", userMatch.name);
+                            localStorage.setItem('seva_v2_active_session', userMatch.name);
+                            localStorage.setItem('seva_v2_session_role', 'user');
+                            setIsProcessing(false);
+                            alert("✅ User Login Successful! Opening Citizen Core Panel...");
+                            window.location.href = "index.html"; 
+                        } else {
+                            appendAuditLog("User Sign In Rejected", "FAILED TIMEOUT", loginIdentifier);
+                            alert("❌ Authentication Vector Mismatch! पासवर्ड किंवा आयडी चुकीचा आहे.");
+                            setIsProcessing(false);
+                        }
+                    } else {
+                        alert("❌ Server Error: युझर लिस्ट फेच करता आली नाही.");
+                        setIsProcessing(false);
+                    }
+                } catch (error) {
+                    console.error("Login connection error:", error);
+                    alert("❌ Backend Server शी संपर्क होऊ शकला नाही! कृपया तुमचा पोर्ट ३००० वर सर्व्हर चालू आहे ना ते तपासा.");
+                    setIsProcessing(false);
+                }
+            };
+
+            // 🟢 सुधारलेला आणि अचूक बॅकएंड रजिस्ट्रेशन हँडलर (Directly Saves to MongoDB via Port 3000)
+            const triggerSecureRegistration = async (e) => {
+                e.preventDefault();
+                if (!regFullName || !regUsername || !regEmail || !regPhone || !regPassword) {
+                    alert("Please fill all cryptographic mandatory security fields.");
+                    return;
+                }
+                if (regUsername.toLowerCase() === 'admin') {
+                    alert("🚫 Reserved Namespace Error: 'admin' keyword prohibited.");
+                    return;
+                }
+                if (regPassword !== regConfirmPassword) {
+                    alert("⚠️ Password mismatch confirmation matrix fails.");
+                    return;
+                }
+
+                setIsProcessing(true);
+
+                try {
+                    // 🟢 तुमच्या userController.js मधील createUser ला मॅच होणारा अचूक पेलोड (नाव, ईमेल, फोन, पासवर्ड)
+                    const payload = {
+                        name: regFullName,
+                        email: regEmail,
+                        phone: regPhone,
+                        password: regPassword,
+                        role: 'user'
+                    };
+
+                    const response = await fetch(`${API_BASE_URL}/register`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success || response.status === 201) {
+                        appendAuditLog("New Cloud Profile Provisions Granted", "SUCCESS", regUsername);
+                        alert("🎉 Premium Account Registered Directly inside MongoDB! आता तुम्ही लॉगिन करू शकता.");
+                        
+                        setRegFullName(''); setRegUsername(''); setRegEmail(''); setRegPhone(''); setRegPassword(''); setRegConfirmPassword('');
+                        setIsLoginTab(true);
+                    } else {
+                        alert(`⚠️ Node conflict: ${result.message || 'Registration Refused by Server Cluster.'}`);
+                    }
+                } catch (error) {
+                    console.error("Registration database connection fault:", error);
+                    alert("❌ Database/Server ला कनेक्ट करता आले नाही! कृपया तपासा की बॅकएंड सर्व्हर चालू आहे का.");
+                } finally {
+                    setIsProcessing(false);
+                }
+            };
+
+            // SAME PAGE WINDOW SOCIAL FEDERATED HANDSHAKE 
+            const triggerSocialOmniAuth = (platformName) => {
+                setIsProcessing(true);
+                appendAuditLog(`Federated ${platformName} Token Hooked`, "PENDING", `${platformName}Identity`);
+                
+                setTimeout(() => {
+                    const mockSocialUsername = `${platformName.toLowerCase()}_citizen`;
+                    appendAuditLog(`Federated ${platformName} Dynamic Sync`, "SUCCESS", mockSocialUsername);
+                    
+                    localStorage.setItem('seva_v2_active_session', mockSocialUsername);
+                    localStorage.setItem('seva_v2_session_role', 'user');
+                    
+                    setIsProcessing(false);
+                    alert(`🌐 Federated ${platformName} Authentication Handshake 100% Ok! Synchronizing Profile...`);
+                    window.location.href = "dashboard.html"; 
+                }, 1200);
+            };
+
+            // BIOMETRIC SCANNER SIMULATION
+            const runBiometricScanner = () => {
+                setBiometricActive(true);
+                setBiometricStatus("Initializing optoelectronic laser optics...");
+                
+                setTimeout(() => { setBiometricStatus("Scanning biological dermis patterns..."); }, 1000);
+                setTimeout(() => { setBiometricStatus("Verifying algorithmic hash structures..."); }, 2000);
+
+                setTimeout(() => {
+                    setBiometricActive(false);
+                    appendAuditLog("Biometric Verification Node Pass", "SUCCESS", "BiometricAdmin");
+                    
+                    localStorage.setItem('seva_v2_active_session', 'admin');
+                    localStorage.setItem('seva_v2_session_role', 'admin');
+                    
+                    alert("🧬 Biometric Data Match 100% Verified. Access Granted Admin.");
+                    window.location.href = "dashboard.html";
+                }, 3200);
+            };
+
+            // FORGOT PASSWORD ENGINE WORKFLOW
+            const initiateForgotPasswordSequence = () => {
+                if (!forgotIdentifier) {
+                    alert("Please provide registered Username, Email Address or Mobile Number.");
+                    return;
+                }
+                setIsProcessing(true);
+                setTimeout(() => {
+                    const systemGeneratedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+                    setGeneratedOtp(systemGeneratedOtp);
+                    setIsProcessing(false);
+                    setForgotStep('otp_verify');
+                    
+                    alert(`📩 SECURE OTP ROUTER: Token dispatched successfully.\n\n[MOCK GATEWAY OTP TOKEN]: ${systemGeneratedOtp}`);
+                    appendAuditLog("Password Reset Triggered OTP Dispatched", "PENDING", forgotIdentifier);
+                }, 1200);
+            };
+
+            const executeOtpValidation = () => {
+                if (enteredOtp === generatedOtp) {
+                    appendAuditLog("OTP Token Handshake Verified", "SUCCESS", forgotIdentifier);
+                    setForgotStep('new_password_set');
+                } else {
+                    alert("❌ Invalid OTP token verification failure. Access Blocked.");
+                    appendAuditLog("Invalid OTP Verification Countermeasure", "MALICIOUS FAILURE", forgotIdentifier);
+                }
+            };
+
+            const commitNewCryptographicPassword = () => {
+                if (!resetNewPassword || resetNewPassword.length < 4) {
+                    alert("Password failure: New configuration must be higher tier complexity.");
+                    return;
+                }
+                if (resetNewPassword !== resetConfirmPassword) {
+                    alert("Password confirmation parity fault.");
+                    return;
+                }
+                alert("🔒 Security Overwrite Successful! Password simulated updated. Now signing in...");
+                setShowForgotModal(false);
+                window.location.href = "dashboard.html";
+            };
+
+            return (
+                <div className="relative min-h-screen w-full transition-all duration-500">
+                    
+                    <section className="min-h-screen flex items-center justify-center px-4 py-12 relative z-20">
+                        <div className="glass-panel neon-glow-indigo max-w-6xl w-full rounded-[32px] overflow-hidden grid lg:grid-cols-12 transition-all duration-500">
+                            
+                            {/* LEFT BANNER CONSOLE GRID COLUMN */}
+                            <div className="lg:col-span-5 p-8 md:p-12 relative flex flex-col justify-between border-r border-white/5 bg-gradient-to-b from-slate-950/80 to-transparent max-lg:hidden">
+                                <div>
+                                    <div className="flex items-center gap-3">
+                                        <span className="bg-indigo-500/10 text-indigo-400 px-4 py-1.5 rounded-full border border-indigo-500/20 text-xs font-bold tracking-widest font-mono-tech">
+                                            SEVA SETU SECURE NODE v3.0
+                                        </span>
+                                        <span className="flex h-2 w-2 relative">
+                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                        </span>
+                                    </div>
+                                    <h1 className="text-4xl font-black tracking-tight leading-tight mt-8 text-white">
+                                        Enterprise <br/>
+                                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-500">
+                                            Identity Core
+                                        </span>
+                                    </h1>
+                                    <p className="text-slate-400 text-sm leading-relaxed mt-4">
+                                        Futuristic public cryptographic access gateway. Protected by multi-factor structural matrix verification paradigms and distributed hashing framework architectures.
+                                        Redirection protocol targeting unified <span className="text-indigo-400 font-mono-tech font-bold">dashboard.html</span> environment profiles.
+                                    </p>
+                                </div>
+
+                                {/* ARCHITECTURE STATS SUBGRID */}
+                                <div className="space-y-4 my-8">
+                                    <div className="glass-card rounded-2xl p-4 flex items-center gap-4 hover:border-indigo-500/30 transition-all">
+                                        <div className="h-10 w-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+                                            <i className="fa-solid fa-fingerprint text-lg"></i>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300">Biometric Encryption</h4>
+                                            <p className="text-slate-400 text-xs">Simulated neural pattern matching arrays.</p>
+                                        </div>
+                                    </div>
+                                    <div className="glass-card rounded-2xl p-4 flex items-center gap-4 hover:border-pink-500/30 transition-all">
+                                        <div className="h-10 w-10 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-400">
+                                            <i className="fa-solid fa-shield-halved text-lg"></i>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300">Unified Dynamic Grid</h4>
+                                            <p className="text-slate-400 text-xs">Realtime endpoint validation matrix protection.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-between items-center border-t border-white/5 pt-6 text-xs font-mono-tech text-slate-500">
+                                    <div>SYSTEM: <span className="text-emerald-400 font-bold">ONLINE</span></div>
+                                    <div>REDIRECT: <span className="text-indigo-400">DASHBOARD</span></div>
+                                    <div>ENC: <span className="text-purple-400">SHA-256</span></div>
+                                </div>
+                            </div>
+
+                            {/* RIGHT OPERATIONS INPUT COMPONENT FRAME */}
+                            <div className="lg:col-span-7 p-6 md:p-12 bg-slate-950/30 flex flex-col justify-center">
+                                <div className="w-full max-w-md mx-auto">
+                                    
+                                    {/* APP LOGO SECTION HEADER */}
+                                    <div className="text-center mb-8">
+                                        <div className="shimmer-effect h-16 w-16 mx-auto rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center text-2xl text-white shadow-xl">
+                                            <i className={authRole === 'admin' && isLoginTab ? "fa-solid fa-user-shield" : "fa-solid fa-id-card"}></i>
+                                        </div>
+                                        <h2 className="text-2xl font-extrabold tracking-tight text-white mt-4">
+                                            {!isLoginTab ? "Create Cluster Vault Profile" : (authRole === 'admin' ? "Admin Core Infrastructure" : "Citizen Secure Access Vector")}
+                                        </h2>
+                                        <p className="text-xs text-slate-400 mt-1">
+                                            {!isLoginTab ? "Provision secondary verification authorization attributes." : "Execute system handshake parameters."}
+                                        </p>
+                                    </div>
+
+                                    {/* ROLE TOGGLE MATRIX SWITCH */}
+                                    {isLoginTab && (
+                                        <div className="grid grid-cols-2 bg-slate-900/90 p-1.5 rounded-xl mb-6 border border-white/5">
+                                            <button type="button" onClick={() => setAuthRole('user')}
+                                                className={`py-2.5 rounded-lg text-xs font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-2 ${authRole === 'user' ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-lg neon-glow-indigo' : 'text-slate-400 hover:text-slate-200'}`}>
+                                                <i className="fa-solid fa-users"></i> Citizen / User
+                                            </button>
+                                            <button type="button" onClick={() => setAuthRole('admin')}
+                                                className={`py-2.5 rounded-lg text-xs font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-2 ${authRole === 'admin' ? 'bg-gradient-to-r from-pink-600 to-pink-700 text-white shadow-lg neon-glow-pink' : 'text-slate-400 hover:text-slate-200'}`}>
+                                                <i className="fa-solid fa-user-gear"></i> System Admin
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {/* MAIN SIGN IN INTERFACE COMPONENT FORM */}
+                                    {isLoginTab ? (
+                                        <form onSubmit={triggerSecureLogin} className="space-y-4">
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-1.5">
+                                                    {authRole === 'admin' ? "Administrator Hash Node Key ID" : "Username / Email / Mobile Node"}
+                                                </label>
+                                                <div className="relative">
+                                                    <i className="fa-solid fa-circle-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+                                                    <input type="text" value={loginIdentifier} onChange={(e) => setLoginIdentifier(e.target.value)}
+                                                        placeholder={authRole === 'admin' ? "Enter admin ID (use 'admin')" : "Enter username, email or phone"}
+                                                        className="glass-input w-full p-3.5 pl-11 rounded-xl text-sm font-medium text-white outline-none" required />
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-1.5">Security Token Password</label>
+                                                <div className="relative">
+                                                    <i className="fa-solid fa-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+                                                    <input type={showPassword ? "text" : "password"} value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)}
+                                                        placeholder={authRole === 'admin' ? "Enter admin pass (use 'admin')" : "••••••••"}
+                                                        className="glass-input w-full p-3.5 pl-11 pr-11 rounded-xl text-sm font-medium text-white outline-none font-mono-tech" required />
+                                                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition">
+                                                        <i className={showPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"} ></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-center justify-between text-xs font-medium">
+                                                <label className="flex items-center gap-2 text-slate-400 cursor-pointer select-none">
+                                                    <input type="checkbox" checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} className="accent-indigo-500 rounded bg-slate-900 border-white/10 h-4 w-4" />
+                                                    Keep Node Synchronized
+                                                </label>
+                                                <button type="button" onClick={() => { setShowForgotModal(true); setForgotStep('request'); }} className="text-indigo-400 hover:text-indigo-300 transition hover:underline">
+                                                    Forgot Access Matrix Token?
+                                                </button>
+                                            </div>
+
+                                            <button type="submit" disabled={isProcessing}
+                                                className={`shimmer-effect w-full p-3.5 rounded-xl font-bold text-xs tracking-widest uppercase text-white transition-all shadow-xl transform active:scale-[0.99] ${authRole === 'admin' ? 'bg-gradient-to-r from-pink-600 to-rose-600 shadow-pink-950/50' : 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 shadow-indigo-950/50'}`}>
+                                                {isProcessing ? (
+                                                    <span className="flex items-center justify-center gap-2"><i className="fa-solid fa-circle-notch animate-spin"></i> Processing Relational Matrix...</span>
+                                                ) : (
+                                                    <span>Sign In Account <i className="fa-solid fa-arrow-right-to-bracket ml-1.5"></i></span>
+                                                )}
+                                            </button>
+
+                                            {/* BIOMETRIC SCANNING CONTROL NODES PANEL */}
+                                            {authRole === 'admin' && (
+                                                <div className="border-t border-white/5 pt-4 mt-2">
+                                                    <button type="button" onClick={runBiometricScanner} disabled={biometricActive}
+                                                        className="w-full glass-card hover:bg-white/5 border border-white/10 text-xs font-bold tracking-wider text-slate-300 rounded-xl p-3 flex items-center justify-center gap-2 transition active:scale-[0.99]">
+                                                        <i className="fa-solid fa-fingerprint text-pink-500 animate-pulse text-sm"></i> 
+                                                        {biometricActive ? biometricStatus : "Bypass Authorization via Biometrics"}
+                                                    </button>
+                                                </div>
+                                            )}
+
+                                            {authRole === 'user' && (
+                                                <p className="text-center text-xs text-slate-400 mt-4">
+                                                    Unregistered Citizen Vector Node Identity? 
+                                                    <span onClick={() => setIsLoginTab(false)} className="text-indigo-400 font-bold ml-1.5 cursor-pointer hover:text-indigo-300 hover:underline">
+                                                        Initialize Account Here
+                                                    </span>
+                                                </p>
+                                            )}
+                                        </form>
+                                    ) : (
+                                        /* REGISTRATION MODULE SCHEDULER FORM */
+                                        <form onSubmit={triggerSecureRegistration} className="space-y-3.5">
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-1">Full Legal Registry Identity Name</label>
+                                                <input type="text" value={regFullName} onChange={(e) => setRegFullName(e.target.value)} placeholder="John Doe"
+                                                    className="glass-input w-full p-3 rounded-xl text-xs font-medium text-white outline-none" required />
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-1">Username Node ID</label>
+                                                    <input type="text" value={regUsername} onChange={(e) => setRegUsername(e.target.value)} placeholder="johndoe"
+                                                        className="glass-input w-full p-3 rounded-xl text-xs font-medium text-white outline-none" required />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-1">Secure Mobile Node</label>
+                                                    <input type="tel" value={regPhone} onChange={(e) => setRegPhone(e.target.value)} placeholder="9876543210"
+                                                        className="glass-input w-full p-3 rounded-xl text-xs font-medium text-white outline-none font-mono-tech" required />
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-1">E-Mail Identity Index</label>
+                                                <input type="email" value={regEmail} onChange={(e) => setRegEmail(e.target.value)} placeholder="john@example.com"
+                                                    className="glass-input w-full p-3 rounded-xl text-xs font-medium text-white outline-none font-mono-tech" required />
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-1">Passphrase Hashing</label>
+                                                    <input type="password" value={regPassword} onChange={(e) => setRegPassword(e.target.value)} placeholder="••••••••"
+                                                        className="glass-input w-full p-3 rounded-xl text-xs font-medium text-white outline-none font-mono-tech" required />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-1">Confirm Matrix Pass</label>
+                                                    <input type="password" value={regConfirmPassword} onChange={(e) => setRegConfirmPassword(e.target.value)} placeholder="••••••••"
+                                                        className="glass-input w-full p-3 rounded-xl text-xs font-medium text-white outline-none font-mono-tech" required />
+                                                </div>
+                                            </div>
+
+                                            {/* DYNAMIC METRIC STRENGTH DISPLAY CONSOLE */}
+                                            <div className="bg-slate-900/80 rounded-xl p-2.5 border border-white/5 space-y-1.5">
+                                                <div className="flex justify-between text-[10px] uppercase font-bold tracking-widest text-slate-400">
+                                                    <span>Password Severity Meter</span>
+                                                    <span className="text-white">{passwordStrength.text}</span>
+                                                </div>
+                                                <div className="w-full h-1 bg-slate-800 rounded-full overflow-hidden flex gap-0.5">
+                                                    <div className={`h-full transition-all duration-300 ${passwordStrength.score >= 1 ? passwordStrength.color : 'bg-transparent'}`} style={{width:'20%'}}></div>
+                                                    <div className={`h-full transition-all duration-300 ${passwordStrength.score >= 2 ? passwordStrength.color : 'bg-transparent'}`} style={{width:'20%'}}></div>
+                                                    <div className={`h-full transition-all duration-300 ${passwordStrength.score >= 3 ? passwordStrength.color : 'bg-transparent'}`} style={{width:'20%'}}></div>
+                                                    <div className={`h-full transition-all duration-300 ${passwordStrength.score >= 4 ? passwordStrength.color : 'bg-transparent'}`} style={{width:'20%'}}></div>
+                                                    <div className={`h-full transition-all duration-300 ${passwordStrength.score >= 5 ? passwordStrength.color : 'bg-transparent'}`} style={{width:'20%'}}></div>
+                                                </div>
+                                            </div>
+
+                                            <button type="submit" disabled={isProcessing} className="shimmer-effect w-full p-3 rounded-xl font-bold text-xs tracking-widest uppercase text-white transition-all shadow-xl bg-gradient-to-r from-emerald-600 to-teal-500 shadow-emerald-950/50 transform active:scale-[0.99]">
+                                                {isProcessing ? "Adding to MongoDB..." : "Provision Premium Account Array"}
+                                            </button>
+
+                                            <p className="text-center text-xs text-slate-400 mt-2">
+                                                Already synchronized profile index? 
+                                                <span onClick={() => setIsLoginTab(true)} className="text-indigo-400 font-bold ml-1.5 cursor-pointer hover:text-indigo-300 hover:underline">
+                                                    Return to Sign In
+                                                </span>
+                                            </p>
+                                        </form>
+                                    )}
+
+                                    {/* SAME PAGE WINDOW RE-ENGINEERED IN-PLACE SOCIAL AUTH LINK CLUSTERS */}
+                                    {isLoginTab && authRole === 'user' && (
+                                        <div className="mt-6">
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex-1 h-[1px] bg-white/10"></div>
+                                                <span className="text-slate-500 text-[10px] font-bold tracking-widest uppercase">Federated OpenID Matrix Channels</span>
+                                                <div className="flex-1 h-[1px] bg-white/10"></div>
+                                            </div>
+
+                                            <div className="grid grid-cols-3 gap-3 mt-4">
+                                                <button type="button" onClick={() => triggerSocialOmniAuth('Google')} 
+                                                    className="glass-card hover:bg-white/10 h-11 rounded-xl text-white flex items-center justify-center text-base transition duration-200 transform active:scale-95 hover:border-slate-500">
+                                                    <i className="fa-brands fa-google text-rose-500"></i>
+                                                </button>
+                                                <button type="button" onClick={() => triggerSocialOmniAuth('Apple')} 
+                                                    className="glass-card hover:bg-white/10 h-11 rounded-xl text-white flex items-center justify-center text-base transition duration-200 transform active:scale-95 hover:border-slate-500">
+                                                    <i className="fa-brands fa-apple text-white"></i>
+                                                </button>
+                                                <button type="button" onClick={() => triggerSocialOmniAuth('GitHub')} 
+                                                    className="glass-card hover:bg-white/10 h-11 rounded-xl text-white flex items-center justify-center text-base transition duration-200 transform active:scale-95 hover:border-slate-500">
+                                                    <i className="fa-brands fa-github text-purple-400"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {showForgotModal && (
+                        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+                            <div className="glass-panel neon-glow-indigo w-full max-w-md rounded-3xl overflow-hidden border border-white/10 relative">
+                                <div className="absolute top-0 left-0 w-full bg-gradient-to-r from-indigo-500 to-pink-500 h-1.5"></div>
+                                
+                                <div className="p-6 md:p-8">
+                                    <div className="flex justify-between items-start mb-6">
+                                        <div>
+                                            <h3 className="text-xl font-bold text-white">Dynamic Cryptographic Recovery</h3>
+                                            <p className="text-xs text-slate-400 mt-1">Multi-factor secure authentication override system</p>
+                                        </div>
+                                        <button onClick={() => setShowForgotModal(false)} className="text-slate-400 hover:text-white transition h-8 w-8 rounded-full bg-slate-900 flex items-center justify-center border border-white/5">
+                                            <i className="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </div>
+
+                                    {/* STEP 1: INITIAL RECOVERY DISCOVERY CAPTURE */}
+                                    {forgotStep === 'request' && (
+                                        <div className="space-y-4">
+                                            <div className="p-4 bg-indigo-950/40 rounded-xl border border-indigo-500/10 text-xs leading-relaxed text-indigo-300">
+                                                <i className="fa-solid fa-circle-info mr-1.5 text-indigo-400"></i> Input verified credentials criteria (Username / Registered Email ID / Phone Node). The core engine will relay an advanced 6-digit secure verification OTP code.
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-1.5">Identity Target Parameter</label>
+                                                <input type="text" value={forgotIdentifier} onChange={(e) => setForgotIdentifier(e.target.value)} placeholder="Username, email or mobile number"
+                                                    className="glass-input w-full p-3.5 rounded-xl text-sm text-white font-medium outline-none" />
+                                            </div>
+                                            <button type="button" onClick={initiateForgotPasswordSequence} disabled={isProcessing}
+                                                className="w-full p-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 text-white font-bold text-xs uppercase tracking-widest transition shadow-lg shadow-indigo-950/50">
+                                                {isProcessing ? "Computing Cluster Mapping..." : "Transmit Verification OTP Token"}
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {/* STEP 2: HANDSHAKE OTP LIVE CHANNELS VALIDATION */}
+                                    {forgotStep === 'otp_verify' && (
+                                        <div className="space-y-4">
+                                            <div className="p-4 bg-amber-950/40 rounded-xl border border-amber-500/10 text-xs leading-relaxed text-amber-300">
+                                                <i className="fa-solid fa-shield-halved mr-1.5 text-amber-400"></i> Cryptographic dynamic OTP transmitted to virtual network endpoints. Validate token immediate payload block below.
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-1.5">6-Digit Verification Node OTP</label>
+                                                <input type="text" value={enteredOtp} onChange={(e) => setEnteredOtp(e.target.value)} placeholder="Enter OTP" maxLength="6"
+                                                    className="glass-input w-full p-3.5 rounded-xl text-center text-lg font-bold text-white outline-none font-mono-tech tracking-[0.4em]" />
+                                            </div>
+                                            <div className="flex gap-3">
+                                                <button type="button" onClick={() => setForgotStep('request')} className="flex-1 p-3 rounded-xl bg-slate-900 border border-white/10 text-slate-300 font-bold text-xs uppercase transition tracking-wider">Back</button>
+                                                <button type="button" onClick={executeOtpValidation} className="flex-1 p-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase transition tracking-wider shadow-lg shadow-indigo-950/50">Validate Token</button>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* STEP 3: RESET DEPLOYMENT STRATIFIED PARAMETERS */}
+                                    {forgotStep === 'new_password_set' && (
+                                        <div className="space-y-4">
+                                            <div className="p-4 bg-emerald-950/40 rounded-xl border border-emerald-500/10 text-xs leading-relaxed text-emerald-300">
+                                                <i className="fa-solid fa-lock-open mr-1.5 text-emerald-400"></i> Identity verification handshake complete. Configure your new complex credentials override array below.
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-1">New Cryptographic Token Pass</label>
+                                                <input type="password" value={resetNewPassword} onChange={(e) => setResetNewPassword(e.target.value)} placeholder="••••••••"
+                                                    className="glass-input w-full p-3 rounded-xl text-xs font-medium text-white outline-none font-mono-tech" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-1">Confirm Token Pass Override</label>
+                                                <input type="password" value={resetConfirmPassword} onChange={(e) => setResetConfirmPassword(e.target.value)} placeholder="••••••••"
+                                                    className="glass-input w-full p-3 rounded-xl text-xs font-medium text-white outline-none font-mono-tech" />
+                                            </div>
+                                            <button type="button" onClick={commitNewCryptographicPassword}
+                                                className="w-full p-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold text-xs uppercase tracking-widest transition shadow-lg shadow-emerald-950/50">
+                                                Deploy Encryption Overwrite Matrix
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    <footer className="text-center pb-8 relative z-20">
+                        <button type="button" onClick={() => window.location.href="dashboard.html"} className="text-xs font-semibold text-slate-500 hover:text-slate-300 transition duration-200">
+                            <i className="fa-solid fa-arrow-left-long mr-1.5"></i> Direct Hotlink Override to dashboard.html Registry Node
+                        </button>
+                    </footer>
+
+                </div>
+            );
+        }
+
+        // VIRTUAL DOM MOUNT ENGINE INITIALIZATION INJECTION
+        const targetContainerNode = document.getElementById("root");
+        const singleApplicationRootInstance = ReactDOM.createRoot(targetContainerNode);
+        singleApplicationRootInstance.render(<SevaSetuEngine />);
+    </script>
+</body>
+</html>

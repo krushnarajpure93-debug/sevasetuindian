@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seva Setu - Ultimate Airplane Booking Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet Mapping Layer for Live Flight Radar Trajectory -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f4f7fa; }
+        .custom-shadow { box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05); }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-content { background: white; padding: 2rem; border-radius: 24px; width: 550px; max-width: 95%; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
+        #flight-radar-map { width: 100%; height: 260px; border-radius: 16px; z-index: 1; }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <!-- Top Navigation Header Links System -->
+    <header class="bg-white border-b border-slate-100 py-3 px-6 md:px-12 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-2">
+            <div class="bg-blue-600 p-2 rounded-lg text-white">
+                <i class="fa-solid fa-plane-departure text-lg"></i>
+            </div>
+            <div>
+                <span class="font-extrabold text-xl text-blue-900 tracking-tight block">Seva Setu</span>
+                <span class="text-[9px] text-slate-400 block -mt-1">One Stop Airplane Booking Platform</span>
+            </div>
+        </div>
+        <nav class="hidden lg:flex gap-6 text-sm font-semibold text-slate-600">
+            <a href="travelbookinghub.html" class="hover:text-blue-600 transition">Home</a>
+            <a href="#" class="hover:text-blue-600 transition flex items-center gap-1">Appointments Hub <i class="fa-solid fa-chevron-down text-[10px]"></i></a>
+            <a href="#" class="text-blue-600 border-b-2 border-blue-600 pb-1 font-bold">Airplane Jet Hub</a>
+            <a href="about.html" class="hover:text-blue-600 transition">About Us</a>
+            <a href="emergency.html" class="hover:text-blue-600 transition text-red-600 font-bold">Emergency</a>
+            <a href="contact.html" class="hover:text-blue-600 transition">Contact</a>
+        </nav>
+        <div class="flex items-center gap-4">
+            <button class="text-slate-600 hover:text-blue-600"><i class="fa-regular fa-moon text-lg"></i></button>
+            <a href="travelbookinghub.html" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition shadow-md">
+                <i class="fa-regular fa-user-circle text-base"></i> Login / Signup
+            </a>
+        </div>
+    </header>
+
+    <!-- Sub Hero Banner Section -->
+    <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 py-10 px-6 md:px-12 text-white border-b border-slate-800">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div class="space-y-2">
+                <div class="text-xs text-blue-300 flex items-center gap-2">
+                    <a href="index.html" class="hover:underline">Home</a> <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                    <span>Travel Booking Hub</span> <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                    <span class="text-white">Airplane Booking</span>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-black tracking-tight">National & International Flights</h1>
+                <p class="text-sm text-slate-300 font-medium">Book dynamic domestic airways networks at lowest convenience fees</p>
+            </div>
+            <div class="flex gap-4 bg-white/10 p-2 rounded-xl backdrop-blur">
+                <span class="px-4 py-2 bg-blue-600 text-xs font-bold rounded-lg cursor-pointer">One Way</span>
+                <span class="px-4 py-2 hover:bg-white/10 text-xs font-semibold rounded-lg cursor-pointer transition">Round Trip</span>
+                <span class="px-4 py-2 hover:bg-white/10 text-xs font-semibold rounded-lg cursor-pointer transition">Multi-City</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step Tracker Block Component -->
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center text-xs md:text-sm font-semibold text-slate-400 border-b border-slate-100 overflow-x-auto gap-4 bg-white mt-4 rounded-xl custom-shadow">
+        <div class="flex items-center text-blue-600 whitespace-nowrap"><i class="fa-solid fa-circle-check mr-2 text-base"></i> Select Flight Terminal</div>
+        <div class="h-[2px] bg-blue-600 flex-1 min-w-[30px]"></div>
+        <div class="flex items-center text-blue-600 font-bold whitespace-nowrap"><div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold mr-2 shadow">2</div> Flight Allocation</div>
+        <div class="h-[2px] bg-slate-200 flex-1 min-w-[30px]" id="step-line-3"></div>
+        <div class="flex items-center whitespace-nowrap" id="step-title-3"><div class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold mr-2" id="step-num-3">3</div> Passenger Details</div>
+        <div class="h-[2px] bg-slate-200 flex-1 min-w-[30px]" id="step-line-4"></div>
+        <div class="flex items-center whitespace-nowrap" id="step-title-4"><div class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold mr-2" id="step-num-4">4</div> Secure Payment Gateway</div>
+        <div class="h-[2px] bg-slate-200 flex-1 min-w-[30px]" id="step-line-5"></div>
+        <div class="flex items-center whitespace-nowrap" id="step-title-5"><div class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold mr-2" id="step-num-5">5</div> Boarding Pass Confirmed</div>
+    </div>
+
+    <!-- Main Workspace Container Interface -->
+    <main class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left Side Flight Selection Area -->
+        <div class="lg:col-span-2 space-y-8">
+            
+            <!-- Flight Route Airport Form Search Box Grid -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-100 custom-shadow">
+                <h2 class="font-bold text-base md:text-lg text-slate-900 mb-6 flex items-center gap-2">
+                    <i class="fa-solid fa-plane-contain text-blue-600"></i> Search Airport Sector Hubs
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative">
+                    <!-- Origin Airport Select Module -->
+                    <div class="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200/60">
+                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                            <i class="fa-solid fa-plane-departure text-green-500 text-[10px]"></i> From (Origin Airport)
+                        </label>
+                        <select id="flight-origin-airport" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none font-bold text-slate-800" onchange="handleFlightPathUpdate()">
+                            <option value="">Select Departure Airport</option>
+                            <option value="BOM">Chhatrapati Shivaji Maharaj Airport (BOM) - Mumbai</option>
+                            <option value="DEL">Indira Gandhi International Airport (DEL) - Delhi</option>
+                            <option value="NAG">Dr. Babasaheb Ambedkar Airport (NAG) - Nagpur</option>
+                            <option value="BLR">Kempegowda International Airport (BLR) - Bengaluru</option>
+                            <option value="AMD">Sardar Vallabhbhai Patel Airport (AMD) - Ahmedabad</option>
+                        </select>
+                    </div>
+
+                    <!-- Swap Flight Vector Button Component -->
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white border border-white p-3 rounded-full shadow-lg cursor-pointer hover:bg-blue-700 transition z-10" onclick="swapAirlinesLocations()">
+                        <i class="fa-solid fa-right-left text-xs"></i>
+                    </div>
+
+                    <!-- Destination Airport Select Module -->
+                    <div class="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200/60">
+                        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                            <i class="fa-solid fa-plane-arrival text-red-500 text-[10px]"></i> To (Destination Airport)
+                        </label>
+                        <select id="flight-destination-airport" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none font-bold text-slate-800" onchange="handleFlightPathUpdate()">
+                            <option value="">Select Destination Airport</option>
+                            <option value="DEL">Indira Gandhi International Airport (DEL) - Delhi</option>
+                            <option value="BOM">Chhatrapati Shivaji Maharaj Airport (BOM) - Mumbai</option>
+                            <option value="NAG">Dr. Babasaheb Ambedkar Airport (NAG) - Nagpur</option>
+                            <option value="BLR">Kempegowda International Airport (BLR) - Bengaluru</option>
+                            <option value="AMD">Sardar Vallabhbhai Patel Airport (AMD) - Ahmedabad</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Date & Class Select Options Row Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 block mb-1">Departure Date</label>
+                        <input type="date" value="2026-05-25" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 block mb-1">Passengers</label>
+                        <select class="w-full border border-slate-200 rounded-xl p-2.5 text-sm font-medium outline-none bg-white">
+                            <option>1 Passenger (Adult)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <!-- Travel Class Mode Multiplier Engine Integration -->
+                        <label class="text-xs font-bold text-slate-500 block mb-1">Travel Class Mode (Premium = Higher Price)</label>
+                        <select id="travel-class-modifier" class="w-full border border-blue-400 bg-blue-50/60 text-blue-800 rounded-xl p-2.5 text-sm font-bold outline-none" onchange="handleFlightPathUpdate()">
+                            <option value="1.0">Economy Class (Base Fare)</option>
+                            <option value="1.5">Premium Economy (1.5x Price)</option>
+                            <option value="3.0">Business Lounge Elite Class (3x Price)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Dynamic Flight Sectors Section -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-100 custom-shadow">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h3 class="font-bold text-base text-slate-900">Popular Domestic Flight Sectors</h3>
+                        <p class="text-xs text-slate-400 font-medium">Top commercial sector pathways loved by travelers</p>
+                    </div>
+                    <button onclick="toggleMorePopularFlightSectors()" class="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 bg-slate-50 hover:bg-blue-100 hover:text-blue-600 transition shadow-sm">
+                        <i id="sector-toggle-icon" class="fa-solid fa-chevron-down text-xs transition-transform"></i>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div onclick="selectPresetFlightSector('BOM', 'DEL')" class="border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow transition cursor-pointer bg-slate-50/50 p-2 text-center">
+                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=150&q=80" class="w-full h-16 object-cover rounded-lg mb-2" alt="Mumbai to Delhi">
+                        <span class="text-xs font-bold text-slate-800 block">Mumbai ➔ Delhi</span>
+                    </div>
+                    <div onclick="selectPresetFlightSector('BLR', 'DEL')" class="border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow transition cursor-pointer bg-slate-50/50 p-2 text-center">
+                        <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=150&q=80" class="w-full h-16 object-cover rounded-lg mb-2" alt="Bengaluru to Delhi">
+                        <span class="text-xs font-bold text-slate-800 block">Bengaluru ➔ Delhi</span>
+                    </div>
+                    <div onclick="selectPresetFlightSector('BOM', 'NAG')" class="border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow transition cursor-pointer bg-slate-50/50 p-2 text-center">
+                        <img src="https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&w=150&q=80" class="w-full h-16 object-cover rounded-lg mb-2" alt="Mumbai to Nagpur">
+                        <span class="text-xs font-bold text-slate-800 block">Mumbai ➔ Nagpur</span>
+                    </div>
+                    <div onclick="selectPresetFlightSector('AMD', 'BOM')" class="border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow transition cursor-pointer bg-slate-50/50 p-2 text-center">
+                        <img src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?auto=format&fit=crop&w=150&q=80" class="w-full h-16 object-cover rounded-lg mb-2" alt="Ahmedabad to Mumbai">
+                        <span class="text-xs font-bold text-slate-800 block">Ahmedabad ➔ Mumbai</span>
+                    </div>
+                </div>
+
+                <!-- Extended List Area: 10 More Jet Flight Route Links -->
+                <div id="extended-flight-sectors-block" class="hidden mt-4 pt-4 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div onclick="selectPresetFlightSector('NAG', 'DEL')" class="border p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Nagpur ➔ Delhi</div>
+                    <div onclick="selectPresetFlightSector('NAG', 'BOM')" class="border p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Nagpur ➔ Mumbai</div>
+                    <div onclick="selectPresetFlightSector('BLR', 'BOM')" class="border p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Bengaluru ➔ Mumbai</div>
+                    <div onclick="selectPresetFlightSector('DEL', 'AMD')" class="border p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Delhi ➔ Ahmedabad</div>
+                    <div onclick="selectPresetFlightSector('BOM', 'BLR')" class="border p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Mumbai ➔ Bengaluru</div>
+                    <div onclick="selectPresetFlightSector('DEL', 'NAG')" class="border p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Delhi ➔ Nagpur</div>
+                    <div onclick="selectPresetFlightSector('AMD', 'DEL')" class="border p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Ahmedabad ➔ Delhi</div>
+                    <div onclick="selectPresetFlightSector('BLR', 'AMD')" class="border p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Bengaluru ➔ Ahmedabad</div>
+                    <div onclick="selectPresetFlightSector('DEL', 'BOM')" class="border p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Delhi ➔ Mumbai</div>
+                    <div onclick="selectPresetFlightSector('NAG', 'BLR')" class="border p-2 rounded-xl bg-slate-50 hover:bg-blue-50 transition cursor-pointer text-center text-xs font-bold text-slate-700">Nagpur ➔ Bengaluru</div>
+                </div>
+            </div>
+
+            <!-- Available Airplanes Flight Cards Area (Total 8 Cards with Airplane Icons/Images) -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-100 custom-shadow space-y-4">
+                <h3 class="font-bold text-base md:text-lg text-slate-900">Available Scheduled Flights</h3>
+                <p class="text-xs text-slate-400 font-medium -mt-2 mb-4">Select the specific airline timetable match matrix</p>
+                
+                <!-- Card 1: Air India -->
+                <label onclick="setSelectedFlightContext('Air India Commercial Premium', 'AI-402', '12A (Window)')" class="border-2 border-blue-600 bg-blue-50/40 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 cursor-pointer block transition">
+                    <div class="flex items-center gap-4">
+                        <input type="radio" name="selected-flight-airplane" checked class="w-4 h-4 accent-blue-600" id="airplane-ai">
+                        <img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=100&h=70&q=80" class="rounded-lg object-cover border" alt="Air India">
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-900 flex items-center gap-1.5">Air India Premium <span class="text-[10px] bg-red-100 text-red-700 font-bold px-1.5 py-0.5 rounded">AI-402</span></h4>
+                            <p class="text-xs text-slate-500 font-medium">06:00 AM ➔ 08:15 AM • Non Stop • Seat: 12A</p>
+                        </div>
+                    </div>
+                    <div class="text-right w-full sm:w-auto">
+                        <span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-bold inline-block mb-1">Free Meals Included</span>
+                        <p class="font-bold text-base text-slate-900 flight-fare-tag" data-multiplier="5.8">₹4,500.00</p>
+                    </div>
+                </label>
+
+                <!-- Card 2: IndiGo Airline -->
+                <label onclick="setSelectedFlightContext('IndiGo Commercial Air', '6E-2137', '18B (Aisle)')" class="border border-slate-200 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 cursor-pointer block hover:border-blue-400 transition">
+                    <div class="flex items-center gap-4">
+                        <input type="radio" name="selected-flight-airplane" class="w-4 h-4 accent-blue-600" id="airplane-igo">
+                        <img src="https://images.unsplash.com/photo-1517479149777-5f3b1511d5ad?auto=format&fit=crop&w=100&h=70&q=80" class="rounded-lg object-cover border" alt="IndiGo">
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-900 flex items-center gap-1.5">IndiGo Air <span class="text-[10px] bg-blue-100 text-blue-700 font-bold px-1.5 py-0.5 rounded">6E-2137</span></h4>
+                            <p class="text-xs text-slate-500 font-medium">09:15 AM ➔ 11:45 AM • Non Stop • Seat: 18B</p>
+                        </div>
+                    </div>
+                    <div class="text-right w-full sm:w-auto">
+                        <span class="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full font-bold inline-block mb-1">On Time Record</span>
+                        <p class="font-bold text-base text-slate-900 flight-fare-tag" data-multiplier="5.1">₹3,900.00</p>
+                    </div>
+                </label>
+
+                <!-- Card 3: Vistara Flight Elite -->
+                <label onclick="setSelectedFlightContext('Vistara Luxury Corporate Jet', 'UK-812', '04C (Premium Window)')" class="border border-slate-200 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 cursor-pointer block hover:border-blue-400 transition">
+                    <div class="flex items-center gap-4">
+                        <input type="radio" name="selected-flight-airplane" class="w-4 h-4 accent-blue-600" id="airplane-vistara">
+                        <img src="https://images.unsplash.com/photo-1606761568499-6d2451b23c66?auto=format&fit=crop&w=100&h=70&q=80" class="rounded-lg object-cover border" alt="Vistara Luxury">
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-900 flex items-center gap-1.5">Vistara Luxury Jet <span class="text-[10px] bg-purple-100 text-purple-700 font-bold px-1.5 py-0.5 rounded">UK-812</span></h4>
+                            <p class="text-xs text-slate-500 font-medium">04:30 PM ➔ 06:45 PM • Non Stop • Seat: 04C</p>
+                        </div>
+                    </div>
+                    <div class="text-right w-full sm:w-auto">
+                        <span class="text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-bold inline-block mb-1">Luxury Lounge Access</span>
+                        <p class="font-bold text-base text-slate-900 flight-fare-tag" data-multiplier="7.2">₹5,800.00</p>
+                    </div>
+                </label>
+
+                <!-- Extra 5 Hidden Flight Fleet Cards Block Container -->
+                <div id="extended-airplanes-hidden-block" class="hidden space-y-4">
+                    <!-- Card 4: SpiceJet -->
+                    <label onclick="setSelectedFlightContext('SpiceJet Express Liner', 'SG-332', '22F')" class="border border-slate-200 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 cursor-pointer block hover:border-blue-400 transition">
+                        <div class="flex items-center gap-4">
+                            <input type="radio" name="selected-flight-airplane" class="w-4 h-4 accent-blue-600">
+                            <img src="https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?auto=format&fit=crop&w=100&h=70&q=80" class="rounded-lg object-cover border" alt="SpiceJet">
+                            <div>
+                                <h4 class="font-bold text-sm text-slate-900">SpiceJet Express <span class="text-[10px] bg-red-100 text-red-600 font-bold px-1.5 py-0.5 rounded">SG-332</span></h4>
+                                <p class="text-xs text-slate-500 font-medium">11:00 PM ➔ 01:20 AM • Budget Eco</p>
+                            </div>
+                        </div>
+                        <div class="text-right"><p class="font-bold text-base text-slate-900 flight-fare-tag" data-multiplier="4.8">₹3,400.00</p></div>
+                    </label>
+
+                    <!-- Card 5: Akasa Air -->
+                    <label onclick="setSelectedFlightContext('Akasa Air Neo Fleet', 'QP-112', '14A')" class="border border-slate-200 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 cursor-pointer block hover:border-blue-400 transition">
+                        <div class="flex items-center gap-4">
+                            <input type="radio" name="selected-flight-airplane" class="w-4 h-4 accent-blue-600">
+                            <img src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=100&h=70&q=80" class="rounded-lg object-cover border" alt="Akasa Air">
+                            <div>
+                                <h4 class="font-bold text-sm text-slate-900">Akasa Air Eco <span class="text-[10px] bg-amber-100 text-amber-700 font-bold px-1.5 py-0.5 rounded">QP-112</span></h4>
+                                <p class="text-xs text-slate-500 font-medium">02:00 PM ➔ 04:15 PM • Brand New Fleet</p>
+                            </div>
+                        </div>
+                        <div class="text-right"><p class="font-bold text-base text-slate-900 flight-fare-tag" data-multiplier="4.9">₹3,600.00</p></div>
+                    </label>
+                </div>
+
+                <!-- More Flights Fleet Toggle Trigger Button -->
+                <button onclick="toggleExtraFlightFleets()" class="w-full mt-2 py-2.5 bg-slate-50 hover:bg-slate-100 text-blue-600 font-bold text-sm rounded-xl border border-slate-200 flex items-center justify-center gap-2 transition">
+                    <i class="fa-solid fa-plane"></i> <span id="fleet-toggle-btn-txt">More Available Flights</span> <i class="fa-solid fa-chevron-down text-xs transition" id="fleet-arrow-icon"></i>
+                </button>
+            </div>
+
+            <!-- Save More Coupon Offers Row Wrapper Block -->
+            <div class="bg-amber-50/70 border border-amber-200 p-4 rounded-xl flex justify-between items-center shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="bg-amber-400/20 text-amber-800 p-2 rounded-lg"><i class="fa-solid fa-percent text-base"></i></div>
+                    <div>
+                        <p class="font-bold text-sm text-amber-900">Save more with Seva Setu Offers!</p>
+                        <p class="text-xs text-amber-700 font-medium">Apply airplane promotion coupons to receive massive flat ticket deductions.</p>
+                    </div>
+                </div>
+                <button onclick="triggerCouponSheet()" class="bg-white border border-slate-200 text-slate-700 font-bold text-xs px-4 py-2 rounded-lg hover:bg-slate-50 transition shadow-sm">Apply Coupon</button>
+            </div>
+        </div>
+
+        <!-- Right Side Invoice Sidebar Panel Layout Container -->
+        <div class="space-y-6">
+            <!-- Dynamic Airplane Flight Path Line Map Widget Box -->
+            <div class="bg-white p-3 rounded-2xl border border-slate-100 custom-shadow">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-1">Airway Route Tracker Map</h4>
+                <div class="rounded-xl overflow-hidden border border-slate-100 relative">
+                    <div class="absolute top-2 left-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold shadow border border-slate-100 text-slate-700 z-[1000]">Live Airspace Map</div>
+                    <div id="flight-radar-map"></div>
+                </div>
+            </div>
+
+            <!-- Invoice Fare Bill Breakdown Widget Summary -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-100 custom-shadow">
+                <h3 class="font-bold text-sm text-slate-900 mb-4 uppercase tracking-wider border-b pb-2">Fare Breakdown Summary</h3>
+                <div class="space-y-3 text-xs font-medium text-slate-500">
+                    <div class="flex justify-between items-center"><span>From Airport</span> <b class="text-slate-800 id-pickup-summary">Not Selected</b></div>
+                    <div class="flex justify-between items-center"><span>To Destination</span> <b class="text-slate-800 id-drop-summary">Not Selected</b></div>
+                    <div class="flex justify-between items-center"><span>Air Distance</span> <b class="text-slate-800" id="summary-distance">0.0 km</b></div>
+                    <div class="flex justify-between items-center border-b pb-3"><span>Estimated Fly Duration</span> <b class="text-slate-800" id="summary-duration">0 mins</b></div>
+                    
+                    <div class="flex justify-between items-center pt-1"><span>Base Air Ticket Cost</span> <span class="font-bold text-slate-800" id="bill-base">₹0.00</span></div>
+                    <div class="flex justify-between items-center"><span>Airport Passenger Taxes</span> <span class="font-bold text-slate-800" id="bill-tax">₹0.00</span></div>
+                    <div class="flex justify-between items-center border-b pb-3"><span>Coupon Discount</span> <span class="font-bold text-emerald-600" id="bill-discount">-₹0.00</span></div>
+                    
+                    <div class="flex justify-between items-center pt-2 text-base text-slate-900 font-extrabold">
+                        <span>Total Flight Price</span>
+                        <span class="text-xl text-blue-600" id="bill-total">₹0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Radar Tracking Widget Block -->
+            <div class="bg-slate-900 text-white p-5 rounded-2xl shadow-xl shadow-indigo-100">
+                <h4 class="font-bold text-sm mb-1 flex items-center gap-2 text-blue-400"><i class="fa-solid fa-satellite-dish animate-pulse"></i> Realtime Flight Air Tracker</h4>
+                <p class="text-xs opacity-70 font-medium mb-4 leading-relaxed">Simulate real airspace flight trajectories natively on interactive grid tracking lines.</p>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="triggerLiveFlightRadarSimulationAnimation()" class="bg-blue-600 hover:bg-blue-700 text-white border border-transparent rounded-xl py-2 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+                        <i class="fa-solid fa-plane text-[10px]"></i> Animate Radar
+                    </button>
+                    <button onclick="alert('SOS Emergency Protocol Broadcasted onto Airspace Control Authorities.')" class="bg-red-600 hover:bg-red-700 text-white border border-transparent rounded-xl py-2 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+                        <i class="fa-solid fa-bell"></i> SOS Alert
+                    </button>
+                </div>
+            </div>
+
+            <!-- Payment Gate Module Selector -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 custom-shadow">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Select Booking Payment Method</h4>
+                <div class="space-y-2" id="payment-gate-selection-list">
+                    <label class="flex items-center justify-between p-3 border-2 border-blue-600 bg-blue-50/40 rounded-xl cursor-pointer">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-mobile-screen-button text-blue-600 text-base"></i>
+                            <span class="text-xs font-bold text-blue-900">Google Pay / PhonePe / UPI Apps</span>
+                        </div>
+                        <input type="radio" name="pay-method" checked value="UPI" class="accent-blue-600 w-4 h-4">
+                    </label>
+                    <label class="flex items-center justify-between p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-regular fa-credit-card text-slate-600 text-base"></i>
+                            <span class="text-xs font-medium text-slate-700">Credit / Debit Premium Card</span>
+                        </div>
+                        <input type="radio" name="pay-method" value="CARD" class="accent-blue-600 w-4 h-4">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Core Checkout Process Initializer Token Button -->
+            <button onclick="initiateFlightBookingWorkflow()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-base py-4 rounded-2xl shadow-xl flex justify-center items-center gap-2 transition tracking-wide">
+                Continue to Book Flight <i class="fa-solid fa-chevron-right text-xs"></i>
+            </button>
+            <p class="text-[10px] text-center text-red-500 font-bold uppercase tracking-wider mt-1"><i class="fa-solid fa-triangle-exclamation"></i> Secure payment is required to unlock airway seating passes.</p>
+        </div>
+    </main>
+
+    <!-- Global Corporate Footer Links Component -->
+    <footer class="bg-slate-900 text-white mt-16 border-t-4 border-blue-600">
+        <div class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-5 gap-8">
+            <div class="md:col-span-2 space-y-4">
+                <div class="flex items-center gap-2">
+                    <div class="bg-blue-600 p-2 rounded-lg text-white"><i class="fa-solid fa-plane-departure text-base"></i></div>
+                    <span class="font-bold text-lg tracking-tight">Seva Setu</span>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed max-w-sm">Seva Setu is your holistic localized workflow interface offering instant commercial airline allocations, boarding ticket registries, and immediate emergency infrastructure desk syncs.</p>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Quick Links</h4>
+                <ul class="space-y-2 text-xs text-slate-400">
+                    <li><a href="index.html" class="hover:text-white transition">Home Dashboard</a></li>
+                    <li><a href="#" class="hover:text-white transition">Appointments Portal</a></li>
+                    <li><a href="about.html" class="hover:text-white transition">About Corporate Profile</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Travel Services</h4>
+                <ul class="space-y-2 text-xs text-slate-400">
+                    <li><a href="index.html" class="hover:text-white transition">Taxi Pool Corridors</a></li>
+                    <li><a href="emergency.html" class="hover:text-white transition text-red-400">Emergency Jet Medevac</a></li>
+                    <li><a href="contact.html" class="hover:text-white transition">Support Center Desk</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Newsletter Sync</h4>
+                <input type="email" placeholder="Enter email address" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white outline-none mb-2">
+                <button class="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg text-xs font-bold transition">Subscribe</button>
+            </div>
+        </div>
+        <div class="bg-slate-950 py-4 text-center text-xs text-slate-500 border-t border-slate-800">
+            © 2026 Seva Setu Corporation Airways Booking Hub. All Rights Reserved.
+        </div>
+    </footer>
+
+    <!-- Coupons Dialogsheet Model Template Element -->
+    <div id="couponSystemModal" class="modal">
+        <div class="modal-content">
+            <h3 class="text-base font-bold text-slate-900 mb-2 border-b pb-2"><i class="fa-solid fa-ticket text-blue-600"></i> Apply Airways Discount Voucher</h3>
+            <div class="flex gap-2 my-4">
+                <input type="text" placeholder="ENTER CODE" id="coupon-raw-input" class="border p-2 rounded-xl text-xs outline-none uppercase font-bold flex-1 focus:ring-2 focus:ring-blue-500">
+                <button onclick="executeVoucherValidationLoop()" class="bg-blue-600 text-white text-xs font-bold px-4 rounded-xl">Validate</button>
+            </div>
+            <div class="space-y-2">
+                <div class="p-2.5 bg-emerald-50 rounded-lg border border-emerald-100 flex justify-between items-center"><span class="text-xs font-bold text-emerald-800">FLYSEVA500</span><button class="text-xs font-bold text-blue-600" onclick="insertCouponCode('FLYSEVA500')">Apply</button></div>
+                <div class="p-2.5 bg-emerald-50 rounded-lg border border-emerald-100 flex justify-between items-center"><span class="text-xs font-bold text-emerald-800">AIRFIRST</span><button class="text-xs font-bold text-blue-600" onclick="insertCouponCode('AIRFIRST')">Apply</button></div>
+            </div>
+            <button onclick="dismissActiveModals()" class="w-full mt-6 bg-slate-100 text-slate-600 py-2 rounded-xl text-xs font-bold">Close Window</button>
+        </div>
+    </div>
+
+    <!-- High Fidelity Interlocking Multi-Step Flight Reservation Wizard Popup Dialog Box -->
+    <div id="checkoutWizardModal" class="modal">
+        <div class="modal-content">
+            <h3 class="text-lg font-extrabold text-slate-900 mb-2 flex items-center gap-1.5 border-b pb-2" id="wizard-step-caption">
+                <i class="fa-solid fa-user-pen text-blue-600"></i> Passenger Registration Board
+            </h3>
+            
+            <div class="my-4 space-y-4" id="wizard-status-body">
+                <!-- Dynamically updated forms injected below via JS pipeline workflows -->
+            </div>
+            
+            <div class="flex gap-3 justify-end pt-3 border-t border-slate-100">
+                <button id="wizard-back-ctrl" onclick="dismissActiveModals()" class="bg-slate-100 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-slate-200 transition">Cancel</button>
+                <button id="wizard-forward-ctrl" onclick="advanceCheckoutStep()" class="bg-blue-600 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-md hover:bg-blue-700 transition">Proceed to Seating Gate</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS Map Core Library Module -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Application Operational Control Core Logics Scripts -->
+    <script>
+        let map, routePolyline, flightMarker, originMarker, destinationMarker;
+        let activeDiscountCouponAmount = 0;
+        let calculatedDistanceValueKm = 0.0;
+        let structuralStepIndex = 1;
+
+        // Reactive State Storage Object Context 
+        let ActiveFlightStateContext = {
+            airlineTitle: "Air India Premium Class",
+            flightCode: "AI-402",
+            allocatedSeatNo: "12A (Window Seat)"
+        };
+
+        const IndiaAirportGeographicalDatabase = {
+            "BOM": { name: "Mumbai (BOM)", lat: 19.0896, lng: 72.8656 },
+            "DEL": { name: "Delhi (DEL)", lat: 28.5562, lng: 77.1000 },
+            "NAG": { name: "Nagpur (NAG)", lat: 21.0922, lng: 79.0472 },
+            "BLR": { name: "Bengaluru (BLR)", lat: 13.1986, lng: 77.7066 },
+            "AMD": { name: "Ahmedabad (AMD)", lat: 23.0734, lng: 72.6347 }
+        };
+
+        function initAirlinesHubDashboard() {
+            map = L.map('flight-radar-map', { zoomControl: false }).setView([21.1458, 79.0882], 5);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© Seva Setu Radar Services' }).addTo(map);
+
+            const pAirport = document.getElementById("flight-origin-airport");
+            const dAirport = document.getElementById("flight-destination-airport");
+
+            Object.keys(IndiaAirportGeographicalDatabase).forEach(code => {
+                pAirport.innerHTML += `<option value="${code}">${IndiaAirportGeographicalDatabase[code].name}</option>`;
+                dAirport.innerHTML += `<option value="${code}">${IndiaAirportGeographicalDatabase[code].name}</option>`;
+            });
+        }
+
+        function setSelectedFlightContext(title, code, seat) {
+            ActiveFlightStateContext.airlineTitle = title;
+            ActiveFlightStateContext.flightCode = code;
+            ActiveFlightStateContext.allocatedSeatNo = seat;
+        }
+
+        function handleFlightPathUpdate() {
+            const code1 = document.getElementById("flight-origin-airport").value;
+            const code2 = document.getElementById("flight-destination-airport").value;
+
+            if (code1) document.querySelectorAll(".id-pickup-summary").forEach(el => el.innerText = IndiaAirportGeographicalDatabase[code1].name);
+            if (code2) document.querySelectorAll(".id-drop-summary").forEach(el => el.innerText = IndiaAirportGeographicalDatabase[code2].name);
+
+            if (code1 && code2) {
+                if (code1 === code2) {
+                    alert("Origin and Destination Air Terminals cannot match identical sector nodes.");
+                    return;
+                }
+                const node1 = IndiaAirportGeographicalDatabase[code1];
+                const node2 = IndiaAirportGeographicalDatabase[code2];
+                renderAirspaceTrajectoryArcOverlay(node1.lat, node1.lng, node2.lat, node2.lng, node1.name, node2.name);
+            }
+        }
+
+        function renderAirspaceTrajectoryArcOverlay(lat1, lng1, lat2, lng2, title1, title2) {
+            if(routePolyline) map.removeLayer(routePolyline);
+            if(originMarker) map.removeLayer(originMarker);
+            if(destinationMarker) map.removeLayer(destinationMarker);
+            if(flightMarker) map.removeLayer(flightMarker);
+
+            originMarker = L.marker([lat1, lng1]).addTo(map).bindPopup(title1).openPopup();
+            destinationMarker = L.marker([lat2, lng2]).addTo(map).bindPopup(title2);
+
+            const trajectoryPoints = [[lat1, lng1], [(lat1 + lat2) / 2 + 1.5, (lng1 + lng2) / 2 - 1.5], [lat2, lng2]];
+            routePolyline = L.polyline(trajectoryPoints, { color: '#4f46e5', weight: 5, opacity: 0.9, dashArray: '6, 6' }).addTo(map);
+            map.fitBounds(routePolyline.getBounds(), { padding: [40, 40] });
+
+            const R = 6371; 
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lng2 - lng1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            
+            calculatedDistanceValueKm = parseFloat((R * c).toFixed(1));
+            const calculatedDurationMins = Math.round(calculatedDistanceValueKm * 0.12 + 45);
+
+            document.getElementById("summary-distance").innerText = `${calculatedDistanceValueKm} km`;
+            document.getElementById("summary-duration").innerText = `${calculatedDurationMins} mins`;
+
+            updateDynamicPricingInvoiceStructure(calculatedDistanceValueKm);
+        }
+
+        function updateDynamicPricingInvoiceStructure(distanceValueMatrix) {
+            // Fetch dynamic structural class multipliers chosen inside select dropdown controls natively
+            const classMultiplierFactor = parseFloat(document.getElementById("travel-class-modifier").value) || 1.0;
+
+            document.querySelectorAll(".flight-fare-tag").forEach(tag => {
+                let mult = parseFloat(tag.getAttribute("data-multiplier")) || 5.2;
+                tag.innerText = `₹${Math.round((distanceValueMatrix * mult + 1200) * classMultiplierFactor)}.00`;
+            });
+
+            let finalBasePriceTicket = Math.round((distanceValueMatrix * 5.4 + 1400) * classMultiplierFactor);
+            let airportPassengerTaxes = Math.round(finalBasePriceTicket * 0.12 + 350);
+            let netTotalBillAmount = (finalBasePriceTicket + airportPassengerTaxes) - activeDiscountCouponAmount;
+
+            document.getElementById("bill-base").innerText = `₹${finalBasePriceTicket}.00`;
+            document.getElementById("bill-tax").innerText = `₹${airportPassengerTaxes}.00`;
+            document.getElementById("bill-total").innerText = `₹${netTotalBillAmount > 0 ? netTotalBillAmount : 0}.00`;
+        }
+
+        function triggerLiveFlightRadarSimulationAnimation() {
+            if(!routePolyline) {
+                alert("Please select valid sector airport codes first!");
+                return;
+            }
+            const lineCoordinatesArray = routePolyline.getLatLngs();
+            if(flightMarker) map.removeLayer(flightMarker);
+
+            const airplaneIconAsset = L.divIcon({
+                html: '<div class="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded-full shadow-2xl font-extrabold flex items-center gap-1 border border-white"><i class="fa-solid fa-plane"></i>FLYING</div>'
+            });
+
+            flightMarker = L.marker(lineCoordinatesArray[0], { icon: airplaneIconAsset }).addTo(map);
+            let indexStep = 0;
+
+            const trackingTimerIntervalId = setInterval(() => {
+                if (indexStep >= lineCoordinatesArray.length - 1) {
+                    clearInterval(trackingTimerIntervalId);
+                    alert("Radar Feedback: Flight safely docked into base perimeter arrival terminal.");
+                    return;
+                }
+                indexStep++;
+                flightMarker.setLatLng(lineCoordinatesArray[indexStep]);
+                map.panTo(lineCoordinatesArray[indexStep]);
+            }, 1500);
+        }
+
+        function selectPresetFlightSector(originCode, destinationCode) {
+            document.getElementById("flight-origin-airport").value = originCode;
+            document.getElementById("flight-destination-airport").value = destinationCode;
+            handleFlightPathUpdate();
+        }
+
+        function swapAirlinesLocations() {
+            const code1 = document.getElementById("flight-origin-airport").value;
+            const code2 = document.getElementById("flight-destination-airport").value;
+            selectPresetFlightSector(code2, code1);
+        }
+
+        function toggleMorePopularFlightSectors() {
+            const block = document.getElementById("extended-flight-sectors-block");
+            if(block.classList.contains("hidden")) block.classList.remove("hidden");
+            else block.classList.add("hidden");
+        }
+
+        function toggleExtraFlightFleets() {
+            const block = document.getElementById("extended-airplanes-hidden-block");
+            if(block.classList.contains('hidden')) block.classList.remove('hidden');
+            else block.classList.add('hidden');
+        }
+
+        function triggerCouponSheet() { document.getElementById('couponSystemModal').style.display = 'flex'; }
+        function dismissActiveModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+        function insertCouponCode(code) { document.getElementById('coupon-raw-input').value = code; }
+
+        function executeVoucherValidationLoop() {
+            const codeRaw = document.getElementById('coupon-raw-input').value;
+            if (codeRaw === "FLYSEVA500" || codeRaw === "AIRFIRST") {
+                activeDiscountCouponAmount = 500;
+                document.getElementById("bill-discount").innerText = `-₹500.00`;
+                alert("Airways coupon applied successfully!");
+                handleFlightPathUpdate();
+                dismissActiveModals();
+            } else {
+                alert("Voucher code invalid.");
+            }
+        }
+
+        // Multi-Step High Fidelity Checkout Popup System Engine Workflow
+        function initiateFlightBookingWorkflow() {
+            if(calculatedDistanceValueKm <= 0.0) {
+                alert("Please select valid Departure & Arrival Airports before checking out!");
+                return;
+            }
+            structuralStepIndex = 1;
+            
+            document.getElementById('checkoutWizardModal').style.display = 'flex';
+            document.getElementById('wizard-step-caption').innerHTML = `<i class="fa-solid fa-user-pen text-blue-600"></i> Step 3: Passenger Registration Board`;
+            
+            // Inject dynamic form layers asking for Customer validation registry criteria inputs
+            document.getElementById('wizard-status-body').innerHTML = `
+                <div class="space-y-3">
+                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Passenger Identity Credentials</p>
+                    <div>
+                        <label class="block text-xs text-slate-600 font-bold mb-1">Full Customer Name</label>
+                        <input type="text" id="cust-fullname" placeholder="Enter Full Legal Name" class="w-full border p-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-600 font-semibold text-slate-800">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs text-slate-600 font-bold mb-1">Mobile Contact Number</label>
+                            <input type="tel" id="cust-mobile" placeholder="+91 XXXXX XXXXX" class="w-full border p-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-600 font-semibold text-slate-800">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-600 font-bold mb-1">Email Destination Address</label>
+                            <input type="email" id="cust-email" placeholder="name@gmail.com" class="w-full border p-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-600 font-semibold text-slate-800">
+                        </div>
+                    </div>
+                    <div class="p-3 bg-blue-50 border border-blue-100 rounded-xl space-y-1 text-xs text-blue-900 mt-2">
+                        <p>✈️ <b>Selected Airline:</b> ${ActiveFlightStateContext.airlineTitle} (${ActiveFlightStateContext.flightCode})</p>
+                        <p>💺 <b>Assigned Seating Deck:</b> Space Block <span class="font-extrabold text-blue-700">${ActiveFlightStateContext.allocatedSeatNo}</span></p>
+                    </div>
+                </div>
+            `;
+            document.getElementById('wizard-forward-ctrl').innerText = "Verify & Advance to Payment";
+        }
+
+        function advanceCheckoutStep() {
+            if(structuralStepIndex === 1) {
+                // Validate if forms contain inputs natively before advancing
+                const name = document.getElementById("cust-fullname").value;
+                const phone = document.getElementById("cust-mobile").value;
+                const email = document.getElementById("cust-email").value;
+
+                if(!name || !phone || !email) {
+                    alert("Please fill out your Passenger Name, Mobile, and Email fields correctly!");
+                    return;
+                }
+
+                // Cache credentials inputs into window elements safely
+                window.cachedPassengerName = name;
+                window.cachedPassengerEmail = email;
+
+                structuralStepIndex = 2;
+                document.getElementById('step-line-3').classList.add('bg-blue-600');
+                document.getElementById('step-num-3').className = "w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold mr-2 shadow";
+                document.getElementById('step-title-3').classList.add('text-blue-600');
+
+                const totalFareAmount = document.getElementById("bill-total").innerText;
+
+                document.getElementById('wizard-step-caption').innerHTML = `<i class="fa-solid fa-credit-card text-amber-500"></i> Step 4: Secure Payment Gateway`;
+                document.getElementById('wizard-status-body').innerHTML = `
+                    <div class="text-red-600 font-extrabold text-xs uppercase tracking-wide mb-1"><i class="fa-solid fa-triangle-exclamation"></i> Action Required:</div>
+                    <strong class="text-slate-900 bg-red-50 p-2.5 border border-red-200 block text-xs rounded-lg mb-3">Payment kelya shivya ticket book honar nahi!</strong>
+                    <div class="p-3 bg-slate-50 border rounded-xl text-xs space-y-1 mb-2 text-slate-700">
+                        <p>👤 <b>Passenger:</b> ${window.cachedPassengerName}</p>
+                        <p>✉️ <b>Billing Email:</b> ${window.cachedPassengerEmail}</p>
+                        <p class="text-blue-600 font-bold text-sm pt-1 border-t mt-1">💸 Total Charge Matrix: ${totalFareAmount}</p>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-relaxed">Please approve the transactional push request broadcasted inside your terminal device layout interface window loops.</p>
+                `;
+                document.getElementById('wizard-forward-ctrl').innerText = "Simulate Payment Complete ✅";
+
+            } else if(structuralStepIndex === 2) {
+                structuralStepIndex = 3;
+                document.getElementById('step-line-4').classList.add('bg-blue-600');
+                document.getElementById('step-num-4').className = "w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold mr-2 shadow";
+                document.getElementById('step-title-4').classList.add('text-blue-600');
+
+                document.getElementById('step-line-5').classList.add('bg-blue-600');
+                document.getElementById('step-num-5').className = "w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold mr-2 shadow";
+                document.getElementById('step-title-5').className = "flex items-center text-emerald-600 font-extrabold whitespace-nowrap";
+
+                document.getElementById('wizard-step-caption').innerHTML = `<i class="fa-solid fa-square-check text-emerald-600"></i> Step 5: Boarding Ticket Released! 🎉`;
+                document.getElementById('wizard-status-body').innerHTML = `
+                    <div class="text-center py-2 space-y-2">
+                        <span class="text-emerald-700 font-black block text-base">Airspace Booking Confirmed!</span>
+                        <p class="text-slate-500 text-xs">PNR Registry Token Code: <b>#SS-AIR-2026MMT</b></p>
+                        <div class="bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs rounded-xl p-3 text-left space-y-1">
+                            <p><b>Passenger:</b> ${window.cachedPassengerName}</p>
+                            <p><b>Flight:</b> ${ActiveFlightStateContext.airlineTitle} (${ActiveFlightStateContext.flightCode})</p>
+                            <p><b>Seat Allocation:</b> ${ActiveFlightStateContext.allocatedSeatNo}</p>
+                        </div>
+                        <p class="text-xs text-blue-600 font-bold bg-blue-50 border border-blue-100 p-2.5 rounded-xl flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-envelope-circle-check"></i> Email Dispatched Successfully to ${window.cachedPassengerEmail}! 📩
+                        </p>
+                    </div>
+                `;
+                document.getElementById('wizard-forward-ctrl').innerText = "Finish & Close Workspace";
+                document.getElementById('wizard-back-ctrl').style.display = "none";
+            } else {
+                dismissActiveModals();
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initAirlinesHubDashboard();
+        });
+    </script>
+    
+</body>
+</html>

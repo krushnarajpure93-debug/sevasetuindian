@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ultra-Advanced Enterprise Settings | Seva Setu</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body{
+      background: #030712;
+      color: #f3f4f6;
+      overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .code-font {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* CYBERPUNK GRADIENT GLOWS */
+    body::before {
+      content: "";
+      position: fixed;
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, rgba(0,0,0,0) 70%);
+      top: -250px;
+      left: -200px;
+      z-index: -1;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      width: 900px;
+      height: 900px;
+      background: radial-gradient(circle, rgba(168,85,247,0.06) 0%, rgba(0,0,0,0) 70%);
+      bottom: -300px;
+      right: -200px;
+      z-index: -1;
+    }
+
+    /* CUSTOM SCROLLBAR */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0f19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1f293d;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3b82f6;
+    }
+
+    /* COMPACT SIDEBAR GLASS EFFECT */
+    .sidebar-panel {
+      width: 300px;
+      height: 100vh;
+      position: fixed;
+      background: rgba(11, 15, 27, 0.7);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border-right: 1px solid rgba(255, 255, 255, 0.04);
+      z-index: 40;
+    }
+
+    /* SETTINGS SUB-NAV PANEL */
+    .settings-nav {
+      width: 260px;
+      height: calc(100vh - 180px);
+      overflow-y: auto;
+    }
+
+    /* CONTAINER CONFIGURATION */
+    .wrapper {
+      margin-left: 300px;
+      padding: 40px;
+      min-height: 100vh;
+    }
+
+    /* DIGITAL GLASS CARD */
+    .glass-box {
+      background: rgba(17, 24, 39, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 20px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-box:hover {
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* ADVANCED TOGGLE SWITCH */
+    .toggle-ui {
+      width: 44px;
+      height: 22px;
+      background: #374151;
+      border-radius: 100px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-ui::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: white;
+      top: 3px;
+      left: 4px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .toggle-ui.active {
+      background: #10b981;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+    }
+
+    .toggle-ui.active::after {
+      left: 24px;
+    }
+
+    /* INPUT FIELD STYLES */
+    .form-input-cyber {
+      width: 100%;
+      padding: 12px 16px;
+      background: #0b0f19;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: white;
+      border-radius: 12px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .form-input-cyber:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+    }
+
+    /* TAB LINK ACTIVE STATE */
+    .tab-link.active-tab {
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 85, 247, 0.02) 100%);
+      border-left: 4px solid #3b82f6;
+      color: white;
+      font-weight: 700;
+    }
+
+    /* FLOATING BUTTONS */
+    .theme-trigger {
+      position: fixed;
+      top: 25px;
+      right: 35px;
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      z-index: 50;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .theme-trigger:hover {
+      background: rgba(255,255,255,0.08);
+      transform: scale(1.05);
+    }
+
+    /* LIGHT THEME CORRECTION OVERRIDES */
+    .light-engine {
+      background: #f3f4f6;
+      color: #111827;
+    }
+    .light-engine body::before, .light-engine body::after { display: none !important; }
+    .light-engine .sidebar-panel { background: rgba(255, 255, 255, 0.85); border-right: 1px solid #e5e7eb; }
+    .light-engine .glass-box { background: white; border-color: #e5e7eb; color: #111827; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+    .light-engine .form-input-cyber { background: #f9fafb; color: #111827; border-color: #d1d5db; }
+    .light-engine .tab-link { color: #4b5563; }
+    .light-engine .tab-link:hover { background: #f3f4f6; color: black; }
+    .light-engine .tab-link.active-tab { background: #e5e7eb; color: #3b82f6; }
+    .light-engine .switch-row { background: #f9fafb !important; }
+    .light-engine .text-slate-400 { color: #6b7280; }
+    .light-engine .text-slate-500 { color: #9ca3af; }
+  </style>
+</head>
+<body>
+
+  <button id="themeToggle" class="theme-trigger">
+    <i class="fa-solid fa-bolt text-yellow-400"></i>
+  </button>
+
+  <aside class="sidebar-panel flex flex-col justify-between p-6">
+    <div>
+      <div class="flex items-center gap-3 mb-8 px-2">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-purple-600 flex items-center justify-center text-white shadow-lg">
+          <i class="fa-solid fa-server text-sm"></i>
+        </div>
+        <h1 class="text-2xl font-black tracking-tight">Seva<span class="text-blue-500">Setu</span></h1>
+      </div>
+
+      <div class="mb-6">
+        <a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900/40 border border-slate-800/50 hover:bg-slate-800/80 transition text-sm font-bold text-blue-400">
+          <i class="fa-solid fa-circle-arrow-left"></i>
+          <span>Exit to Dashboard</span>
+        </a>
+      </div>
+
+      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4 mb-3">Settings Navigation</p>
+      
+      <nav class="settings-nav space-y-1 pr-1">
+        <button onclick="switchTab('profile')" id="btn-profile" class="tab-link active-tab w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-semibold transition hover:bg-white/5 text-slate-400">
+          <i class="fa-solid fa-id-card w-5 text-center text-blue-500"></i> <span>1. Admin Profile</span>
+        </button>
+        <button onclick="switchTab('security')" id="btn-security" class="tab-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-semibold transition hover:bg-white/5 text-slate-400">
+          <i class="fa-solid fa-user-shield w-5 text-center text-red-500"></i> <span>2. Security & Auth</span>
+        </button>
+        <button onclick="switchTab('system')" id="btn-system" class="tab-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-semibold transition hover:bg-white/5 text-slate-400">
+          <i class="fa-solid fa-gear w-5 text-center text-emerald-500"></i> <span>3. Core System</span>
+        </button>
+        <button onclick="switchTab('ai')" id="btn-ai" class="tab-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-semibold transition hover:bg-white/5 text-slate-400">
+          <i class="fa-solid fa-brain w-5 text-center text-purple-500"></i> <span>4. AI Automation</span>
+        </button>
+        <button onclick="switchTab('notifications')" id="btn-notifications" class="tab-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-semibold transition hover:bg-white/5 text-slate-400">
+          <i class="fa-solid fa-bullhorn w-5 text-center text-amber-500"></i> <span>5. Notifications Engine</span>
+        </button>
+        <button onclick="switchTab('payments')" id="btn-payments" class="tab-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-semibold transition hover:bg-white/5 text-slate-400">
+          <i class="fa-solid fa-receipt w-5 text-center text-cyan-500"></i> <span>6. Billing & Taxes</span>
+        </button>
+        <button onclick="switchTab('database')" id="btn-database" class="tab-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-semibold transition hover:bg-white/5 text-slate-400">
+          <i class="fa-solid fa-database w-5 text-center text-indigo-500"></i> <span>7. Cloud Database</span>
+        </button>
+        <button onclick="switchTab('api')" id="btn-api" class="tab-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-semibold transition hover:bg-white/5 text-slate-400">
+          <i class="fa-solid fa-code w-5 text-center text-pink-500"></i> <span>8. API Configurations</span>
+        </button>
+        <button onclick="switchTab('localization')" id="btn-localization" class="tab-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-semibold transition hover:bg-white/5 text-slate-400">
+          <i class="fa-solid fa-globe w-5 text-center text-teal-500"></i> <span>9. Localization</span>
+        </button>
+        <button onclick="switchTab('logs')" id="btn-logs" class="tab-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-semibold transition hover:bg-white/5 text-slate-400">
+          <i class="fa-solid fa-terminal w-5 text-center text-orange-500"></i> <span>10. Server Audit Logs</span>
+        </button>
+        <button onclick="switchTab('compliance')" id="btn-compliance" class="tab-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-semibold transition hover:bg-white/5 text-slate-400">
+          <i class="fa-solid fa-gavel w-5 text-center text-lime-500"></i> <span>11. Legal Compliance</span>
+        </button>
+      </nav>
+    </div>
+    
+    <div class="pt-4 border-t border-slate-800/40 text-center">
+      <p class="text-xs text-slate-500">Enterprise Edition v4.8.2</p>
+    </div>
+  </aside>
+
+  <main class="wrapper">
+
+    <div class="glass-box p-6 flex justify-between items-center gap-6 mb-10 border border-blue-500/10">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-xs uppercase font-extrabold tracking-wider text-emerald-400 code-font">Cluster Node Node-01 Active</span>
+        </div>
+        <h2 class="text-3xl font-extrabold tracking-tight">System Global Settings</h2>
+        <p class="text-slate-400 text-sm mt-1">Central configuration cluster for Seva Setu operations, microservices, and identity providers.</p>
+      </div>
+      <div class="flex items-center gap-4 bg-slate-900/50 p-3 rounded-2xl border border-slate-800/60">
+        <img src="https://i.pravatar.cc/150?img=68" class="w-12 h-12 rounded-xl object-cover border-2 border-purple-500 shadow-md">
+        <div>
+          <h4 class="text-sm font-bold">Krushna Admin</h4>
+          <span class="text-xs px-2 py-0.5 rounded bg-blue-900/50 text-blue-300 font-mono border border-blue-700/40">Super_Root_User</span>
+        </div>
+      </div>
+    </div>
+
+    <section id="tab-profile" class="settings-section space-y-6">
+      <div class="glass-box p-8">
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-2 text-blue-400"><i class="fa-solid fa-id-card"></i> 1. Admin Profile Configuration</h3>
+        <p class="text-sm text-slate-400 mb-6">Modify system identities, avatars, and communication nodes for root parameters.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Display Name (Global)</label>
+            <input type="text" class="form-input-cyber" value="Krushna Admin">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Primary Root Email</label>
+            <input type="email" class="form-input-cyber" value="krushna@sevasetu.gov.in">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Alternate Recovery Email</label>
+            <input type="email" class="form-input-cyber" placeholder="backup-email@domain.com">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Secure Mobile Node</label>
+            <input type="text" class="form-input-cyber" value="+91 9988776655">
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">System Admin Biography / Signature Notes</label>
+            <textarea rows="3" class="form-input-cyber" placeholder="Add administrative signature notes displayed on system credentials..."></textarea>
+          </div>
+        </div>
+
+        <div class="mt-6 p-4 rounded-xl bg-blue-950/20 border border-blue-900/30 flex justify-between items-center flex-wrap gap-4">
+          <p class="text-xs text-slate-400 max-w-xl">Changes here will reflect on global platform registries instantly and will require validation from metadata nodes.</p>
+          <button class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 text-sm font-bold hover:opacity-90 shadow-md">Commit Profile Updates</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-security" class="settings-section hidden space-y-6">
+      <div class="glass-box p-8">
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-2 text-red-400"><i class="fa-solid fa-user-shield"></i> 2. Cryptographic Security & Multi-Factor Engine</h3>
+        <p class="text-sm text-slate-400 mb-6">Manage advanced access vectors, dynamic firewall rules, and password lifecycle protocols.</p>
+
+        <div class="p-6 rounded-2xl bg-slate-900/30 border border-slate-800/60 mb-6">
+          <h4 class="text-md font-bold mb-4 text-slate-300">Rotate Primary Credentials</h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-400 mb-2">Master Password</label>
+              <input type="password" id="oldPassword" class="form-input-cyber" placeholder="••••••••">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-400 mb-2">New Complex Token</label>
+              <input type="password" id="newPassword" class="form-input-cyber" placeholder="Min 8 characters">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-400 mb-2">Re-verify Token</label>
+              <input type="password" id="confirmPassword" class="form-input-cyber" placeholder="••••••••">
+            </div>
+          </div>
+          <button onclick="updatePassword()" class="mt-4 px-5 py-2.5 bg-red-600 hover:bg-red-700 rounded-xl text-xs font-bold transition">Trigger Credential Rotation</button>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex justify-between items-center p-4 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h5 class="text-sm font-bold">Enforce Multi-Factor Authentication (2FA via TOTP)</h5>
+              <p class="text-xs text-slate-400">Forces all high-clearance administrators to verify via Google Authenticator.</p>
+            </div>
+            <div class="toggle-ui active"></div>
+          </div>
+
+          <div class="flex justify-between items-center p-4 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h5 class="text-sm font-bold">Biometric Passkey Validation Gateway</h5>
+              <p class="text-xs text-slate-400">Enables WebAuthn technology utilizing local FaceID/Fingerprint devices.</p>
+            </div>
+            <div class="toggle-ui"></div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+            <div>
+              <label class="block text-xs font-bold text-slate-400 mb-2">Automated Session Timeout Threshold</label>
+              <select class="form-input-cyber cursor-pointer">
+                <option>15 Minutes (Recommended)</option>
+                <option>30 Minutes</option>
+                <option>1 Hour</option>
+                <option>Never (High Security Risk)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-400 mb-2">Maximum Invalid Login Retry Blocks</label>
+              <select class="form-input-cyber cursor-pointer">
+                <option>3 Attempts (Strict Protection)</option>
+                <option>5 Attempts</option>
+                <option>10 Attempts</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <label class="block text-xs font-bold text-slate-400 mb-2">IP Whitelist Matrix (Restricted Access Layer CIDR)</label>
+            <input type="text" class="form-input-cyber code-font" value="192.168.1.1/24, 10.0.0.45, 157.45.23.109" placeholder="Comma separated asset blocks...">
+            <p class="text-[11px] text-slate-500 mt-1">Leaves blank to open network routing to global infrastructure addresses.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-system" class="settings-section hidden space-y-6">
+      <div class="glass-box p-8">
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-2 text-emerald-400"><i class="fa-solid fa-gear"></i> 3. Core Engine Parameters</h3>
+        <p class="text-sm text-slate-400 mb-6">Configure platform pipeline switches, maintenance rules, optimization strategies, and server clustering.</p>
+
+        <div class="space-y-4">
+          <div class="flex justify-between items-center p-4 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h5 class="text-sm font-bold text-amber-400"><i class="fa-solid fa-triangle-exclamation"></i> Master Maintenance Lockdown Mode</h5>
+              <p class="text-xs text-slate-400">Routes all public user vectors to a 503 Maintenance template page. Admin panel bypass remains open.</p>
+            </div>
+            <div class="toggle-ui"></div>
+          </div>
+
+          <div class="flex justify-between items-center p-4 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h5 class="text-sm font-bold">GZIP & Brotli Stream Compression Compression</h5>
+              <p class="text-xs text-slate-400">Reduces asset file footprint size dynamically on runtime edge delivery network.</p>
+            </div>
+            <div class="toggle-ui active"></div>
+          </div>
+
+          <div class="flex justify-between items-center p-4 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h5 class="text-sm font-bold">Asset CDN Distribution Pipeline (Edge Caching)</h5>
+              <p class="text-xs text-slate-400">Caches script vectors instantly across global server arrays for hyper-fast response.</p>
+            </div>
+            <div class="toggle-ui active"></div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-400 mb-2">Memory Allocation Threshold Limit</label>
+              <select class="form-input-cyber cursor-pointer">
+                <option>512MB RAM Pool</option>
+                <option selected>1024MB RAM Pool (Optimized)</option>
+                <option>2048MB Extreme Dedicated Pool</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-400 mb-2">Static Cache Invalidation Clock</label>
+              <select class="form-input-cyber cursor-pointer">
+                <option>Every 24 Hours</option>
+                <option>Every 7 Days</option>
+                <option>Manual Flush Target Only</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="pt-4 flex gap-3">
+            <button onclick="alert('⚡ Server Cache Pipeline Invalidation Triggered Successfully.')" class="px-4 py-2 border border-slate-700 hover:border-slate-500 rounded-xl text-xs font-semibold transition bg-slate-900/50">Flush Server Redis Cache</button>
+            <button onclick="alert('♻️ Hard Structural Reload Triggered on Load Balancer Threads.')" class="px-4 py-2 border border-slate-700 hover:border-slate-500 rounded-xl text-xs font-semibold transition bg-slate-900/50">Restart Execution Daemon Threads</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-ai" class="settings-section hidden space-y-6">
+      <div class="glass-box p-8">
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-2 text-purple-400"><i class="fa-solid fa-brain"></i> 4. Seva Setu Neural Net AI & Chatbot Automation</h3>
+        <p class="text-sm text-slate-400 mb-6">Manage large language microservice endpoints, automated citizen intent categorizers, and translation models.</p>
+
+        <div class="space-y-4">
+          <div class="flex justify-between items-center p-4 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h5 class="text-sm font-bold">Enable Real-Time Citizen AI Assistant chatbot</h5>
+              <p class="text-xs text-slate-400">Launches floating interactive chatbot vector for automating support questions.</p>
+            </div>
+            <div class="toggle-ui active"></div>
+          </div>
+
+          <div class="flex justify-between items-center p-4 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h5 class="text-sm font-bold">Dynamic AI Ticket Intent Auto-Classification</h5>
+              <p class="text-xs text-slate-400">Utilizes internal NLP models to categorize civic grievance issues automatically without human intervention.</p>
+            </div>
+            <div class="toggle-ui active"></div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-400 mb-2">Core Neural LLM Model Engine Selection</label>
+              <select class="form-input-cyber cursor-pointer">
+                <option>SevaSetu-Llama3-70B-Custom (Local Server Cluster)</option>
+                <option>GPT-4o API Gateway Server</option>
+                <option>Claude 3.5 Sonnet Integration Matrix</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-400 mb-2">AI Creative Temperature Metric Value</label>
+              <select class="form-input-cyber code-font cursor-pointer">
+                <option>0.2 - Strict, Factual & Formal Regulatory Answers</option>
+                <option selected>0.5 - Balanced & Natural Assistant Profile</option>
+                <option>0.9 - Fluid & Highly Creative Context Mapping</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-400 mb-2">Custom AI Prompt Directive Base Context Injector</label>
+            <textarea rows="3" class="form-input-cyber text-xs" placeholder="You are Seva Setu AI, a highly compliant administrative supervisor asset designed by digital civic services groups..."></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-notifications" class="settings-section hidden space-y-6">
+      <div class="glass-box p-8">
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-2 text-amber-400"><i class="fa-solid fa-bullhorn"></i> 5. Notification Dispatch Systems</h3>
+        <p class="text-sm text-slate-400 mb-6">Configure critical notification pipelines for citizens, tracking arrays, and emergency alerts.</p>
+
+        <div class="space-y-3">
+          <div class="flex justify-between items-center p-3.5 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h5 class="text-sm font-bold">Email Dispatchers (Receipts & Dynamic PDF Generation)</h5>
+              <p class="text-xs text-slate-400">Routes transactional receipts directly via Amazon SES relay grids.</p>
+            </div>
+            <div class="toggle-ui active"></div>
+          </div>
+
+          <div class="flex justify-between items-center p-3.5 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h5 class="text-sm font-bold">SMS Mobile Gateway Interfacing (Twilio / NIC Node)</h5>
+              <p class="text-xs text-slate-400">Dispatches real-time OTP credentials and status alerts directly to mobile hand-sets.</p>
+            </div>
+            <div class="toggle-ui active"></div>
+          </div>
+
+          <div class="flex justify-between items-center p-3.5 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h5 class="text-sm font-bold">Browser Push API Notifications Hub</h5>
+              <p class="text-xs text-slate-400">Enables dynamic popups inside desktop or smartphone application shells.</p>
+            </div>
+            <div class="toggle-ui"></div>
+          </div>
+
+          <div class="flex justify-between items-center p-3.5 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h5 class="text-sm font-bold">WhatsApp Business API Integration Gateway</h5>
+              <p class="text-xs text-slate-400">Sends high-priority application verification copies directly to WhatsApp profiles.</p>
+            </div>
+            <div class="toggle-ui active"></div>
+          </div>
+
+          <div class="pt-2">
+            <label class="block text-xs font-bold text-slate-400 mb-2">Daily Digest Dispatch Synchronization Time</label>
+            <input type="time" class="form-input-cyber max-w-xs" value="20:00">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-payments" class="settings-section hidden space-y-6">
+      <div class="glass-box p-8">
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-2 text-cyan-400"><i class="fa-solid fa-receipt"></i> 6. Accounting Core & Taxation Configuration</h3>
+        <p class="text-sm text-slate-400 mb-6">Configure platform payment routing, GST mapping parameters, and localized invoicing conventions.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Corporate GSTIN / Tax Identifier ID</label>
+            <input type="text" class="form-input-cyber code-font" value="27AAAAA0000A1Z5">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Default Base Platform Currency</label>
+            <select class="form-input-cyber cursor-pointer">
+              <option>INR (₹) - Indian Rupee Preferred</option>
+              <option>USD ($) - United States Dollar</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Automated Tax Percentage Levy</label>
+            <input type="text" class="form-input-cyber" value="18% SGST/CGST Split Architecture">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Invoice Serial Prefix Token</label>
+            <input type="text" class="form-input-cyber code-font" value="SETU-2026-INV-">
+          </div>
+        </div>
+
+        <div class="mt-6 space-y-3">
+          <div class="flex justify-between items-center p-3 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h6 class="text-xs font-bold">Auto-Generate Chargeback Recovery Holds</h6>
+              <p class="text-xs text-slate-500">Locks account operations instantly if fraud actions trigger ledger discrepancies.</p>
+            </div>
+            <div class="toggle-ui active"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-database" class="settings-section hidden space-y-6">
+      <div class="glass-box p-8">
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-2 text-indigo-400"><i class="fa-solid fa-database"></i> 7. Database Clusters & Cloud Storage Targets</h3>
+        <p class="text-sm text-slate-400 mb-6">Manage transactional backup matrices, read-replica data node syncs, and historical data archiving.</p>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-400 mb-2">Automated Snapshot Mirror Frequency</label>
+            <select class="form-input-cyber cursor-pointer">
+              <option>Every Hour (High Payload Cloud Configuration)</option>
+              <option selected>Every 24 Hours (Standard Operational Vector)</option>
+              <option>Weekly Maintenance Blocks Only</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-400 mb-2">Cloud Storage Destination Bucket Target URI</label>
+            <input type="text" class="form-input-cyber code-font" value="s3://production-cluster-seva-setu-backups/main-db/">
+          </div>
+
+          <div class="flex justify-between items-center p-4 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h5 class="text-sm font-bold">Binary Payload Base64 Encryption Layer</h5>
+              <p class="text-xs text-slate-400">Enforces AES-256 standard encryption algorithms directly onto output backup arrays before transit.</p>
+            </div>
+            <div class="toggle-ui active"></div>
+          </div>
+
+          <div class="flex justify-between items-center p-4 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h5 class="text-sm font-bold">Auto-Prune Redundant Audit Files</h5>
+              <p class="text-xs text-slate-400">Deletes backup log assets older than 90 days to minimize data allocation cost footprints.</p>
+            </div>
+            <div class="toggle-ui"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-api" class="settings-section hidden space-y-6">
+      <div class="glass-box p-8">
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-2 text-pink-400"><i class="fa-solid fa-code"></i> 8. REST & GraphQL Application Integration API</h3>
+        <p class="text-sm text-slate-400 mb-6">Control cross-origin communication paths, issue validation tokens, and track system traffic throttle constraints.</p>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-400 mb-2">Primary Master Integration Authentication Token</label>
+            <div class="flex gap-2">
+              <input type="text" id="apiTokenField" readonly class="form-input-cyber code-font text-xs text-pink-400" value="sk_live_2026_setu_system_df98ad7f98e2091bc3ad">
+              <button onclick="alert('🔑 New Key Rollover Complete.')" class="px-4 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs font-bold border border-slate-700 transition">Regenerate</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-400 mb-2">API Maximum Throttle Rate Limits</label>
+              <select class="form-input-cyber cursor-pointer">
+                <option>60 Calls / Minute (Secure Public Tier)</option>
+                <option selected>1000 Calls / Minute (Enterprise Internal System Tier)</option>
+                <option>Unlimited Speed (Not Recommended)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-400 mb-2">CORS Cross-Origin Security Restrictions</label>
+              <input type="text" class="form-input-cyber code-font" value="*.sevasetu.gov.in, nic.in">
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center p-4 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h5 class="text-sm font-bold">Detailed Request Vector Debug Logging</h5>
+              <p class="text-xs text-slate-400">Stores incoming payload parameters inside log tables. (Warning: Increases disk consumption rate).</p>
+            </div>
+            <div class="toggle-ui"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-localization" class="settings-section hidden space-y-6">
+      <div class="glass-box p-8">
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-2 text-teal-400"><i class="fa-solid fa-globe"></i> 9. Regional Localization & Translation Protocols</h3>
+        <p class="text-sm text-slate-400 mb-6">Manage default platform interface language arrays, timezone overrides, and local date templates.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-400 mb-2">Master Language Array</label>
+            <select class="form-input-cyber cursor-pointer">
+              <option>English (US Premium)</option>
+              <option selected>मराठी (Marathi Base Dev)</option>
+              <option>हिन्दी (Hindi Global)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-400 mb-2">Data Timezone Mapping</label>
+            <select class="form-input-cyber cursor-pointer">
+              <option selected>(GMT+05:30) Asia/Kolkata (IST)</option>
+              <option>(GMT+00:00) UTC Standard Time</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-400 mb-2">Calendar Format Matrix</label>
+            <select class="form-input-cyber cursor-pointer">
+              <option selected>DD/MM/YYYY (Standard)</option>
+              <option>YYYY-MM-DD (ISO Format)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-4 flex justify-between items-center p-4 rounded-xl bg-white/5 switch-row">
+          <div>
+            <h5 class="text-sm font-bold">Auto-Detect Client Machine Location Parameters</h5>
+            <p class="text-xs text-slate-400">Dynamically maps translations matching visitor geolocation coordinates.</p>
+          </div>
+          <div class="toggle-ui active"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-logs" class="settings-section hidden space-y-6">
+      <div class="glass-box p-8">
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-2 text-orange-400"><i class="fa-solid fa-terminal"></i> 10. Live Microservice Server Trace Console</h3>
+        <p class="text-sm text-slate-400 mb-4">Real-time status display capturing events from connection daemons and secure nodes across the pipeline layout.</p>
+
+        <div class="p-4 rounded-xl bg-black border border-slate-800 text-xs text-emerald-400 font-mono space-y-2 h-64 overflow-y-auto code-font">
+          <div>[2026-06-04 08:24:01] <span class="text-blue-400">INFO</span> Connection establishing process resolved on proxy router pool.</div>
+          <div>[2026-06-04 08:24:15] <span class="text-blue-400">INFO</span> Sync thread pool allocated to bucket s3://production-cluster-backups.</div>
+          <div>[2026-06-04 08:25:34] <span class="text-purple-400">NEURAL</span> AI Token context tracking optimization resolved in 42ms.</div>
+          <div>[2026-06-04 08:26:02] <span class="text-blue-400">INFO</span> Root user 'Krushna Admin' verified via authorization token validation.</div>
+          <div>[2026-06-04 08:27:11] <span class="text-amber-400">WARN</span> API throttle capacity utilization monitoring metrics reached 74% limits.</div>
+          <div>[2026-06-04 08:28:55] <span class="text-emerald-400">SUCCESS</span> Cluster handshake status validated completely. Operating green nominal.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-compliance" class="settings-section hidden space-y-6">
+      <div class="glass-box p-8">
+        <h3 class="text-xl font-bold mb-2 flex items-center gap-2 text-lime-400"><i class="fa-solid fa-gavel"></i> 11. Platform Regulatory Compliance & Data Rights</h3>
+        <p class="text-sm text-slate-400 mb-6">Manage citizen safety guidelines, tracking opt-out states, and terms compilation algorithms.</p>
+
+        <div class="space-y-3">
+          <div class="flex justify-between items-center p-4 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h5 class="text-sm font-bold">Enforce Digital DPDP Act Regulation Auditing (India)</h5>
+              <p class="text-xs text-slate-400">Logs data authorization consents securely ensuring complete state regulatory privacy alignment.</p>
+            </div>
+            <div class="toggle-ui active"></div>
+          </div>
+
+          <div class="flex justify-between items-center p-4 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h5 class="text-sm font-bold">Dynamic Cookie Tracking Acceptance Prompt</h5>
+              <p class="text-xs text-slate-400">Renders footer tracking consent dialogues for monitoring system usage transparency.</p>
+            </div>
+            <div class="toggle-ui"></div>
+          </div>
+
+          <div class="flex justify-between items-center p-4 rounded-xl bg-white/5 switch-row">
+            <div>
+              <h5 class="text-sm font-bold">Citizen Right-To-Be-Forgotten Profile Deletion Loop</h5>
+              <p class="text-xs text-slate-400">Allows end-users to permanently submit profile purging pipelines without administrative delays.</p>
+            </div>
+            <div class="toggle-ui active"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // 1. ENGINE TAB CONTROLLER FUNCTIONALITY
+    function switchTab(targetTabId) {
+      // Hide all standard section containers
+      const sectionContainers = document.querySelectorAll('.settings-section');
+      sectionContainers.forEach(section => section.classList.add('hidden'));
+
+      // Remove focus highlights from tab click links
+      const sideLinks = document.querySelectorAll('.tab-link');
+      sideLinks.forEach(link => link.classList.remove('active-tab'));
+
+      // Display selected target viewport matching category
+      document.getElementById('tab-' + targetTabId).classList.remove('hidden');
+
+      // Add state tag focus highlighting on click action
+      document.getElementById('btn-' + targetTabId).classList.add('active-tab');
+    }
+
+    // 2. LIVE INTERACTIVE TOGGLE BUTTON CONTROLLER
+    const toggleSwitches = document.querySelectorAll(".toggle-ui");
+    toggleSwitches.forEach(switchNode => {
+      switchNode.onclick = () => {
+        switchNode.classList.toggle("active");
+      }
+    });
+
+    // 3. MASTER LIGHT THEME ENGINE CONTROLLER SWITCH
+    const themeButton = document.getElementById("themeToggle");
+    themeButton.onclick = function() {
+      document.documentElement.classList.toggle("light-engine");
+      if(document.documentElement.classList.contains("light-engine")) {
+        themeButton.innerHTML = '<i class="fa-solid fa-sun text-orange-500"></i>';
+      } else {
+        themeButton.innerHTML = '<i class="fa-solid fa-bolt text-yellow-400"></i>';
+      }
+    }
+
+    // 4. COMPLEX TOKEN COMPLIANCE ACCESS INTERACTION LOGIC (PASSWORD ENGINE)
+    function updatePassword() {
+      const currentToken = document.getElementById("oldPassword").value;
+      const proxyToken = document.getElementById("newPassword").value;
+      const verifierToken = document.getElementById("confirmPassword").value;
+
+      const masterDatabaseMatch = "admin123";
+
+      if(!currentToken || !proxyToken || !verifierToken) {
+        alert("⚠️ Core Execution Error: All password security cells must contain inputs.");
+        return;
+      }
+      if(currentToken !== masterDatabaseMatch) {
+        alert("❌ Cryptographic Error: Master password does not match database cluster reference.");
+        return;
+      }
+      if(proxyToken.length < 6) {
+        alert("⚠️ Minimum Requirements Fault: New password string length insufficient.");
+        return;
+      }
+      if(proxyToken !== verifierToken) {
+        alert("❌ Discrepancy Error: Target input password strings do not align match.");
+        return;
+      }
+
+      alert("🎉 Security Registry Database Updated Successfully! Root keys re-calculated safely. ✅");
+      document.getElementById("oldPassword").value = "";
+      document.getElementById("newPassword").value = "";
+      document.getElementById("confirmPassword").value = "";
+    }
+  </script>
+</body>
+</html>

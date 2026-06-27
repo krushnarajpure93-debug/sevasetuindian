@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Emergency Services - Seva Setu Command Grid</title>
+
+    <!-- TAILWIND CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+    <!-- GOOGLE FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+
+    <!-- LEAFLET MAP CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- CHART JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- EMAIL JS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins',sans-serif;
+        }
+
+        body{
+            background:#020617;
+            overflow-x:hidden;
+            color:white;
+        }
+
+        .font-cyber { font-family: 'Share Tech Mono', monospace; }
+
+        /* BACKGROUND BLURS */
+        .bg-blur1{
+            position:absolute;
+            width:500px;
+            height:500px;
+            background:#ef4444;
+            filter:blur(140px);
+            opacity:.25;
+            border-radius:50%;
+            top:-120px;
+            left:-120px;
+            pointer-events: none;
+        }
+
+        .bg-blur2{
+            position:absolute;
+            width:500px;
+            height:500px;
+            background:#3b82f6;
+            filter:blur(140px);
+            opacity:.25;
+            border-radius:50%;
+            bottom:-120px;
+            right:-120px;
+            pointer-events: none;
+        }
+
+        /* GLASS EFFECT */
+        .glass{
+            background:rgba(15, 23, 42, 0.75);
+            backdrop-filter:blur(20px);
+            -webkit-backdrop-filter:blur(20px);
+            border:1px solid rgba(255,255,255,.08);
+        }
+
+        /* GLOWS */
+        .glow{
+            box-shadow: 0 0 35px rgba(239,68,68,.3), 0 0 70px rgba(239,68,68,.15);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 35px rgba(6,182,212,.3), 0 0 70px rgba(6,182,212,.15);
+        }
+
+        /* CARD HOVER */
+        .card-hover{
+            transition:.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .card-hover:hover {
+            transform:translateY(-8px) scale(1.02);
+            border-color: rgba(239,68,68,0.4);
+        }
+        .card-hover.active-vector {
+            border-color: #ef4444;
+            background: rgba(239,68,68,0.06);
+            box-shadow: 0 0 25px rgba(239,68,68,0.15);
+        }
+
+        /* BUTTONS */
+        .call-btn{
+            background:linear-gradient(to right,#ef4444,#dc2626);
+            transition:.3s;
+        }
+        .call-btn:hover{
+            transform:translateY(-3px);
+            box-shadow:0 10px 25px rgba(239,68,68,.4);
+        }
+
+        /* Ticker Animation */
+        .marquee-wrap { overflow: hidden; white-space: nowrap; width: 100%; background: #7f1d1d; border-bottom: 1px solid #ef4444; }
+        .marquee-node { display: inline-block; animation: marquee-scroll 25s linear infinite; font-size: 13px; font-weight: 800; letter-spacing: 0.5px; }
+        @keyframes marquee-scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        /* Radar Ring Effects */
+        .radar-box { position: relative; width: 140px; height: 140px; margin: 0 auto; }
+        .radar-ring {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+            border-radius: 50%; border: 2px solid #ef4444;
+            animation: pulse-ring 2.5s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+        .radar-ring:nth-child(2) { animation-delay: 0.8s; }
+        .radar-ring:nth-child(3) { animation-delay: 1.6s; }
+        @keyframes pulse-ring { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(3.5); opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <!-- EmailJS Initialization -->
+    <script>
+        (function() {
+            emailjs.init("_1QEdVW2xwioEhAvU"); // Public Identifier Key
+        })();
+    </script>
+
+    <!-- BACKGROUND LIGHT NODES -->
+    <div class="bg-blur1"></div>
+    <div class="bg-blur2"></div>
+
+    <!-- LIVE OPERATION TICKER NETWORK -->
+    <div class="marquee-wrap py-2 z-50 sticky top-0">
+        <div class="marquee-node uppercase flex items-center gap-4 text-white">
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-white animate-ping"></span> 
+            [SEVA SETU ENTERPRISE EMERGENCY CONTROL CENTER] • LIVE DISASTER DEPLOYMENT PROTOCOLS ACTIVE • NATIONAL HEALTH MATRIX SYNCED (LATENCY: 12ms) • FLOOD ALERT IN WESTERN MAHARASHTRA DISTRICTS • LEVEL-1 EMERGENCY DISPATCH VECTOR OPERATIONAL
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="glass border-b border-slate-800/80 w-full z-40 relative">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-red-800 flex items-center justify-center text-white text-xl shadow-[0_0_15px_rgba(239,68,68,0.5)]">
+                    <i class="fa-solid fa-tower-broadcast"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-tight text-white leading-none">Seva <span class="text-red-500">Setu</span></h1>
+                    <span class="text-[9px] text-slate-400 block font-mono tracking-widest uppercase mt-0.5">Disaster Response Grid</span>
+                </div>
+            </div>
+
+            <div class="flex gap-8 text-xs font-bold uppercase tracking-widest text-slate-300">
+                <a href="#vectors-section" class="hover:text-red-500 transition">Emergency Vectors</a>
+                <a href="#gis-section" class="hover:text-red-500 transition">GIS Map Control</a>
+                <a href="#ai-section" class="hover:text-red-500 transition">AI Diagnosis</a>
+                <a href="#analytics-section" class="hover:text-red-500 transition">Analytics</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="bg-red-500/10 border border-red-500/30 px-3.5 py-1.5 rounded-lg flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                    <span class="text-[10px] font-mono font-bold text-red-400 tracking-wider">DEFCON 1 ACTIVE</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO / COMMAND MATRIX -->
+    <section class="relative z-10 max-w-7xl mx-auto px-6 pt-16 pb-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center min-h-[75vh]">
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900 border border-red-500/30 text-xs font-bold text-red-400 tracking-wider uppercase">
+                <i class="fa-solid fa-circle-nodes animate-pulse"></i> AI Satellite Geospatial HyperLink Active
+            </div>
+            <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tighter leading-tight text-white uppercase">
+                Autonomous <br/>
+                <span class="bg-gradient-to-r from-red-500 via-orange-400 to-red-600 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(239,68,68,0.2)]">Emergency Grid</span>
+            </h1>
+            <p class="text-slate-400 text-sm sm:text-base max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed">
+                Integrated real-time critical response terminal. Instantly maps localized coordinates, dispatches nearest ALS ambulances, coordinates with trauma networks, and notifies authorized disaster handling agencies.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                <button onclick="scrollToSection('vectors-section')" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 rounded-xl font-black text-xs uppercase tracking-widest transition shadow-lg shadow-red-600/30">
+                    Explore Vectors <i class="fa-solid fa-angles-down ml-2"></i>
+                </button>
+                <button onclick="openSOSModal()" class="w-full sm:w-auto px-8 py-4 bg-[#0a0f24] hover:bg-red-600 hover:text-black border border-red-500/40 rounded-xl font-black text-xs uppercase tracking-widest transition text-red-400">
+                    Broadcast SOS Packet
+                </button>
+            </div>
+        </div>
+
+        <!-- BIG SOS GLOW BUTTON -->
+        <div class="lg:col-span-5 flex justify-center items-center relative">
+            <div class="radar-box flex items-center justify-center">
+                <div class="radar-ring"></div>
+                <div class="radar-ring"></div>
+                <div class="radar-ring"></div>
+                <button onclick="openSOSModal()" class="sos-btn flex flex-col items-center justify-center text-white tracking-widest">
+                    <span class="text-4xl font-black">SOS</span>
+                    <span class="text-[9px] font-mono tracking-normal font-bold opacity-80 mt-1">TAP ONCE</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CORE EMERGENCY VECTORS (WITH FULL DETAILED SYSTEM INTERACTION) -->
+    <section id="vectors-section" class="max-w-7xl mx-auto px-6 py-12 scroll-mt-24">
+        <div class="border-b border-slate-800 pb-4 mb-10">
+            <h2 class="text-3xl font-black uppercase tracking-tight text-white">Core Emergency <span class="text-red-500">Vectors</span></h2>
+            <p class="text-sm text-slate-400 mt-1 font-semibold">Select an incident handling vector below to initialize real-time terminal orchestration.</p>
+        </div>
+
+        <!-- 4 MAIN INTERACTIVE VECTORS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <!-- AMBULANCE -->
+            <div onclick="activateVectorTerminal('ambulance')" id="vector-card-ambulance" class="glass rounded-3xl p-6 text-center card-hover cursor-pointer border border-slate-800 relative select-none active-vector">
+                <span class="absolute top-4 right-4 text-[9px] font-black tracking-wider bg-emerald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full border border-emerald-500/30">14ms SYNC</span>
+                <div class="h-16 w-16 mx-auto rounded-full bg-red-600 flex items-center justify-center text-2xl shadow-xl"><i class="fa-solid fa-truck-medical"></i></div>
+                <h3 class="text-lg font-bold mt-5 text-white uppercase tracking-wide">Ambulance Grid</h3>
+                <p class="text-xs text-slate-400 font-medium mt-2 leading-relaxed">ALS/BLS critical respiratory and life deployment vectors.</p>
+                <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-black uppercase text-red-400">Deploy Terminal &rarr;</div>
+            </div>
+
+            <!-- POLICE -->
+            <div onclick="activateVectorTerminal('police')" id="vector-card-police" class="glass rounded-3xl p-6 text-center card-hover cursor-pointer border border-slate-800 relative select-none">
+                <span class="absolute top-4 right-4 text-[9px] font-black tracking-wider bg-emerald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full border border-emerald-500/30">8ms SYNC</span>
+                <div class="h-16 w-16 mx-auto rounded-full bg-blue-600 flex items-center justify-center text-2xl shadow-xl"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3 class="text-lg font-bold mt-5 text-white uppercase tracking-wide">Police Force</h3>
+                <p class="text-xs text-slate-400 font-medium mt-2 leading-relaxed">Law enforcement, riot response, and tactical dispatch setups.</p>
+                <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-black uppercase text-blue-400">Deploy Terminal &rarr;</div>
+            </div>
+
+            <!-- FIRE -->
+            <div onclick="activateVectorTerminal('fire')" id="vector-card-fire" class="glass rounded-3xl p-6 text-center card-hover cursor-pointer border border-slate-800 relative select-none">
+                <span class="absolute top-4 right-4 text-[9px] font-black tracking-wider bg-emerald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full border border-emerald-500/30">19ms SYNC</span>
+                <div class="h-16 w-16 mx-auto rounded-full bg-orange-500 flex items-center justify-center text-2xl shadow-xl"><i class="fa-solid fa-fire-extinguisher"></i></div>
+                <h3 class="text-lg font-bold mt-5 text-white uppercase tracking-wide">Fire Brigade</h3>
+                <p class="text-xs text-slate-400 font-medium mt-2 leading-relaxed">Thermal control, structural hazmat containment and rescue.</p>
+                <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-black uppercase text-orange-400">Deploy Terminal &rarr;</div>
+            </div>
+
+            <!-- DISASTER -->
+            <div onclick="activateVectorTerminal('disaster')" id="vector-card-disaster" class="glass rounded-3xl p-6 text-center card-hover cursor-pointer border border-slate-800 relative select-none">
+                <span class="absolute top-4 right-4 text-[9px] font-black tracking-wider bg-amber-500/20 text-amber-400 px-2.5 py-0.5 rounded-full border border-amber-500/30">CRITICAL</span>
+                <div class="h-16 w-16 mx-auto rounded-full bg-purple-600 flex items-center justify-center text-2xl shadow-xl"><i class="fa-solid fa-cloud-bolt"></i></div>
+                <h3 class="text-lg font-bold mt-5 text-white uppercase tracking-wide">Disaster NDRF</h3>
+                <p class="text-xs text-slate-400 font-medium mt-2 leading-relaxed">Flood, earthquake, and extreme pandemic containment grids.</p>
+                <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-black uppercase text-purple-400">Deploy Terminal &rarr;</div>
+            </div>
+        </div>
+
+        <!-- DYNAMIC INTEGRATED INTERACTIVE OPERATION PANEL -->
+        <div class="glass rounded-[2rem] p-6 lg:p-8 border border-slate-800/80 shadow-2xl relative overflow-hidden" id="vectorTerminalDisplayWorkspace">
+            <!-- Dynamic Data Will Be Rendered By JS Function -->
+        </div>
+    </section>
+
+    <!-- GIS MAP & ACTIVE TELEMETRY GRAPH SECTION -->
+    <section id="gis-section" class="max-w-7xl mx-auto px-4 py-12 border-t border-slate-900/60 scroll-mt-24">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            
+            <!-- Map Instance -->
+            <div class="lg:col-span-8 glass p-5 rounded-3xl border border-slate-800 relative flex flex-col justify-between min-h-[450px]">
+                <div class="flex justify-between items-center mb-4 shrink-0">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-map-location-dot text-2xl text-red-500"></i>
+                        <div>
+                            <h4 class="text-sm font-black uppercase tracking-widest text-white">Geospatial GIS Telemetry Core</h4>
+                            <p class="text-[10px] text-slate-500 font-mono">Live tracking coordinates array mapped on OpenStreetMap Engine</p>
+                        </div>
+                    </div>
+                    <select id="mapDistrictPivotNode" onchange="pivotGeospatialMapCoords()" class="bg-slate-950 border border-slate-800 text-xs font-bold px-3 py-1.5 rounded-lg text-slate-300 outline-none focus:border-red-500">
+                        <option value="Solapur">Solapur Hub (Current Context)</option>
+                        <option value="Pune">Pune Central Grid</option>
+                        <option value="Mumbai">Mumbai Capital Terminal</option>
+                        <option value="Nagpur">Nagpur Eastern Command</option>
+                    </select>
+                </div>
+                <div id="liveGeospatialMapContainer" class="w-full flex-grow rounded-xl relative border border-slate-800/80 shadow-inner min-h-[350px]"></div>
+            </div>
+
+            <!-- Stats & Integration Metrics -->
+            <div class="lg:col-span-4 flex flex-col justify-between gap-6">
+                <div class="glass p-5 rounded-2xl border border-slate-800 flex-1">
+                    <h4 class="text-xs font-black uppercase tracking-widest text-slate-400 border-b border-slate-800 pb-2 mb-4"><i class="fa-solid fa-hospital-user text-blue-400 mr-1"></i> Hospital Network State</h4>
+                    <div class="space-y-3 font-mono text-xs text-slate-300">
+                        <div class="flex justify-between"><span>Government Trauma Units:</span><span class="text-white font-bold">142 Centers</span></div>
+                        <div class="flex justify-between"><span>Private Multi-Speciality:</span><span class="text-white font-bold">890 Labs</span></div>
+                        <div class="flex justify-between border-t border-slate-800/80 pt-2 text-red-400"><span>ICU Ventilator Backlog:</span><span class="font-bold">42 Empty</span></div>
+                        <div class="flex justify-between text-emerald-400"><span>Blood Units Plasma Sync:</span><span class="font-bold">12.4k Packets</span></div>
+                    </div>
+                </div>
+
+                <div class="glass p-5 rounded-2xl border border-slate-800 flex-1">
+                    <h4 class="text-xs font-black uppercase tracking-widest text-slate-400 border-b border-slate-800 pb-2 mb-4"><i class="fa-solid fa-microchip text-purple-400 mr-1"></i> Advanced Automation Nodes</h4>
+                    <div class="space-y-2.5 text-xs font-bold text-slate-300">
+                        <p class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-500"></i> One-Click Hardware SOS Alert</p>
+                        <p class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-500"></i> Auto Family Geofence Notification</p>
+                        <p class="fa-fade flex items-center gap-2 text-cyan-400"><i class="fa-solid fa-video"></i> Live Video Medical Consult Desk</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ANALYTICS CHARTS MATRIX -->
+    <section id="analytics-section" class="max-w-7xl mx-auto px-4 py-12 border-t border-slate-900/60 scroll-mt-24">
+        <div class="border-b border-slate-800 pb-3 mb-6">
+            <h3 class="text-2xl font-black uppercase tracking-wide text-white">Performance Analytics Dashboard</h3>
+            <p class="text-xs text-slate-500 mt-1 font-bold font-mono">Statistical cluster metrics computed asynchronously</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="glass p-5 rounded-2xl border border-slate-800/80">
+                <h4 class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-4">Avg Ambulance Response Delta Matrix (Minutes)</h4>
+                <div class="h-56"><canvas id="responseTimeLineChart"></canvas></div>
+            </div>
+            <div class="glass p-5 rounded-2xl border border-slate-800/80">
+                <h4 class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-4">Incident Log Distributions Vector (Monthly)</h4>
+                <div class="h-56"><canvas id="incidentCategoryBarChart"></canvas></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ULTRA PREMIUM FOOTER WITH DEVELOPER INDEX PROFILES -->
+    <footer class="glass border-t border-slate-800/80 mt-20 pt-16 pb-8 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+            <div class="md:col-span-2 space-y-4">
+                <h2 class="text-3xl font-black uppercase tracking-tighter text-white">SEVA <span class="text-red-500">SETU</span></h2>
+                <p class="text-slate-400 text-sm leading-relaxed max-w-md font-medium">
+                    Centralized distributed infrastructure cluster node network. Orchestrating autonomous dispatch sequences, geo-fenced disaster tracking and telemetry packet delivery systems under sovereign guidelines under strict protocols.
+                </p>
+                <div class="flex flex-wrap gap-3 pt-2">
+                    <span class="px-3 py-1 bg-slate-900 text-[10px] text-red-400 font-bold uppercase rounded border border-red-500/20 tracking-wider">PCI-DSS Secured</span>
+                    <span class="px-3 py-1 bg-slate-900 text-[10px] text-cyan-400 font-bold uppercase rounded border border-cyan-500/20 tracking-wider">AES-256 Tunneling</span>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-white font-black uppercase tracking-widest text-xs mb-4 border-b border-slate-800 pb-2">Quick Access Matrix</h4>
+                <ul class="space-y-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    <li><a href="index.html" class="hover:text-red-500 transition">Sovereign Home Portal</a></li>
+                    <li><a href="contact.html" class="hover:text-red-500 transition">Central Support Line</a></li>
+                    <li><a href="admin.html" target="_blank" class="hover:text-red-500 transition"><i class="fa-solid fa-terminal text-[#ef4444]"></i> Super Admin Control</a></li>
+                </ul>
+            </div>
+
+            <!-- DEVELOPER CREDITS KEY DUMP -->
+            <div>
+                <h4 class="text-white font-black uppercase tracking-widest text-xs mb-4 border-b border-slate-800 pb-2">System Architect Profile</h4>
+                <div class="bg-slate-950/80 border border-slate-800/80 p-4 rounded-xl">
+                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">Lead Software Engineer:</p>
+                    <h5 class="text-lg font-black text-cyan-400 tracking-wide">Krushna Rajpure</h5>
+                    
+                    <div class="flex flex-col gap-2 text-[11px] font-semibold text-slate-400 mt-3 font-mono">
+                        <a href="mailto:krushnarajpure93@gmail.com" class="hover:text-white transition"><i class="fa-solid fa-envelope text-red-500 mr-1.5"></i> krushnarajpure93@gmail.com</a>
+                        <a href="https://www.instagram.com/krushna_rajpure" target="_blank" class="hover:text-pink-400 transition"><i class="fa-brands fa-instagram text-pink-500 mr-1.5"></i> @krushna_rajpure</a>
+                        <a href="https://www.linkedin.com/in/krushna-rajpure-397b34394" target="_blank" class="hover:text-blue-400 transition"><i class="fa-brands fa-linkedin text-blue-500 mr-1.5"></i> Core LinkedIn Matrix</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 border-t border-slate-800/60 pt-8 flex flex-col sm:flex-row justify-between items-center text-[10px] text-slate-600 font-bold uppercase tracking-widest gap-4">
+            <p>&copy; 2026 Seva Setu Portal Sub-Continent Grid Network. Engineered Safely by Krushna Rajpure. All Rights Reserved.</p>
+            <div class="flex items-center gap-4 text-sm">
+                <i class="fa-brands fa-cc-visa"></i>
+                <i class="fa-brands fa-cc-mastercard"></i>
+                <i class="fa-solid fa-fingerprint"></i>
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE SOS OVERLAY CONTAINER (EMAILJS TUNNELED) -->
+    <div id="sosModalOverlay" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/85 backdrop-blur-md transition-all duration-300">
+        <div class="glass p-8 rounded-3xl max-w-md w-full mx-4 border-red-500/30 glow relative">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-transparent"></div>
+            <button onclick="closeSOSModal()" class="absolute top-4 right-4 text-slate-500 hover:text-white text-2xl cursor-pointer">&times;</button>
+            
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-red-600/10 text-red-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 border border-red-500/30 animate-pulse"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <h3 class="text-xl font-black text-white uppercase tracking-wider">Initialize SOS Pipeline</h3>
+                <p class="text-[11px] text-slate-400 mt-1 font-semibold leading-relaxed">This will execute an API broadcast sending your current coordinate metrics directly to state emergency relays and your mail log buffer.</p>
+            </div>
+
+            <form id="sosForm" onsubmit="executeSOSEmailTransmissionSequence(event)" class="space-y-4 text-xs font-bold uppercase tracking-wider text-slate-400">
+                <div>
+                    <label class="block mb-1.5 text-[10px]">Your Profile Identifier Name *</label>
+                    <input type="text" id="sos_name" required placeholder="Enter Full Legal Name" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3.5 text-white outline-none focus:border-red-500 font-semibold tracking-normal normal-case">
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-[10px]">Secure Recovery Target Email *</label>
+                    <input type="email" id="sos_email" required placeholder="name@corporate.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3.5 text-white outline-none focus:border-red-500 font-semibold tracking-normal normal-case">
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-[10px]">Incident Brief Variables</label>
+                    <select id="sos_brief" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3.5 text-white outline-none focus:border-red-500">
+                        <option>Critical Medical Support Needed</option>
+                        <option>Accident Encountered Node Drop</option>
+                        <option>Civil Anomaly Safety Threat</option>
+                        <option>Fire Hazard Outbreak</option>
+                    </select>
+                </div>
+                
+                <div class="flex gap-4 pt-2">
+                    <button type="button" onclick="closeSOSModal()" class="flex-1 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white transition text-[10px] font-black tracking-widest cursor-pointer border border-slate-800">ABORT</button>
+                    <button type="submit" id="sosSubmitBtn" class="flex-1 py-3.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-[10px] tracking-widest cursor-pointer shadow-md shadow-red-600/30">BROADCAST <i class="fa-solid fa-paper-plane ml-1"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- BACK TO TOP HOVER VPA -->
+    <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="fixed bottom-6 right-6 z-50 w-11 h-11 bg-gradient-to-tr from-red-600 to-red-800 rounded-full flex items-center justify-center text-white font-bold shadow-lg hover:scale-110 transition-transform focus:outline-none cursor-pointer border border-red-500/30 shadow-red-600/30">
+        <i class="fa-solid fa-angle-up text-lg"></i>
+    </button>
+
+    <!-- CORE SYSTEM SCRIPTS -->
+    <script>
+        // MASTER GEOSPATIAL VECTOR MAP CONFIG
+        let globalLeafletMapInstance = null;
+        let activeMarkersClusterArray = [];
+
+        // DYNAMIC VECTORS LOGIC GRAPH STRUCT
+        const vectorTerminalDictionary = {
+            ambulance: {
+                title: "Ambulance Fleet Orchestrator Node",
+                color: "text-red-400",
+                icon: "fa-truck-medical",
+                btnText: "Request Ambulance Dispatch",
+                fields: [
+                    { id: "t_param_1", label: "Patient Critical Severity", type: "select", options: ["Level 3 (Cardiac / Trauma)", "Level 2 (Severe Fracture / Burn)", "Level 1 (Routine / General Stabilization)"] },
+                    { id: "t_param_2", label: "Select Vehicle Spec", type: "select", options: ["ALS (Advanced Life Support Mainframe)", "BLS (Basic Life Support Node)", "Neonatal / Pediatric ICU Capsule"] }
+                ],
+                stats: `
+                    <div class="grid grid-cols-3 gap-4 text-center text-xs font-bold font-mono">
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800"><span class="block text-slate-500 text-[10px]">ACTIVE IN AREA</span><span class="text-emerald-400 text-sm font-black">42 Vehicles</span></div>
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800"><span class="block text-slate-500 text-[10px]">AVG DISPATCH ETA</span><span class="text-red-400 text-sm font-black">4.5 Minutes</span></div>
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800"><span class="block text-slate-500 text-[10px]">NETWORK LINK</span><span class="text-cyan-400 text-sm font-black">108 Active</span></div>
+                    </div>
+                `
+            },
+            police: {
+                title: "Law Enforcement Tactical Control Core",
+                color: "text-blue-400",
+                icon: "fa-shield-halved",
+                btnText: "Deploy Police Force Unit",
+                fields: [
+                    { id: "t_param_1", label: "Incident Classification Anomaly", type: "select", options: ["Civil Dispute / Altercation", "Robbery / Security Breach Anomaly", "Traffic Block / Accident Lock", "SOS Panic Anomaly Verified"] },
+                    { id: "t_param_2", label: "Urgency Multiplier", type: "select", options: ["Immediate Threat to Life", "Property Hazard Control", "Routine Log Patrol Request"] }
+                ],
+                stats: `
+                    <div class="grid grid-cols-3 gap-4 text-center text-xs font-bold font-mono">
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800"><span class="block text-slate-500 text-[10px]">PATROLS ACTIVE</span><span class="text-emerald-400 text-sm font-black">18 Units</span></div>
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800"><span class="block text-slate-500 text-[10px]">RESPONSE DELTA</span><span class="text-blue-400 text-sm font-black">3.2 Minutes</span></div>
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800"><span class="block text-slate-500 text-[10px]">STATION INDEX</span><span class="text-cyan-400 text-sm font-black">Dial 100 Sync</span></div>
+                    </div>
+                `
+            },
+            fire: {
+                title: "Thermal Hazard Containment System",
+                color: "text-orange-400",
+                icon: "fa-fire-extinguisher",
+                btnText: "Dispatch Fire Engines Cluster",
+                fields: [
+                    { id: "t_param_1", label: "Thermal Hazard Classification", type: "select", options: ["Structural Building Fire Outbreak", "Chemical / Hazmat Leak Ignition", "Electrical Short Circuit Array Spark"] },
+                    { id: "t_param_2", label: "Threat Density Metric", type: "select", options: ["High Rise Commercial (Scale-3)", "Residential Property Structure (Scale-2)", "Vehicle / Garbage Grid Fire (Scale-1)"] }
+                ],
+                stats: `
+                    <div class="grid grid-cols-3 gap-4 text-center text-xs font-bold font-mono">
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800"><span class="block text-slate-500 text-[10px]">ENGINES ASSIGNED</span><span class="text-emerald-400 text-sm font-black">8 Trucks</span></div>
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800"><span class="block text-slate-500 text-[10px]">WATER CAPACITY</span><span class="text-orange-400 text-sm font-black">45,000 Liters</span></div>
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800"><span class="block text-slate-500 text-[10px]">STATION BOUNDS</span><span class="text-cyan-400 text-sm font-black">101 Station Connected</span></div>
+                    </div>
+                `
+            },
+            disaster: {
+                title: "Sovereign Disaster Response (NDRF Force Node)",
+                color: "text-purple-400",
+                icon: "fa-cloud-bolt",
+                btnText: "Engage NDRF Core Response Battalion",
+                fields: [
+                    { id: "t_param_1", label: "Catastrophic Event Framework", type: "select", options: ["Flash Flood Inundation Grid", "Seismic Movement / Earthquake Structural Failure", "Industrial Toxic Chemical Spill Inversion"] },
+                    { id: "t_param_2", label: "Evacuation Protocol Status", type: "select", options: ["Immediate Structural Relocation Mandatory", "Shelter Layout Allocation In Process", "Baseline Warning Protocol Deployment"] }
+                ],
+                stats: `
+                    <div class="grid grid-cols-3 gap-4 text-center text-xs font-bold font-mono">
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800"><span class="block text-slate-500 text-[10px]">BATTALIONS ON STANDBY</span><span class="text-emerald-400 text-sm font-black">4 Columns</span></div>
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800"><span class="block text-slate-500 text-[10px]">RESCUE CRAFTS RIG</span><span class="text-purple-400 text-sm font-black">24 Boats / Air</span></div>
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800"><span class="block text-slate-500 text-[10px]">DISASTER HOTLINE</span><span class="text-cyan-400 text-sm font-black">Live National Port</span></div>
+                    </div>
+                `
+            }
+        };
+
+        // INTERACTIVE VECTOR WORKSPACE SWITCH LAYER ENGINE
+        function activateVectorTerminal(vectorKey) {
+            // Adjust Card Highlighting Arrays
+            document.querySelectorAll('#vectors-section .card-hover').forEach(el => el.classList.remove('active-vector'));
+            document.getElementById(`vector-card-${vectorKey}`).classList.add('active-vector');
+
+            const targetConfig = vectorTerminalDictionary[vectorKey];
+            const targetWorkspaceNode = document.getElementById('vectorTerminalDisplayWorkspace');
+            
+            let fieldsHTML = '';
+            targetConfig.fields.forEach(f => {
+                let optionsMarkup = f.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+                fieldsHTML += `
+                    <div class="space-y-2">
+                        <label class="block text-[11px] font-black uppercase text-slate-400 tracking-wider">${f.label}</label>
+                        <select id="${f.id}" class="w-full bg-slate-950 border border-slate-800 p-3.5 rounded-xl text-xs font-semibold text-white outline-none focus:border-red-500">${optionsMarkup}</select>
+                    </div>`;
+            });
+
+            targetWorkspaceNode.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center animate-fadeIn">
+                    <div class="space-y-5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-lg ${targetConfig.color}"><i class="fa-solid ${targetConfig.icon}"></i></div>
+                            <h3 class="text-lg font-black text-white uppercase tracking-wider">${targetConfig.title}</h3>
+                        </div>
+                        <p class="text-xs font-medium text-slate-400 leading-relaxed">Configure emergency parameters rows block packet below. Submission instantly schedules variables arrays queues to local dispatch centers near Solapur.</p>
+                        ${targetConfig.stats}
+                    </div>
+                    
+                    <form onsubmit="handleOperationalTerminalDispatch(event, '${vectorKey}')" class="space-y-4 bg-slate-950/40 p-6 rounded-2xl border border-slate-800/60 shadow-inner">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[11px] font-black uppercase text-slate-400 tracking-wider mb-2">Caller Full Name *</label>
+                                <input type="text" id="t_caller_name" required placeholder="Suresh Patil" class="w-full bg-slate-950 border border-slate-800 p-3 rounded-xl text-xs font-semibold text-white outline-none focus:border-red-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-black uppercase text-slate-400 tracking-wider mb-2">Contact Link Line *</label>
+                                <input type="tel" id="t_caller_phone" required placeholder="10 Digits Mobile" class="w-full bg-slate-950 border border-slate-800 p-3 rounded-xl text-xs font-semibold text-white outline-none focus:border-red-500 font-mono">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-[11px] font-black uppercase text-slate-400 tracking-wider">Localized Landmark Address Notes *</label>
+                            <input type="text" id="t_caller_addr" required placeholder="Enter exact current spot or taluka sector info" class="w-full bg-slate-950 border border-slate-800 p-3.5 rounded-xl text-xs font-semibold text-white outline-none focus:border-red-500">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            ${fieldsHTML}
+                        </div>
+                        <button type="submit" class="w-full py-4 bg-gradient-to-r from-slate-900 to-slate-950 border border-slate-700 hover:border-red-500 rounded-xl font-black text-[11px] uppercase tracking-widest text-white transition cursor-pointer mt-2 shadow-sm">${targetConfig.btnText}</button>
+                    </form>
+                </div>`;
+        }
+
+        // TERMINAL GENERAL INPUT HANDLER SUBMISSION DISPATCH LOGIC (COMMITS TO BOOKINGS DATABASE)
+        async function handleOperationalTerminalDispatch(event, vectorType) {
+            event.preventDefault();
+            
+            let callerName = document.getElementById('t_caller_name').value.trim();
+            let callerPhone = document.getElementById('t_caller_phone').value.trim();
+            let callerAddr = document.getElementById('t_caller_addr').value.trim();
+            
+            if(callerPhone.length < 10) { alert("Please enter valid contact parameters."); return; }
+
+            // Construct payload packet matched to master administrator specs
+            const payload = {
+                module: "emergency",
+                userName: callerName,
+                contact: `${callerPhone} | Location: ${callerAddr}`,
+                district: `SOLAPUR - [${vectorType.toUpperCase()} MODE]`,
+                amount: "0", // Emergency dispatches have zero standard cost variables
+                status: "Pending Check",
+                date: new Date().toISOString()
+            };
+
+            try {
+                // Post into master /api/bookings core endpoint for admin integration
+                let res = await fetch(API_BASE + "/bookings", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if(res.ok) {
+                    triggerToastNotification("Deployment Initiated", `SLA Queue committed successfully for: ${callerName}`);
+                    alert(`🚨 SECURE COMMAND DISPATCHED!\nEmergency vector block packet initialized matching coordinates: ${callerAddr}.\nTracking Status available via Live Ledger.`);
+                    
+                    // Reset fields
+                    event.target.reset();
+                    fetchLiveUserLogs();
+                } else { alert("API Node Transmission Error."); }
+            } catch(e) { alert("Server Offline. Run node server.js"); }
+        }
+
+        // ==========================================
+        // EMAILJS SOS TRANSMISSION METHOD DUMP CORE
+        // ==========================================
+        function openSOSModal() {
+            document.getElementById('sosModalOverlay').classList.remove('hidden');
+            document.getElementById('sosModalOverlay').classList.add('flex');
+        }
+        function closeSOSModal() {
+            document.getElementById('sosModalOverlay').classList.add('hidden');
+            document.getElementById('sosModalOverlay').classList.remove('flex');
+            document.getElementById('sosForm').reset();
+        }
+
+        function executeSOSEmailTransmissionSequence(e) {
+            e.preventDefault();
+            const btn = document.getElementById('sosSubmitBtn');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> TRANSMITTING...';
+            btn.disabled = true;
+
+            const name = document.getElementById('sos_name').value.trim();
+            const email = document.getElementById('sos_email').value.trim();
+            const briefType = document.getElementById('sos_brief').value;
+
+            // Mapping parameters matched to template variables fields
+            const emailParams = {
+                to_name: "Krushna Rajpure (Command Head)",
+                from_name: name,
+                reply_to: email,
+                message: `[CRITICAL SOS BROADCAST LEVEL-1] An emergency signal node was initialized by client: ${name}. Context: ${briefType}. Coordinates pivoting near Solapur grid maps. Secure copy sent to: ${email}.`
+            };
+
+            // Unified Keys Enforced Matrix: service_wuyxe4d & template_u19a0sh
+            emailjs.send("service_wuyxe4d", "template_u19a0sh", emailParams)
+                .then(function() {
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> SIGNAL EMITTED';
+                    btn.className = btn.className.replace('bg-red-600', 'bg-emerald-600');
+                    
+                    alert(`✅ SOS Token Broadcast Successful!\nEncrypted coordinates packet transmitted live into database loops. Email logged safely.`);
+                    
+                    // Post booking entry so it mirrors in user logs
+                    sendOrderToDatabaseDataStream({ type: "SOS Panic Alert", mobile: name, company: "MAIN CONNECTOR LINK", plan: briefType, amount: 0 });
+
+                    setTimeout(() => {
+                        closeSOSModal();
+                        btn.innerHTML = 'BROADCAST <i class="fa-solid fa-paper-plane ml-1"></i>';
+                        btn.className = btn.className.replace('bg-emerald-600', 'bg-red-600');
+                        btn.disabled = false;
+                    }, 1500);
+                }, function(err) {
+                    alert("SLA Link Failed. Dial 108 instantly. Error: " + JSON.stringify(err));
+                    btn.innerHTML = 'BROADCAST <i class="fa-solid fa-paper-plane ml-1"></i>';
+                    btn.disabled = false;
+                });
+        }
+
+        // BACKEND LOGGING CORE
+        async function sendOrderToDatabaseDataStream(payload) {
+            const syncPayload = {
+                module: "telecom", // mapped to standard loop channels
+                userName: "SOS Alert: " + payload.mobile,
+                contact: payload.company + " | " + payload.plan, 
+                district: "SOLAPUR PANIC ZONE", 
+                amount: "0",
+                status: "Active Tracking",
+                date: new Date().toISOString()
+            };
+            try {
+                await fetch(API_BASE + '/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(syncPayload) });
+                fetchLiveUserLogs();
+            } catch(err) {}
+        }
+
+        // FETCH USER OPERATION LOGS (MONGODB PIPELINE INTEGRATION)
+        async function fetchLiveUserLogs() {
+            try {
+                const res = await fetch(API_BASE + '/data');
+                const dbState = await res.json();
+                
+                // Pull bookings from both telecom loops and general emergency modules
+                const dbOrders = dbState.bookings.filter(b => b.module === 'emergency' || b.module === 'telecom');
+                
+                let rows = "";
+                dbOrders.reverse().forEach(item => {
+                    let idCode = item.id || item._id || '#TRACE-NEW';
+                    let shortId = idCode.substring(idCode.length - 6).toUpperCase();
+                    
+                    rows += `<tr class="hover:bg-red-500/5 transition-colors border-b border-slate-800/60 font-semibold text-xs">
+                        <td class="py-4 px-4 font-cyber text-red-400 font-bold">#EMG-${shortId}</td>
+                        <td class="py-4 px-4 font-black text-white">${item.userName}</td>
+                        <td class="py-4 px-4"><span class="px-2 py-0.5 rounded text-[9px] uppercase font-black bg-red-500/10 border border-red-500/20 text-red-400 tracking-widest">${item.district}</span></td>
+                        <td class="py-4 px-4 text-slate-400">${item.contact}</td>
+                        <td class="py-4 px-4 font-bold text-slate-300 font-mono text-right">₹${item.amount || 0}.00</td>
+                        <td class="py-4 px-4 text-center"><span class="bg-slate-900 border border-slate-800 text-slate-300 font-bold uppercase tracking-widest text-[9px] px-2.5 py-1 rounded-md">${item.status}</span></td>
+                    </tr>`;
+                });
+                
+                document.getElementById("userLogs").innerHTML = rows || `<tr><td colspan="6" class="text-center py-8 text-slate-600 font-black uppercase tracking-widest text-xs">Zero operational entries written inside datastore layers loop.</td></tr>`;
+            } catch (err) {
+                document.getElementById("userLogs").innerHTML = `<tr><td colspan="6" class="text-center py-8 text-red-500 font-black uppercase tracking-widest text-xs">Database Connection Interrupted. Fire server.js on Port 3000</td></tr>`;
+            }
+        }
+
+        // GEOSPATIAL MAP PIVOT CONTROL LOGIC
+        function pivotGeospatialMapCoords() {
+            const chosenTargetPivot = document.getElementById('mapDistrictPivotNode').value;
+            let coords = [17.6599, 75.9064]; // Solapur fallback default
+            let zoom = 12;
+
+            if(chosenTargetPivot === 'Pune') { coords = [18.5204, 73.8567]; zoom = 11; }
+            else if(chosenTargetPivot === 'Mumbai') { coords = [19.0760, 72.8777]; zoom = 11; }
+            else if(chosenTargetPivot === 'Nagpur') { coords = [21.1458, 79.0882]; zoom = 11; }
+
+            if(globalLeafletMapInstance) {
+                globalLeafletMapInstance.setView(coords, zoom);
+                triggerToastNotification("Map View pivoted", `GIS satellite camera locked target vector to: ${chosenTargetPivot} region.`);
+            }
+        }
+
+        // TOAST ENGINE NOTIFICATIONS
+        function triggerToastNotification(headerTitleText, descriptionBodyMessage) {
+            const toastNodeContainer = document.getElementById('toastNotification');
+            document.getElementById('toastTitle').innerText = headerTitleText;
+            document.getElementById('toastMessage').innerText = descriptionBodyMessage;
+
+            toastNodeContainer.style.transform = "translateX(0px)";
+            setTimeout(() => { toastNodeContainer.style.transform = "translateX(500px)"; }, 4000);
+        }
+
+        function scrollToSection(elementTargetId) {
+            const domNode = document.getElementById(elementTargetId);
+            if (domNode) domNode.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ANALYTICS INTEGRATION (CHART JS)
+        window.addEventListener('load', () => {
+            activateVectorTerminal('ambulance'); // default active workspace form
+            fetchLiveUserLogs();
+            
+            // Map Draw Enforced
+            globalLeafletMapInstance = L.map('liveGeospatialMapContainer', { zoomControl: false, attributionControl: false }).setView([17.6599, 75.9064], 12);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(globalLeafletMapInstance);
+            
+            // Plotted active vehicle markers
+            var redDotIcon = L.divIcon({className: 'bg-red-500 w-3.5 h-3.5 rounded-full shadow-[0_0_15px_#ef4444] border-2 border-white'});
+            var greenCrossIcon = L.divIcon({className: 'bg-emerald-500 w-4 h-4 rounded shadow-[0_0_15px_#10b981] border-2 border-slate-950 flex items-center justify-center text-[8px] text-white font-bold', html:'+'});
+            
+            L.marker([17.6599, 75.9064], {icon: greenCrossIcon}).addTo(globalLeafletMapInstance).bindPopup("Civil Trauma Ward Node A");
+            L.marker([17.6750, 75.9120], {icon: redDotIcon}).addTo(globalLeafletMapInstance).bindPopup("Ambulance #MH-12-3214 Active");
+            L.marker([17.6410, 75.8850], {icon: redDotIcon}).addTo(globalLeafletMapInstance).bindPopup("ALS Unit Enroute to Spot");
+
+            // Chart A: Response
+            new Chart(document.getElementById('responseTimeLineChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        data: [14.2, 12.8, 11.5, 9.4, 7.8, 4.5],
+                        borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.05)', borderWidth: 2, tension: 0.4, fill: true
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(255,255,255,0.03)' } } } }
+            });
+
+            // Chart B: Incident
+            new Chart(document.getElementById('incidentCategoryBarChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Trauma', 'Fire Outbreak', 'NDRF Evac', 'SOS Panic'],
+                    datasets: [{
+                        data: [540, 210, 95, 310],
+                        backgroundColor: ['#ef4444', '#f97316', '#a855f7', '#06b6d4'], borderRadius: 6
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(255,255,255,0.03)' } } } }
+            });
+        });
+    </script>
+</body>
+</html>

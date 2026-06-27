@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Krushna Rajpure | Seva Setu</title>
+
+  <!-- TAILWIND CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- FONT AWESOME -->
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- GOOGLE FONT -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      font-family: 'Poppins', sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body{
+      background: #020617;
+      overflow-x: hidden;
+    }
+
+    /* ANIMATION */
+    .floating{
+      animation: floating 4s ease-in-out infinite;
+    }
+
+    @keyframes floating{
+      0%{
+        transform: translateY(0px);
+      }
+
+      50%{
+        transform: translateY(-20px);
+      }
+
+      100%{
+        transform: translateY(0px);
+      }
+    }
+
+    /* GLOW */
+    .glow{
+      box-shadow:
+      0 0 30px rgba(99,102,241,.4),
+      0 0 60px rgba(99,102,241,.3);
+    }
+
+    /* GLASS */
+    .glass{
+      background: rgba(255,255,255,.05);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+  </style>
+
+</head>
+
+<body class="text-white">
+
+  <!-- NAVBAR -->
+  <nav class="fixed top-0 w-full z-50 glass">
+
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+
+      <h1 class="text-3xl font-extrabold tracking-wide">
+        Seva <span class="text-indigo-500">Setu</span>
+      </h1>
+
+      <div class="hidden md:flex items-center gap-10 text-lg">
+
+        <a href="#" class="hover:text-indigo-400 transition">
+          Home
+        </a>
+
+        <a href="#about" class="hover:text-indigo-400 transition">
+          About
+        </a>
+
+        <a href="#skills" class="hover:text-indigo-400 transition">
+          Skills
+        </a>
+
+        <a href="#contact" class="hover:text-indigo-400 transition">
+          Contact
+        </a>
+
+      </div>
+
+    </div>
+
+  </nav>
+
+
+  <!-- HERO SECTION -->
+  <section class="min-h-screen flex items-center justify-center relative overflow-hidden">
+
+    <!-- BG -->
+    <div class="absolute w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-3xl top-10 left-10"></div>
+
+    <div class="absolute w-[400px] h-[400px] bg-pink-600/20 rounded-full blur-3xl bottom-10 right-10"></div>
+
+    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center relative z-10">
+
+      <!-- LEFT -->
+      <div>
+
+        <span class="bg-indigo-600/20 text-indigo-400 px-5 py-2 rounded-full border border-indigo-500/20 font-semibold">
+          Third Year IT Student
+        </span>
+
+        <h1 class="text-6xl md:text-7xl font-extrabold leading-tight mt-8">
+
+          Krushna
+          <span class="text-indigo-500">
+            Rajpure
+          </span>
+
+        </h1>
+
+        <p class="text-slate-400 text-xl leading-10 mt-8 max-w-2xl">
+
+          Passionate Web Developer focused on building
+          modern websites, smart digital platforms,
+          and powerful UI/UX experiences.
+
+        </p>
+
+        <!-- BUTTONS -->
+        <div class="flex gap-6 mt-10 flex-wrap">
+
+          <a href="#contact"
+          class="bg-indigo-600 hover:bg-indigo-700 px-8 py-4 rounded-2xl font-bold text-lg transition shadow-2xl">
+
+            Contact Me
+
+          </a>
+
+          <a href="#skills"
+          class="border border-white/10 hover:bg-white/10 px-8 py-4 rounded-2xl font-bold text-lg transition">
+
+            Explore Skills
+
+          </a>
+
+        </div>
+
+        <!-- SOCIAL -->
+        <div class="flex gap-5 mt-12">
+
+          <!-- INSTAGRAM -->
+          <a href="https://instagram.com/krushna_rajpure"
+          target="_blank"
+          class="h-16 w-16 bg-pink-500 rounded-full flex items-center justify-center text-2xl hover:scale-110 transition glow">
+
+            <i class="fa-brands fa-instagram"></i>
+
+          </a>
+
+          <!-- LINKEDIN -->
+          <a href="https://linkedin.com/in/krushna-rajpure-397b34394"
+          target="_blank"
+          class="h-16 w-16 bg-blue-600 rounded-full flex items-center justify-center text-2xl hover:scale-110 transition glow">
+
+            <i class="fa-brands fa-linkedin"></i>
+
+          </a>
+
+          <!-- GITHUB -->
+          <a href="#"
+          class="h-16 w-16 bg-slate-800 border border-white/10 rounded-full flex items-center justify-center text-2xl hover:scale-110 transition glow">
+
+            <i class="fa-brands fa-github"></i>
+
+          </a>
+
+        </div>
+
+      </div>
+
+      <!-- RIGHT -->
+      <div class="relative flex justify-center">
+
+        <!-- GLOW -->
+        <div class="absolute w-[350px] h-[350px] bg-indigo-600/30 blur-3xl rounded-full"></div>
+
+        <!-- IMAGE -->
+        <img
+        src="images/krushna.png.png"
+        class="relative w-[400px] h-[520px] object-cover rounded-[40px] border-4 border-white/10 shadow-2xl floating glow">
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ABOUT -->
+  <section id="about" class="py-32">
+
+    <div class="max-w-7xl mx-auto px-6">
+
+      <div class="text-center mb-20">
+
+        <h2 class="text-6xl font-extrabold">
+          About Me
+        </h2>
+
+        <p class="text-slate-400 text-xl mt-6">
+          Passionate about technology and innovation.
+        </p>
+
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-10">
+
+        <!-- CARD -->
+        <div class="glass p-10 rounded-[35px] hover:-translate-y-3 transition duration-500">
+
+          <i class="fa-solid fa-code text-indigo-400 text-6xl mb-8"></i>
+
+          <h3 class="text-3xl font-bold mb-5">
+            Web Developer
+          </h3>
+
+          <p class="text-slate-400 leading-9 text-lg">
+            Building responsive and modern websites using
+            HTML, CSS, JavaScript, and React.
+          </p>
+
+        </div>
+
+        <!-- CARD -->
+        <div class="glass p-10 rounded-[35px] hover:-translate-y-3 transition duration-500">
+
+          <i class="fa-solid fa-laptop-code text-pink-400 text-6xl mb-8"></i>
+
+          <h3 class="text-3xl font-bold mb-5">
+            UI/UX Designer
+          </h3>
+
+          <p class="text-slate-400 leading-9 text-lg">
+            Creating beautiful and premium interfaces
+            with smooth user experience.
+          </p>
+
+        </div>
+
+        <!-- CARD -->
+        <div class="glass p-10 rounded-[35px] hover:-translate-y-3 transition duration-500">
+
+          <i class="fa-solid fa-rocket text-cyan-400 text-6xl mb-8"></i>
+
+          <h3 class="text-3xl font-bold mb-5">
+            Startup Vision
+          </h3>
+
+          <p class="text-slate-400 leading-9 text-lg">
+            Dreaming to build Seva Setu into a huge
+            digital platform across India.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- SKILLS -->
+  <section id="skills" class="py-32 bg-slate-950">
+
+    <div class="max-w-7xl mx-auto px-6">
+
+      <div class="text-center mb-20">
+
+        <h2 class="text-6xl font-extrabold">
+          My Skills
+        </h2>
+
+      </div>
+
+      <div class="grid md:grid-cols-4 sm:grid-cols-2 gap-10">
+
+        <!-- HTML -->
+        <div class="glass p-10 rounded-[35px] text-center hover:scale-105 transition duration-500">
+
+          <i class="fa-brands fa-html5 text-orange-500 text-7xl mb-8"></i>
+
+          <h3 class="text-3xl font-bold">
+            HTML5
+          </h3>
+
+        </div>
+
+        <!-- CSS -->
+        <div class="glass p-10 rounded-[35px] text-center hover:scale-105 transition duration-500">
+
+          <i class="fa-brands fa-css3-alt text-blue-500 text-7xl mb-8"></i>
+
+          <h3 class="text-3xl font-bold">
+            CSS3
+          </h3>
+
+        </div>
+
+        <!-- JS -->
+        <div class="glass p-10 rounded-[35px] text-center hover:scale-105 transition duration-500">
+
+          <i class="fa-brands fa-js text-yellow-400 text-7xl mb-8"></i>
+
+          <h3 class="text-3xl font-bold">
+            JavaScript
+          </h3>
+
+        </div>
+
+        <!-- REACT -->
+        <div class="glass p-10 rounded-[35px] text-center hover:scale-105 transition duration-500">
+
+          <i class="fa-brands fa-react text-cyan-400 text-7xl mb-8"></i>
+
+          <h3 class="text-3xl font-bold">
+            React JS
+          </h3>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- CONTACT -->
+  <section id="contact" class="py-32">
+
+    <div class="max-w-5xl mx-auto px-6 text-center">
+
+      <h2 class="text-6xl font-extrabold">
+        Contact Me
+      </h2>
+
+      <p class="text-slate-400 text-xl mt-6">
+        Let's build something amazing together.
+      </p>
+
+      <div class="flex justify-center gap-6 mt-14 flex-wrap">
+
+        <a href="mailto:krushnarajpure93@gmail.com"
+        class="bg-indigo-600 hover:bg-indigo-700 px-10 py-5 rounded-2xl font-bold text-lg transition shadow-2xl">
+
+          Email Me
+
+        </a>
+
+        <a href="tel:+919860894960"
+        class="border border-white/10 hover:bg-white/10 px-10 py-5 rounded-2xl font-bold text-lg transition">
+
+          Call Me
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- FOOTER -->
+  <footer class="border-t border-white/10 py-10 text-center">
+
+    <h3 class="text-3xl font-bold">
+      Seva <span class="text-indigo-500">Setu</span>
+    </h3>
+
+    <p class="text-slate-500 mt-4">
+      Designed & Developed by Krushna Rajpure
+    </p>
+
+  </footer>
+
+</body>
+</html>
