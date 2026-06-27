@@ -1,18 +1,452 @@
 <!DOCTYPE html>
-<html lang="mr">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seva Setu - One Stop Appointment Platform</title>
+    <title>Seva Setu - One Stop Advanced Digital Appointment Platform</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    
     <style>
-        /* स्लायडर आणि स्क्रोलिंगसाठी लागणारे अतिरिक्त CSS स्टाइल्स */
+        /* ==========================================
+           ADVANCED DIGITAL DESIGN SYSTEM & VARIABLES
+           ========================================== */
+        :root {
+            --bg-primary: #0a0f1d;
+            --bg-secondary: #131c31;
+            --bg-tertiary: #1e2942;
+            --accent-glow: rgba(37, 99, 235, 0.15);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --secondary-gradient: linear-gradient(135deg, #10b981 0%, #047857 100%);
+            --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --emergency-gradient: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            --purple-gradient: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+            --glass-bg: rgba(19, 28, 49, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Base Reset & Core Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Smooth Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-tertiary);
+            border-radius: 50px;
+            border: 2px solid var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6;
+        }
+
+        /* Utilities */
+        .section-container {
+            padding: 100px 8% 80px 8%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .section-title-area {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(120deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Premium Buttons */
+        .btn-digital {
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .btn-digital-primary {
+            background: var(--primary-gradient);
+            color: #fff;
+            box-shadow: 0 10px 20px rgba(29, 78, 216, 0.3);
+        }
+
+        .btn-digital-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(29, 78, 216, 0.5);
+        }
+
+        .btn-digital-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-digital-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* ==========================================
+           ADVANCED HEADER / NAVIGATION
+           ========================================== */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(10, 15, 29, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: var(--transition-smooth);
+        }
+
+        .navbar.scrolled {
+            padding: 15px 8%;
+            background: rgba(10, 15, 29, 0.95);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 32px;
+            background: linear-gradient(45deg, #60a5fa, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #fff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo p {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 35px;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: var(--transition-smooth);
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #fff;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #3b82f6;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #dark-mode-toggle {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            width: 42px;
+            height: 42px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+        }
+
+        #dark-mode-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #3b82f6;
+        }
+
+        .btn-login {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-login:hover {
+            background: #fff;
+            color: var(--bg-primary);
+            transform: translateY(-2px);
+        }
+
+        /* ==========================================
+           HERO SECTION ENHANCEMENT
+           ========================================== */
+        .hero-section {
+            background: radial-gradient(circle at 90% 10%, rgba(29, 78, 216, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 10% 90%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                        var(--bg-primary);
+            padding: 180px 8% 100px 8%;
+            border-bottom: 1px solid var(--glass-border);
+            position: relative;
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .badge {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #60a5fa;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+
+        .hero-content h2 {
+            font-size: 54px;
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -1.5px;
+            margin-bottom: 20px;
+        }
+
+        .blue-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            color: var(--text-muted);
+            font-size: 18px;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        /* Search Container Digital Redesign */
+        .search-container {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 10px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .search-input {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-left: 20px;
+            flex: 1;
+        }
+
+        .search-input i {
+            color: #3b82f6;
+            font-size: 18px;
+        }
+
+        .search-input input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 15px;
+            width: 100%;
+            outline: none;
+        }
+
+        .search-input input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .category-select {
+            border-left: 1px solid var(--glass-border);
+            padding: 0 20px;
+        }
+
+        .category-select select {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 15px;
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .category-select select option {
+            background: var(--bg-secondary);
+            color: #fff;
+        }
+
+        .btn-search {
+            background: var(--primary-gradient);
+            color: #fff;
+            border: none;
+            width: 52px;
+            height: 52px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+            box-shadow: 0 5px 15px rgba(29, 78, 216, 0.4);
+        }
+
+        .btn-search:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(29, 78, 216, 0.6);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Interactive Floating Hero Image */
+        .hero-image {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--glass-border);
+            animation: floating 6s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
+            opacity: 0.2;
+            z-index: 1;
+            filter: blur(40px);
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* ==========================================
+           SLIDERS & WRAPPERS INFRASTRUCTURE
+           ========================================== */
         .appointments-wrapper,
         .categories-wrapper {
             position: relative;
@@ -20,731 +454,1374 @@
             align-items: center;
             max-width: 100%;
             margin: 0 auto;
-            padding: 0 40px;
         }
 
         .appointments-scroll-container,
         .categories-scroll-container {
             display: flex;
-            gap: 20px;
+            gap: 25px;
             overflow-x: auto;
             scroll-behavior: smooth;
-            padding: 15px 5px;
+            padding: 20px 5px;
             width: 100%;
         }
 
         .appointments-scroll-container::-webkit-scrollbar,
         .categories-scroll-container::-webkit-scrollbar {
             display: none;
-            /* स्क्रोलबार लपवण्यासाठी */
         }
 
         .appointments-scroll-container,
         .categories-scroll-container {
             -ms-overflow-style: none;
-            /* IE and Edge */
             scrollbar-width: none;
-            /* Firefox */
         }
 
         .scroll-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 45px;
-            height: 45px;
-            background-color: #ffffff;
-            border: 1px solid #ddd;
+            width: 50px;
+            height: 50px;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--glass-border);
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            color: #333;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            font-size: 16px;
+            color: #fff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
             z-index: 10;
-            transition: all 0.3s ease;
+            transition: var(--transition-smooth);
+            backdrop-filter: blur(10px);
         }
 
         .scroll-btn:hover {
-            background-color: #0056b3;
-            color: #fff;
-            border-color: #0056b3;
+            background: var(--primary-gradient);
+            border-color: transparent;
+            transform: translateY(-50%) scale(1.1);
         }
 
-        .scroll-btn.left-btn {
-            left: -5px;
-        }
+        .scroll-btn.left-btn { left: -25px; }
+        .scroll-btn.right-btn { right: -25px; }
 
-        .scroll-btn.right-btn {
-            right: -5px;
-        }
-
-        /* कार्डची रुंदी टिकवून ठेवण्यासाठी */
-        .appointment-card {
-            flex: 0 0 300px;
-            /* प्रत्येक कार्डची रुंदी ३०० पिक्सेल राहील */
-            max-width: 300px;
-            box-sizing: border-box;
+        /* ==========================================
+           CATEGORIES SECTION DESIGN
+           ========================================== */
+        .categories-section {
+            background: #111827;
+            position: relative;
         }
 
         .category-card {
-            flex: 0 0 180px;
-            /* कॅटेगरी कार्डची निश्चित रुंदी */
-            max-width: 180px;
-            box-sizing: border-box;
-        }
-
-        .section-title {
+            flex: 0 0 210px;
+            max-width: 210px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            padding: 30px 20px;
+            border-radius: 20px;
             text-align: center;
-            margin-bottom: 30px;
-            font-size: 28px;
-            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            box-shadow: var(--card-shadow);
         }
 
-        /* Hero Section Background Enhancement */
-        .hero-section {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4ecf7 100%);
-            padding: 60px 0;
-            border-bottom: 1px solid #e1e8f2;
+        .category-card.hidden {
+            display: none !important;
         }
 
-        /* New Marketing / Informational Section Styles */
+        .category-card:hover {
+            transform: translateY(-10px);
+            border-color: #3b82f6;
+            background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.15);
+        }
+
+        .cat-icon {
+            width: 65px;
+            height: 65px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+            font-size: 24px;
+            color: #60a5fa;
+            transition: var(--transition-smooth);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .category-card:hover .cat-icon {
+            background: var(--primary-gradient);
+            color: #fff;
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .category-card p {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* ==========================================
+           POPULAR APPOINTMENTS CARDS (GLASS DESIGN)
+           ========================================== */
+        .appointments-section {
+            background: var(--bg-primary);
+        }
+
+        .appointment-card {
+            flex: 0 0 320px;
+            max-width: 320px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition-smooth);
+        }
+
+        .appointment-card.hidden {
+            display: none !important;
+        }
+
+        .appointment-card:hover {
+            transform: translateY(-12px);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-img {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-smooth);
+        }
+
+        .appointment-card:hover .card-img img {
+            transform: scale(1.1);
+        }
+
+        .card-img::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, var(--bg-secondary), transparent);
+        }
+
+        .card-body {
+            padding: 25px;
+            position: relative;
+            padding-top: 35px;
+        }
+
+        .card-icon {
+            position: absolute;
+            top: -30px;
+            left: 25px;
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            z-index: 3;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Color variations for icons and actions */
+        .ic-blue { background: var(--primary-gradient); color: white; }
+        .ic-green { background: var(--secondary-gradient); color: white; }
+        .ic-purple { background: var(--purple-gradient); color: white; }
+        .ic-orange { background: var(--accent-gradient); color: white; }
+
+        .card-body h4 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .card-body p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            height: 40px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .btn-card-book {
+            display: block;
+            text-align: center;
+            padding: 12px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition-smooth);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-card-book.btn-blue { background: rgba(59, 130, 246, 0.1); color: #60a5fa; }
+        .btn-card-book.btn-blue:hover { background: var(--primary-gradient); color: #fff; }
+
+        .btn-card-book.btn-green { background: rgba(16, 185, 129, 0.1); color: #34d399; }
+        .btn-card-book.btn-green:hover { background: var(--secondary-gradient); color: #fff; }
+
+        .btn-card-book.btn-purple { background: rgba(139, 92, 246, 0.1); color: #c084fc; }
+        .btn-card-book.btn-purple:hover { background: var(--purple-gradient); color: #fff; }
+
+        .btn-card-book.btn-orange { background: rgba(245, 158, 11, 0.1); color: #fbbf24; }
+        .btn-card-book.btn-orange:hover { background: var(--accent-gradient); color: #fff; }
+
+        /* ==========================================
+           MARKETING & ECOSYSTEM SECTION
+           ========================================== */
         .marketing-section {
-            padding: 80px 10%;
-            background-color: #ffffff;
+            background: linear-gradient(180deg, #111827 0%, var(--bg-primary) 100%);
         }
 
         .marketing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            margin-top: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
         }
 
         .marketing-box {
-            padding: 30px;
-            background: #f8faac;
-            background: linear-gradient(145deg, #ffffff, #f1f5f9);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e2e8f0;
-            transition: transform 0.3s ease;
+            padding: 40px 30px;
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--card-shadow);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
         }
 
+        .marketing-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-gradient);
+            opacity: 0;
+            transition: var(--transition-smooth);
+        }
+
+        .marketing-box:hover::before { opacity: 1; }
+
         .marketing-box:hover {
-            transform: translateY(-50px);
+            transform: translateY(-8px);
+            border-color: rgba(59, 130, 246, 0.2);
         }
 
         .marketing-box h4 {
             font-size: 20px;
-            color: #0f172a;
+            font-weight: 700;
+            color: #fff;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .marketing-box h4 i {
-            color: #2563eb;
+            font-size: 22px;
+            color: #3b82f6;
         }
 
         .marketing-box p {
-            color: #475569;
+            color: var(--text-muted);
+            font-size: 14.5px;
+            line-height: 1.7;
+        }
+
+        /* ==========================================
+           DIGITAL ADVANCED FEATURES
+           ========================================== */
+        .digital-features {
+            background: var(--bg-secondary);
+        }
+
+        .features-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .feature-showcase-img img {
+            width: 100%;
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--card-shadow);
+        }
+
+        .feature-list-advanced {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .adv-feature-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid transparent;
+            transition: var(--transition-smooth);
+        }
+
+        .adv-feature-item:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--glass-border);
+            transform: translateX(5px);
+        }
+
+        .adv-feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .adv-feature-text h5 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .adv-feature-text p {
+            color: var(--text-muted);
             font-size: 14px;
+        }
+
+        /* ==========================================
+           LIVE DIGITAL STATS BANNER
+           ========================================== */
+        .stats-banner {
+            background: linear-gradient(90deg, #1d4ed8 0%, #111827 50%, #047857 100%);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            padding: 60px 8%;
+            gap: 40px;
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .stat-item i {
+            font-size: 40px;
+            color: #60a5fa;
+            opacity: 0.8;
+        }
+
+        .stat-item h3 {
+            font-size: 36px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -1px;
+        }
+
+        .stat-item p {
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* ==========================================
+           WHY CHOOSE US DESIGN
+           ========================================== */
+        .why-choose-section {
+            background: var(--bg-primary);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            padding: 40px 30px;
+            border-radius: 24px;
+            text-align: center;
+            transition: var(--transition-smooth);
+            box-shadow: var(--card-shadow);
+        }
+
+        .feature-item:hover {
+            transform: translateY(-8px);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .feature-item i {
+            font-size: 32px;
+            color: #10b981;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .feature-item h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .feature-item p {
+            color: var(--text-muted);
+            font-size: 13.5px;
+        }
+
+        /* ==========================================
+           EMERGENCY BANNER (REAL FLUID ANIMATION)
+           ========================================== */
+        .emergency-banner {
+            background: var(--emergency-gradient);
+            border-radius: 30px;
+            padding: 40px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 60px 8%;
+            box-shadow: 0 20px 50px rgba(239, 68, 68, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .emergency-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 80% 50%, rgba(255,255,255,0.15) 0%, transparent 60%);
+        }
+
+        .emergency-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            z-index: 2;
+        }
+
+        .em-icon {
+            font-size: 50px;
+            color: #fff;
+            animation: pulse-emergency 1.5s infinite;
+        }
+
+        @keyframes pulse-emergency {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .emergency-left h3 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .emergency-left p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 15px;
+        }
+
+        .btn-emergency-call {
+            background: #fff;
+            color: #ef4444;
+            padding: 16px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transition: var(--transition-smooth);
+            z-index: 2;
+        }
+
+        .btn-emergency-call:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            background: #f8fafc;
+        }
+
+        /* ==========================================
+           TESTIMONIALS SECTION REDESIGN
+           ========================================== */
+        .testimonials-section {
+            background: #111827;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .testimonial-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            padding: 35px;
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition-smooth);
+        }
+
+        .testimonial-card img {
+            width: 65px;
+            height: 65px;
+            border-radius: 50px;
+            border: 2px solid #3b82f6;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-card h4 {
+            color: #fff;
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stars {
+            color: #f59e0b;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .testimonial-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+            font-style: italic;
             line-height: 1.6;
         }
 
-        .marketing-lead {
-            text-align: center;
-            max-width: 700px;
-            margin: 0 auto 20px auto;
-            color: #64748b;
+        /* ==========================================
+           PREMIUM FOOTER
+           ========================================== */
+        footer {
+            background: #070b14;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 80px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: 1.5fr repeat(3, 1fr) 1.5fr;
+            gap: 40px;
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 0 8% 60px 8%;
+        }
+
+        .footer-col h3 {
+            color: #fff;
             font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo i {
+            font-size: 28px;
+            color: #3b82f6;
+        }
+
+        .footer-logo h2 {
+            color: #fff;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .brand-col p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            background: var(--primary-gradient);
+            color: #fff;
+            transform: translateY(-3px);
+            border-color: transparent;
+        }
+
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 12px; }
+
+        .footer-col ul li a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: var(--transition-smooth);
+        }
+
+        .footer-col ul li a:hover {
+            color: #3b82f6;
+            padding-left: 5px;
+        }
+
+        .newsletter-col p {
+            color: var(--text-muted);
+            font-size: 13.5px;
+            margin-bottom: 20px;
+        }
+
+        .subscribe-form { position: relative; }
+
+        .subscribe-form input {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            color: #fff;
+            outline: none;
+            font-size: 13.5px;
+            transition: var(--transition-smooth);
+        }
+
+        .subscribe-form input:focus {
+            border-color: #3b82f6;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .subscribe-form button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            padding: 9px 20px;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 30px 8%;
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            font-size: 13.5px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-container { grid-template-columns: 1fr; text-align: center; gap: 40px;}
+            .hero-image { order: -1; }
+            .search-container { flex-direction: column; border-radius: 24px; padding: 20px; }
+            .category-select { border-left: none; border-top: 1px solid var(--glass-border); padding: 15px 0; width: 100%; text-align: center;}
+            .btn-search { width: 100%; border-radius: 50px; }
+            .hero-buttons { justify-content: center; }
+            .features-showcase { grid-template-columns: 1fr; }
+            .footer-container { grid-template-columns: 1fr 1fr; }
+            .newsletter-col { grid-column: span 2; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .emergency-banner { flex-direction: column; text-align: center; gap: 25px; padding: 30px; }
+            .emergency-left { flex-direction: column; }
+            .footer-container { grid-template-columns: 1fr; }
+            .newsletter-col { grid-column: span 1; }
         }
     </style>
 </head>
 
 <body>
 
-    <header class="navbar">
+    <header class="navbar" id="mainNavbar">
         <div class="logo">
             <i class="fa-solid fa-handshake-angle"></i>
             <div>
                 <h1>Seva Setu</h1>
-                <p>One Stop Appointment Platform</p>
+                <p>Advanced Digital Portal</p>
             </div>
         </div>
         <nav class="nav-links">
             <a href="index.html" class="active">Home</a>
-            <div class="dropdown">
-                <a href="#">Appointments <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></a>
-            </div>
-            <a href="#">Services</a>
-            <a href="about.html">About Us</a>
+            <a href="#servicesSlider">Bookings</a>
+            <a href="#ecosystem">Ecosystem</a>
+            <a href="#advancedFeatures">Features</a>
+            <a href="about.html">About</a>
             <a href="contact.html">Contact</a>
         </nav>
         <div class="nav-actions">
-            <button id="dark-mode-toggle"><i class="fa-regular fa-moon"></i></button>
-            <a href="login.html" class="btn-login"><i class="fa-solid fa-user"></i> Login / Signup</a>
+            <button id="dark-mode-toggle" title="Toggle Theme"><i class="fa-solid fa-circle-half-stroke"></i></button>
+            <a href="login.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Login / Signup</a>
         </div>
     </header>
 
     <section class="hero-section">
         <div class="hero-container">
-            <div class="hero-content">
-                <span class="badge">All Services, One Platform</span>
-                <h2>Book Any Appointment <br><span class="blue-text">Anywhere, Anytime</span></h2>
-                <p class="hero-subtitle">Doctor, Hotel, Travel, Government Services & More</p>
+            <div class="hero-content" data-aos="fade-right">
+                <span class="badge"><i class="fa-solid fa-bolt"></i> 2026 Next-Gen Digital Edition</span>
+                <h2>One Bridge to All Services <br><span class="blue-text">Anywhere, Anytime!</span></h2>
+                <p class="hero-subtitle">Doctors, Government Certificates, Agriculture Schemes, Hotel and Travel Bookings all within a single unified high-speed secure platform.</p>
 
                 <div class="search-container">
                     <div class="search-input">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" placeholder="Search for any appointment or service...">
+                        <input type="text" id="liveSearchInput" placeholder="What service or appointment do you need? Search instantly...">
                     </div>
                     <div class="category-select">
-                        <select>
-                            <option>All Categories</option>
-                            <option>Healthcare</option>
-                            <option>Government Services</option>
-                            <option>Travel & Tourism</option>
-                            <option>Template Services</option>
+                        <select id="filterDropdown">
+                            <option value="all">All Categories</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Government">Government Services</option>
+                            <option value="Agriculture">Agriculture</option>
+                            <option value="Travel">Travel & Tourism</option>
+                            <option value="Home">Home Services</option>
                         </select>
                     </div>
-                    <button class="btn-search"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <button class="btn-search" title="Start Search" id="searchBtn"><i class="fa-solid fa-arrow-right"></i></button>
                 </div>
 
                 <div class="hero-buttons">
-                    <button class="btn-primary"
-                        onclick="document.getElementById('servicesSlider').scrollIntoView({behavior: 'smooth'});">Book
-                        Now</button>
-                    <button class="btn-secondary"
-                        onclick="document.getElementById('categoriesSlider').scrollIntoView({behavior: 'smooth'});">Explore
-                        Services</button>
+                    <button class="btn-digital btn-digital-primary" onclick="document.getElementById('servicesSlider').scrollIntoView({behavior: 'smooth'});">
+                        <i class="fa-solid fa-calendar-check"></i> Book Now
+                    </button>
+                    <button class="btn-digital btn-digital-secondary" onclick="document.getElementById('categoriesSlider').scrollIntoView({behavior: 'smooth'});">
+                        <i class="fa-solid fa-compass"></i> Explore All
+                    </button>
                 </div>
             </div>
-            <div class="hero-image">
-                <img src="images/image1.jpg" alt="Happy Family using Laptop">
+            <div class="hero-image" data-aos="fade-left">
+                <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?q=80&w=600" alt="Advanced Tech Governance Platform Structure">
             </div>
         </div>
     </section>
 
-    <section class="categories-section">
-        <h3 class="section-title">Browse by Categories</h3>
-        <div class="categories-wrapper">
-            <button class="scroll-btn left-btn" onclick="scrollContainer('categoriesSlider', -200)"><i
-                    class="fa-solid fa-chevron-left"></i></button>
+    <section class="categories-section section-container">
+        <div class="section-title-area" data-aos="fade-up">
+            <h3 class="section-title">Select Major Categories</h3>
+            <p class="section-subtitle">Choose the desired department or sector below to instantly access digital tokens and workflows.</p>
+        </div>
+        
+        <div class="categories-wrapper" data-aos="fade-up">
+            <button class="scroll-btn left-btn" onclick="scrollContainer('categoriesSlider', -220)"><i class="fa-solid fa-chevron-left"></i></button>
 
             <div class="categories-scroll-container" id="categoriesSlider">
-                <div class="category-card item-1">
-                    <div class="cat-icon"><i class="fa-solid fa-user-doctor"></i></div>
-                    <p>Healthcare</p>
+                <div class="category-card" data-tags="healthcare doctor hospital medical">
+                    <div class="cat-icon"><i class="fa-solid fa-user-doctor"></i></div><p>Healthcare & Doctors</p>
                 </div>
-                <div class="category-card item-2">
-                    <div class="cat-icon"><i class="fa-solid fa-building-columns"></i></div>
-                    <p>Government Services</p>
+                <div class="category-card" data-tags="government certificate e-seva gov">
+                    <div class="cat-icon"><i class="fa-solid fa-building-columns"></i></div><p>Maha-E-Seva (Govt)</p>
                 </div>
-                <div class="category-card item-3">
-                    <div class="cat-icon"><i class="fa-solid fa-plane-departure"></i></div>
-                    <p>Travel & Tourism</p>
+                <div class="category-card" data-tags="agriculture farming seeds wheat solar">
+                    <div class="cat-icon"><i class="fa-solid fa-wheat-awn"></i></div><p>Agriculture Advisory</p>
                 </div>
-                <div class="category-card item-4">
-                    <div class="cat-icon"><i class="fa-solid fa-graduation-cap"></i></div>
-                    <p>Education</p>
+                <div class="category-card" data-tags="travel tourism travel hotel bus flight">
+                    <div class="cat-icon"><i class="fa-solid fa-plane-departure"></i></div><p>Tourism & Travel</p>
                 </div>
-                <div class="category-card item-5">
-                    <div class="cat-icon"><i class="fa-solid fa-house-chimney"></i></div>
-                    <p>Home Services</p>
+                <div class="category-card" data-tags="education counseling student admission exam">
+                    <div class="cat-icon"><i class="fa-solid fa-graduation-cap"></i></div><p>Education Support</p>
                 </div>
-                <div class="category-card item-6">
-                    <div class="cat-icon"><i class="fa-solid fa-car"></i></div>
-                    <p>Vehicle Services</p>
+                <div class="category-card" data-tags="home service repair plumber cleaning">
+                    <div class="cat-icon"><i class="fa-solid fa-house-chimney"></i></div><p>Home Services</p>
                 </div>
-                <div class="category-card item-7">
-                    <div class="cat-icon"><i class="fa-solid fa-truck-medical"></i></div>
-                    <p>Emergency Services</p>
+                <div class="category-card" data-tags="vehicles repair mechanic auto car garage">
+                    <div class="cat-icon"><i class="fa-solid fa-car-wrench"></i></div><p>Vehicle Repair</p>
                 </div>
-                <div class="category-card item-8">
-                    <div class="cat-icon"><i class="fa-solid fa-briefcase"></i></div>
-                    <p>Business Services</p>
+                <div class="category-card" data-tags="business registration startup tax license">
+                    <div class="cat-icon"><i class="fa-solid fa-briefcase"></i></div><p>Business Setup</p>
+                </div>
+                <div class="category-card" data-tags="legal advocate court notary lawyer">
+                    <div class="cat-icon"><i class="fa-solid fa-gavel"></i></div><p>Legal Consultations</p>
+                </div>
+                <div class="category-card" data-tags="finance banking loan insurance wallet">
+                    <div class="cat-icon"><i class="fa-solid fa-wallet"></i></div><p>Banking & Finance</p>
+                </div>
+                <div class="category-card" data-tags="passport visa immigration travel international">
+                    <div class="cat-icon"><i class="fa-solid fa-passport"></i></div><p>Passport & Visa Seva</p>
+                </div>
+                <div class="category-card" data-tags="insurance car life health policy claim">
+                    <div class="cat-icon"><i class="fa-solid fa-shield-halved"></i></div><p>Insurance Hub</p>
+                </div>
+                <div class="category-card" data-tags="utilities electricity water gas bill payments">
+                    <div class="cat-icon"><i class="fa-solid fa-bolt"></i></div><p>Utility Bill Centers</p>
+                </div>
+                <div class="category-card" data-tags="property registration land layout buy sell flat">
+                    <div class="cat-icon"><i class="fa-solid fa-house-laptop"></i></div><p>Property Registration</p>
+                </div>
+                <div class="category-card" data-tags="veterinary pets animals dog cat health care clinic">
+                    <div class="cat-icon"><i class="fa-solid fa-paw"></i></div><p>Veterinary & Pets</p>
+                </div>
+                <div class="category-card" data-tags="transport RTO driving license learning registration test">
+                    <div class="cat-icon"><i class="fa-solid fa-id-card"></i></div><p>RTO Services</p>
+                </div>
+                <div class="category-card" data-tags="employment jobs recruitment placement career openings">
+                    <div class="cat-icon"><i class="fa-solid fa-user-tie"></i></div><p>Job Exchange Portal</p>
+                </div>
+                <div class="category-card" data-tags="pan card tax income udyam aadhar updation">
+                    <div class="cat-icon"><i class="fa-solid fa-address-card"></i></div><p>Identity Card Portal</p>
+                </div>
+                <div class="category-card" data-tags="courier logistics tracking shipping delivery pack move">
+                    <div class="cat-icon"><i class="fa-solid fa-truck-ramp-box"></i></div><p>Logistics & Courier</p>
+                </div>
+                <div class="category-card" data-tags="wedding event matrimonial hall catering sound system">
+                    <div class="cat-icon"><i class="fa-solid fa-champagne-glasses"></i></div><p>Event Management</p>
+                </div>
+                <div class="category-card" data-tags="sports fitness gym trainer sports ground court booking">
+                    <div class="cat-icon"><i class="fa-solid fa-dumbbell"></i></div><p>Fitness & Sports</p>
+                </div>
+                <div class="category-card" data-tags="photography video shooting studio editor drones event photoshoot">
+                    <div class="cat-icon"><i class="fa-solid fa-camera"></i></div><p>Photography Studio</p>
+                </div>
+                <div class="category-card" data-tags="software technical it website cyber security network support">
+                    <div class="cat-icon"><i class="fa-solid fa-laptop-code"></i></div><p>IT & Tech Solutions</p>
+                </div>
+                <div class="category-card" data-tags="senior citizen help pension cards health benefits old age">
+                    <div class="cat-icon"><i class="fa-solid fa-person-cane"></i></div><p>Senior Citizen Seva</p>
+                </div>
+                <div class="category-card" data-tags="women welfare child empowerment safety care assistance self help">
+                    <div class="cat-icon"><i class="fa-solid fa-person-dress"></i></div><p>Women Welfare</p>
+                </div>
+                <div class="category-card" data-tags="disability card reservation dynamic infrastructure travel coupon">
+                    <div class="cat-icon"><i class="fa-solid fa-wheelchair"></i></div><p>Divyangjan Care</p>
+                </div>
+                <div class="category-card" data-tags="municipal water connection garbage birth certificate building permission">
+                    <div class="cat-icon"><i class="fa-solid fa-city"></i></div><p>Municipal Operations</p>
+                </div>
+                <div class="category-card" data-tags="e-commerce shop dynamic seller listing global business online market">
+                    <div class="cat-icon"><i class="fa-solid fa-store"></i></div><p>E-Commerce Support</p>
+                </div>
+                <div class="category-card" data-tags="skill development vocational training workshops technical courses upgrade">
+                    <div class="cat-icon"><i class="fa-solid fa-user-gear"></i></div><p>Skill Training Hub</p>
+                </div>
+                <div class="category-card" data-tags="food safety license fssai hotel bar permit checking">
+                    <div class="cat-icon"><i class="fa-solid fa-utensils"></i></div><p>Food Safety & FSSAI</p>
+                </div>
+                <div class="category-card" data-tags="charity donation ngos trust funding volunteer human rights">
+                    <div class="cat-icon"><i class="fa-solid fa-hand-holding-heart"></i></div><p>NGOs & Donations</p>
+                </div>
+                <div class="category-card" data-tags="telecom mobile internet sim fiber dynamic broadband recharge">
+                    <div class="cat-icon"><i class="fa-solid fa-signal"></i></div><p>Telecom Services</p>
+                </div>
+                <div class="category-card" data-tags="digital media advertising marketing content writing flyers banner pr">
+                    <div class="cat-icon"><i class="fa-solid fa-bullhorn"></i></div><p>Media & Advertising</p>
+                </div>
+                <div class="category-card" data-tags="printing binding scanning documents premium lamination press shop">
+                    <div class="cat-icon"><i class="fa-solid fa-print"></i></div><p>Printing Press Hub</p>
+                </div>
+                <div class="category-card" data-tags="security guards cctv surveillance systems bodyguards dynamic safety">
+                    <div class="cat-icon"><i class="fa-solid fa-shield-cat"></i></div><p>Security Services</p>
+                </div>
+                <div class="category-card" data-tags="translation typing dynamic scripts copy editing transcription proofreading">
+                    <div class="cat-icon"><i class="fa-solid fa-language"></i></div><p>Translation Services</p>
+                </div>
+                <div class="category-card" data-tags="astrology horoscope vastu shastra kundali matching planetary shifts">
+                    <div class="cat-icon"><i class="fa-solid fa-moon"></i></div><p>Vastu & Astrology</p>
+                </div>
+                <div class="category-card" data-tags="waste solar clean energy plants bio gas green infrastructure text">
+                    <div class="cat-icon"><i class="fa-solid fa-seedling"></i></div><p>Green & Clean Tech</p>
+                </div>
+                <div class="category-card" data-tags="textile garments wholesale fashion tailoring custom clothes uniform">
+                    <div class="cat-icon"><i class="fa-solid fa-shirt"></i></div><p>Textiles & Tailoring</p>
+                </div>
+                <div class="category-card" data-tags="real estate valuation surveyor plot checking structural check safety">
+                    <div class="cat-icon"><i class="fa-solid fa-map-location-dot"></i></div><p>Real Estate Valuations</p>
+                </div>
+                <div class="category-card" data-tags="pesticides crop monitoring drone sprays modern harvesting soil health">
+                    <div class="cat-icon"><i class="fa-solid fa-faucet-drip"></i></div><p>Crop Spraying & Drones</p>
+                </div>
+                <div class="category-card" data-tags="poultry dairy milk production fish farming modern cattle setups">
+                    <div class="cat-icon"><i class="fa-solid fa-cow"></i></div><p>Dairy & Poultry Care</p>
+                </div>
+                <div class="category-card" data-tags="warehouse storage cold rooms distribution logistics inventory stock holds">
+                    <div class="cat-icon"><i class="fa-solid fa-warehouse"></i></div><p>Cold Storage Lockers</p>
+                </div>
+                <div class="category-card" data-tags="handicraft local artisans organic exhibitions dynamic market entry fairs">
+                    <div class="cat-icon"><i class="fa-solid fa-palette"></i></div><p>Artisans Marketplace</p>
+                </div>
+                <div class="category-card" data-tags="weather prediction forecasting monsoon storm notifications crop risk alert">
+                    <div class="cat-icon"><i class="fa-solid fa-cloud-sun-rain"></i></div><p>Weather Forecast Desk</p>
+                </div>
+                <div class="category-card" data-tags="blood bank donation hospital emergency rare types camp checkups">
+                    <div class="cat-icon"><i class="fa-solid fa-droplet"></i></div><p>Blood Bank Network</p>
+                </div>
+                <div class="category-card" data-tags="mental health guidance meditation stress burnout therapy help desk">
+                    <div class="cat-icon"><i class="fa-solid fa-brain"></i></div><p>Mental Wellness Desk</p>
+                </div>
+                <div class="category-card" data-tags="audit accounting file returns company audits digital signatures balance sheets">
+                    <div class="cat-icon"><i class="fa-solid fa-calculator"></i></div><p>Auditing & CA Network</p>
+                </div>
+                <div class="category-card" data-tags="cooperative societies registration audits housing groups local permits rules">
+                    <div class="cat-icon"><i class="fa-solid fa-users-gear"></i></div><p>Cooperative Registrars</p>
+                </div>
+                <div class="category-card" data-tags="public relations grievance portal citizen complaints feedback state department tracking">
+                    <div class="cat-icon"><i class="fa-solid fa-comments"></i></div><p>Grievance Redressal</p>
                 </div>
             </div>
 
-            <button class="scroll-btn right-btn" onclick="scrollContainer('categoriesSlider', 200)"><i
-                    class="fa-solid fa-chevron-right"></i></button>
+            <button class="scroll-btn right-btn" onclick="scrollContainer('categoriesSlider', 220)"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
     </section>
 
-    <section class="appointments-section">
-        <h3 class="section-title">Popular Appointments and Services</h3>
+    <section class="appointments-section section-container">
+        <div class="section-title-area" data-aos="fade-up">
+            <h3 class="section-title">Popular Digital Appointments</h3>
+            <p class="section-subtitle">Most Used Secure Online Booking Services. Instant confirmation with zero waiting hours.</p>
+        </div>
 
-        <div class="appointments-wrapper">
-            <button class="scroll-btn left-btn" onclick="scrollContainer('servicesSlider', -320)"><i
-                    class="fa-solid fa-chevron-left"></i></button>
+        <div class="appointments-wrapper" data-aos="fade-up">
+            <button class="scroll-btn left-btn" onclick="scrollContainer('servicesSlider', -340)"><i class="fa-solid fa-chevron-left"></i></button>
 
             <div class="appointments-scroll-container" id="servicesSlider">
 
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=400"
-                            alt="Doctor Appointment">
-                    </div>
+                <div class="appointment-card" data-type="Healthcare" data-tags="doctor specialist hospital surgeon clinic">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=400" alt="Doctor Appointment"></div>
                     <div class="card-body">
-                        <div class="card-icon ic-doc"><i class="fa-solid fa-user-doctor"></i></div>
-                        <h4>Doctor Appointment</h4>
-                        <p>Book with best doctors near you</p>
-                        <a href="doctor.html" class="btn-card-book btn-blue">Book Now</a>
+                        <div class="card-icon ic-blue"><i class="fa-solid fa-user-doctor"></i></div>
+                        <h4>Expert Doctor Consultation</h4><p>Book verified medical practitioners and clinical checkups near you instantly.</p>
+                        <a href="doctor.html" class="btn-card-book btn-blue">Book Appointment</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Government" data-tags="income certificate cast domecile native maha e seva">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1541872703-74c5e44368f9?q=80&w=400" alt="Government Services"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-green"><i class="fa-solid fa-landmark"></i></div>
+                        <h4>Maha-E-Seva Tokens</h4><p>Apply for income, caste, and domicile certificates digitally without long queues.</p>
+                        <a href="government.html" class="btn-card-book btn-green">Apply Online</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Travel" data-tags="hotel stay luxury resort room booking tourism">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=400" alt="Hotel Booking"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-orange"><i class="fa-solid fa-bed"></i></div>
+                        <h4>Hotel & Stay Bookings</h4><p>Reserve absolute top rated secure stays, motels, and premium vacation hotels.</p>
+                        <a href="hotel.html" class="btn-card-book btn-orange">Reserve Room</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Travel" data-tags="bus travels transport ticketing sleeper interstate route">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=400" alt="Travel Hub"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-purple"><i class="fa-solid fa-bus"></i></div>
+                        <h4>Smart Travel Hub (Bus)</h4><p>Instant seat booking across all premium transport providers and tourist lines.</p>
+                        <a href="travelbookinghub.html" class="btn-card-book btn-purple">Book Ticket</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Agriculture" data-tags="solar pump kusum soil testing farm machinery subsidy">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=400" alt="Agriculture"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-green"><i class="fa-solid fa-wheat-awn"></i></div>
+                        <h4>Agri Schemes & Solar</h4><p>Submit applications for Kusum Solar Pumps, soil tests, and major govt subsidies.</p>
+                        <a href="agriculture.html" class="btn-card-book btn-green">Check Schemes</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Home" data-tags="plumber cleaning electrician technician house fix maintenance">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=400" alt="Home Seva"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-orange"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                        <h4>Home Maintenance Crew</h4><p>Book professional plumbers, electricians, or high intensity home deep cleaners.</p>
+                        <a href="homeservices.html" class="btn-card-book btn-orange">Call Expert</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Healthcare" data-tags="blood collection pathology health check diagnostic clinic lab test">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1579152183423-aa45481d9f67?q=80&w=400" alt="Lab Test"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-blue"><i class="fa-solid fa-microscope"></i></div>
+                        <h4>Diagnostic Lab Setup</h4><p>Schedule path labs and blood tests with fully automated home collection options.</p>
+                        <a href="labs.html" class="btn-card-book btn-blue">Schedule Test</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Government" data-tags="driving license learning test auto vehicle rto token registry">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=400" alt="RTO slot"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-green"><i class="fa-solid fa-id-card"></i></div>
+                        <h4>RTO Appointment Slot</h4><p>Secure premium test slots for permanent driving license and vehicle passing verification.</p>
+                        <a href="rto.html" class="btn-card-book btn-green">Book RTO Slot</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Healthcare" data-tags="dentist teeth dental root canal crowns aligners checkup">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1606811971618-4486d14f3f99?q=80&w=400" alt="Dental Care"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-blue"><i class="fa-solid fa-tooth"></i></div>
+                        <h4>Premium Dental Care</h4><p>Fix appointment tokens for dental surgeries, scaling, and orthodontic procedures.</p>
+                        <a href="dental.html" class="btn-card-book btn-blue">Fix Visit</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Home" data-tags="car bike mechanic garage servicing engine tuning repair service">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1486006920555-c77dce18193b?q=80&w=400" alt="Vehicle servicing"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-orange"><i class="fa-solid fa-car-battery"></i></div>
+                        <h4>Vehicle Servicing Station</h4><p>Book authorized general multi brand car or two-wheeler mechanical services.</p>
+                        <a href="garage.html" class="btn-card-book btn-orange">Book Service</a>
                     </div>
                 </div>
 
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=400" alt="Hotel">
-                    </div>
+                <div class="appointment-card" data-type="Government" data-tags="passport reissue tracking physical dispatch tracking slot check">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=400" alt="Passport Seva"></div>
                     <div class="card-body">
-                        <div class="card-icon ic-hotel"><i class="fa-solid fa-bed"></i></div>
-                        <h4>Hotel Booking</h4>
-                        <p>Find and book best hotels</p>
-                        <a href="hotel.html" class="btn-card-book btn-green">Book Now</a>
+                        <div class="card-icon ic-green"><i class="fa-solid fa-passport"></i></div>
+                        <h4>Passport Office Slot</h4><p>Apply for verification, fresh issuance or rapid re-issue appointments instantly.</p>
+                        <a href="#" class="btn-card-book btn-green">Book Slot</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Healthcare" data-tags="eye test optical specs cataract laser surgery ophthalmologist clinic">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1588773922397-60e0ecd8d759?q=80&w=400" alt="Eye Care"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-blue"><i class="fa-solid fa-eye"></i></div>
+                        <h4>Advanced Eye Checkup</h4><p>Consult with expert surgeons for vision alignment and laser operations slots.</p>
+                        <a href="#" class="btn-card-book btn-blue">Meet Surgeon</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Home" data-tags="pest control termites bugs mosquitoes sanitization household safety">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1604147706283-d7119b5b822c?q=80&w=400" alt="Pest Control"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-orange"><i class="fa-solid fa-bug"></i></div>
+                        <h4>Herbal Pest Control</h4><p>Schedule eco-friendly commercial or residential anti-termite operations.</p>
+                        <a href="#" class="btn-card-book btn-orange">Schedule Service</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Travel" data-tags="flight ticketing airways flight booking domestic international route">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=400" alt="Flight Booking"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-purple"><i class="fa-solid fa-plane"></i></div>
+                        <h4>Flight Reservation Desk</h4><p>Get best real-time airline ticket bookings, seat maps, and multi-sector passes.</p>
+                        <a href="#" class="btn-card-book btn-purple">Book Flight</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Agriculture" data-tags="veterinary clinic artificial insemination cow cattle health check up">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?q=80&w=400" alt="Veterinary Care"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-green"><i class="fa-solid fa-cow"></i></div>
+                        <h4>Livestock & Vet Care</h4><p>Schedule home visits by expert livestock veterinarians or regular vaccinations.</p>
+                        <a href="#" class="btn-card-book btn-green">Call Doctor</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Government" data-tags="aadhar generation fingerprint biometric update linking address update">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=400" alt="Aadhaar Center"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-green"><i class="fa-solid fa-fingerprint"></i></div>
+                        <h4>Aadhaar Enrollment Slot</h4><p>Book token windows at centralized verified banks or post office counters.</p>
+                        <a href="#" class="btn-card-book btn-green">Reserve Counter</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Home" data-tags="carpenter custom furniture modular wood repair sofa alignment door lock">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=400" alt="Carpenter"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-orange"><i class="fa-solid fa-hammer"></i></div>
+                        <h4>On-Demand Woodwork</h4><p>Book skilled structural modular carpenters for precision furniture fixes.</p>
+                        <a href="#" class="btn-card-book btn-orange">Hire Carpenter</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Agriculture" data-tags="nursery plants shade nets tissue culture hybrid seeds botanical gardens">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?q=80&w=400" alt="Agri Nursery"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-green"><i class="fa-solid fa-seedling"></i></div>
+                        <h4>Hybrid Nursery Orders</h4><p>Pre-book fruit crops, premium cash crop saplings, or certified organic seed stocks.</p>
+                        <a href="#" class="btn-card-book btn-green">Order Seeds</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Healthcare" data-tags="physiotherapy pain relief tracking muscle injury rehab exercise window">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=400" alt="Physiotherapy"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-blue"><i class="fa-solid fa-crutch"></i></div>
+                        <h4>Physiotherapy Sessions</h4><p>Book clinically sound physiotherapists for neuro, sports or back trauma recoveries.</p>
+                        <a href="#" class="btn-card-book btn-blue">Book Session</a>
+                    </div>
+                </div>
+                <div class="appointment-card" data-type="Government" data-tags="marriage registration certificate court witness affidavit notary counter">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=400" alt="Marriage Registration"></div>
+                    <div class="card-body">
+                        <div class="card-icon ic-green"><i class="fa-solid fa-file-signature"></i></div>
+                        <h4>Marriage Registration Slot</h4><p>Acquire legal timestamps and official counselor check windows for couples.</p>
+                        <a href="#" class="btn-card-book btn-green">File Application</a>
                     </div>
                 </div>
 
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=400"
-                            alt="booking hub">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon ic-bus"><i class="fa-solid fa-bus"></i></div>
-                        <h4>Travel Booking Hub</h4>
-                        <p>Book your bus tickets easily</p>
-                        <a href="travelbookinghub.html" class="btn-card-book btn-purple">Book Now</a>
-                    </div>
+                <div class="appointment-card" data-type="Home" data-tags="ac service air conditioner cooler gas filling repair crew cooling">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=400" alt="AC Service"></div>
+                    <div class="card-body"><div class="card-icon ic-orange"><i class="fa-solid fa-snowflake"></i></div><h4>Air Conditioner Repair</h4><p>Get instant deep filter cleaning, gas leakage resolution, or coil fixes.</p><a href="#" class="btn-card-book btn-orange">Book AC Crew</a></div>
+                </div>
+                <div class="appointment-card" data-type="Healthcare" data-tags="vaccination polio baby immunity drops multi shot schedule hospital clinic">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1605684954278-9f17d26439b4?q=80&w=400" alt="Vaccination"></div>
+                    <div class="card-body"><div class="card-icon ic-blue"><i class="fa-solid fa-syringe"></i></div><h4>Child Vaccination Slot</h4><p>Secure essential premium pediatric immune vaccination windows comfortably.</p><a href="#" class="btn-card-book btn-blue">Secure Dose</a></div>
+                </div>
+                <div class="appointment-card" data-type="Government" data-tags="pan card verification corrections update duplicate link tracking">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=400" alt="PAN Card"></div>
+                    <div class="card-body"><div class="card-icon ic-green"><i class="fa-solid fa-id-badge"></i></div><h4>PAN Card Processing</h4><p>File online request validations for immediate corrections or fresh duplicate generation.</p><a href="#" class="btn-card-book btn-green">Update PAN</a></div>
+                </div>
+                <div class="appointment-card" data-type="Travel" data-tags="car rental self drive rental suv sedan local tour travel intercity outstation">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=400" alt="Car Rental"></div>
+                    <div class="card-body"><div class="card-icon ic-purple"><i class="fa-solid fa-car"></i></div><h4>Self-Drive Rentals</h4><p>Book verified outstation tourist luxury SUVs or compact family cars safely.</p><a href="#" class="btn-card-book btn-purple">Rent Vehicle</a></div>
+                </div>
+                <div class="appointment-card" data-type="Agriculture" data-tags="organic fertilizers manure bulk booking farm delivery compost bags">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1592417817098-8f3d6eb18865?q=80&w=400" alt="Fertilizers"></div>
+                    <div class="card-body"><div class="card-icon ic-green"><i class="fa-solid fa-bag-shopping"></i></div><h4>Organic Fertilizer Stocks</h4><p>Order direct wholesale drops of certified farm manure or advanced vermicompost.</p><a href="#" class="btn-card-book btn-green">Order Manure</a></div>
+                </div>
+                <div class="appointment-card" data-type="Home" data-tags="house painter home painting wall texture design waterproof layer premium">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?q=80&w=400" alt="Painting"></div>
+                    <div class="card-body"><div class="card-icon ic-orange"><i class="fa-solid fa-paint-roller"></i></div><h4>Professional House Painting</h4><p>Schedule exact interior layout scoping or waterproofing checks by masters.</p><a href="#" class="btn-card-book btn-orange">Get Estimate</a></div>
+                </div>
+                <div class="appointment-card" data-type="Government" data-tags="udyam registration msme startup tracking industry license micro factory">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=400" alt="Udyam"></div>
+                    <div class="card-body"><div class="card-icon ic-green"><i class="fa-solid fa-industry"></i></div><h4>MSME Udyam Enrollment</h4><p>Register local business infrastructure models to claim low cost central bank loans.</p><a href="#" class="btn-card-book btn-green">Register Business</a></div>
+                </div>
+                <div class="appointment-card" data-type="Healthcare" data-tags="skin clinic dermatologist allergy acne scars permanent fix care specialist">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=400" alt="Dermatology"></div>
+                    <div class="card-body"><div class="card-icon ic-blue"><i class="fa-solid fa-wand-magic-sparkles"></i></div><h4>Dermatology Clinics</h4><p>Meet skilled dermatologists for hyper-pigmentation or general skincare therapies.</p><a href="#" class="btn-card-book btn-blue">Schedule Visit</a></div>
+                </div>
+                <div class="appointment-card" data-type="Travel" data-tags="resort farmhouse package weekend villas infinity pool booking dynamic">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=400" alt="Resorts"></div>
+                    <div class="card-body"><div class="card-icon ic-purple"><i class="fa-solid fa-umbrella-beach"></i></div><h4>Luxury Weekend Resorts</h4><p>Get exclusive early deals on massive farmhouses with deep private pools.</p><a href="#" class="btn-card-book btn-purple">Lock Deal</a></div>
+                </div>
+                <div class="appointment-card" data-type="Home" data-tags="ro filter water purifier replacement maintenance installation kitchen aqua">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=400" alt="Water Purifier"></div>
+                    <div class="card-body"><div class="card-icon ic-orange"><i class="fa-solid fa-faucet"></i></div><h4>Water Purifier Repair</h4><p>Schedule specialized alkaline multi-stage RO filter cartridge replacement.</p><a href="#" class="btn-card-book btn-orange">Call Technician</a></div>
+                </div>
+                <div class="appointment-card" data-type="Agriculture" data-tags="harvester tractor rental leasing agriculture tools dynamic tools heavy rigs">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=400" alt="Tractor"></div>
+                    <div class="card-body"><div class="card-icon ic-green"><i class="fa-solid fa-tractor"></i></div><h4>Heavy Tractor Leasing</h4><p>Rent sophisticated modern crop harvesters or cultivators on daily dynamic metrics.</p><a href="#" class="btn-card-book btn-green">Lease Rig</a></div>
+                </div>
+                <div class="appointment-card" data-type="Government" data-tags="gazette name change profile legal notice processing publication matching tracking">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1505664194779-8beaceb93744?q=80&w=400" alt="Gazette"></div>
+                    <div class="card-body"><div class="card-icon ic-green"><i class="fa-solid fa-newspaper"></i></div><h4>Official Gazette Application</h4><p>Publish legally verified name or surname alterations directly inside national database grids.</p><a href="#" class="btn-card-book btn-green">Submit Request</a></div>
+                </div>
+                <div class="appointment-card" data-type="Healthcare" data-tags="cardiology heart scan surgery check up ecg blood pressure chest clinic doctor">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1530026405186-ed1ea0ac7a63?q=80&w=400" alt="Cardiology"></div>
+                    <div class="card-body"><div class="card-icon ic-blue"><i class="fa-solid fa-heart-pulse"></i></div><h4>Cardiology Specialist Visit</h4><p>Book prioritized high-fidelity echocardiogram monitoring windows with senior doctors.</p><a href="#" class="btn-card-book btn-blue">Consult Cardiologist</a></div>
+                </div>
+                <div class="appointment-card" data-type="Home" data-tags="refrigerator fridge repair compressor cooling kitchen mechanics help tool service">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1571175432247-fe832c25096a?q=80&w=400" alt="Fridge Service"></div>
+                    <div class="card-body"><div class="card-icon ic-orange"><i class="fa-solid fa-box"></i></div><h4>Refrigerator Fixing Team</h4><p>Resolve single or double door compressor problems with genuine warranty spares.</p><a href="#" class="btn-card-book btn-orange">Fix Fridge Now</a></div>
+                </div>
+                <div class="appointment-card" data-type="Travel" data-tags="cruise liner boat ride ocean tour luxury package gateway ship ticket booking">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1548574505-5e239809ee19?q=80&w=400" alt="Cruise Booking"></div>
+                    <div class="card-body"><div class="card-icon ic-purple"><i class="fa-solid fa-ship"></i></div><h4>Coastal Cruise Booking</h4><p>Pre-book safe, highly regulated luxury boat tours or inner deck cabin passes.</p><a href="#" class="btn-card-book btn-purple">Confirm Passage</a></div>
+                </div>
+                <div class="appointment-card" data-type="Healthcare" data-tags="ayurveda herbal natural immunity therapies lifestyle wellness doctor clinic home remedies">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1611070973770-b1a6726b0c6a?q=80&w=400" alt="Ayurveda"></div>
+                    <div class="card-body"><div class="card-icon ic-blue"><i class="fa-solid fa-leaf"></i></div><h4>Ayurveda Wellness Center</h4><p>Consult holistic lifestyle practitioners for chronic metabolic disorder therapies.</p><a href="#" class="btn-card-book btn-blue">Book Practitioner</a></div>
+                </div>
+                <div class="appointment-card" data-type="Government" data-tags="voter id card application epic matching corrections local updates identity assembly">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?q=80&w=400" alt="Voter card"></div>
+                    <div class="card-body"><div class="card-icon ic-green"><i class="fa-solid fa-check-to-slot"></i></div><h4>Voter ID Documentation</h4><p>Apply for a fresh digital EPIC card or modify standard regional constituency coordinates.</p><a href="#" class="btn-card-book btn-green">Process Card</a></div>
+                </div>
+                <div class="appointment-card" data-type="Agriculture" data-tags="cattle buying selling livestock verified buffalo breeding dairy market farm load">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?q=80&w=400" alt="Cattle Market"></div>
+                    <div class="card-body"><div class="card-icon ic-green"><i class="fa-solid fa-clipboard-list"></i></div><h4>Verified Cattle Marketplace</h4><p>Access authorized healthy bovine trading channels complete with comprehensive vet fitness indices.</p><a href="#" class="btn-card-book btn-green">View Marketplace</a></div>
+                </div>
+                <div class="appointment-card" data-type="Home" data-tags="home internet fiber connection wifi router setup speed booster local line">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1600132806370-bf17e65e942f?q=80&w=400" alt="Wifi Connection"></div>
+                    <div class="card-body"><div class="card-icon ic-orange"><i class="fa-solid fa-wifi"></i></div><h4>High Speed Fiber Install</h4><p>Get priority connections with same-day active routing modems from local vendors.</p><a href="#" class="btn-card-book btn-orange">Request Setup</a></div>
+                </div>
+                <div class="appointment-card" data-type="Travel" data-tags="trekking camping tour guides mountain safety pass camp fire tents group booking">
+                    <div class="card-img"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=400" alt="Trekking Pass"></div>
+                    <div class="card-body"><div class="card-icon ic-purple"><i class="fa-solid fa-mountain-sun"></i></div><h4>Sahyadri Trekking Passes</h4><p>Secure essential permit registrations alongside certified remote rescue teams.</p><a href="#" class="btn-card-book btn-purple">Register Trek</a></div>
                 </div>
 
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1541872703-74c5e44368f9?q=80&w=400"
-                            alt="Government Services">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon ic-pass" style="background: #17a2b8; color: white;"><i
-                                class="fa-solid fa-building-columns"></i></div>
-                        <h4>Government Services</h4>
-                        <p>MahaESeva, Certificates & Aadhaar</p>
-                        <a href="government.html" class="btn-card-book btn-blue">Book Now</a>
-                    </div>
-                </div>
+                <div class="appointment-card" data-type="Healthcare" data-tags="pediatrician child health newborn baby care growth tracker clinic hospital vaccine"><div class="card-body"><h4>Pediatric Care</h4><p>Specialist baby tracking.</p><a href="#" class="btn-card-book btn-blue">Book Now</a></div></div>
+                <div class="appointment-card" data-type="Healthcare" data-tags="orthopedic bone fracture joints back spine pain replacement surgeon clinic"><div class="card-body"><h4>Bone Specialists</h4><p>Joint therapy slots.</p><a href="#" class="btn-card-book btn-blue">Book Now</a></div></div>
+                <div class="appointment-card" data-type="Healthcare" data-tags="gynecology women pregnancy prenatal clinical checkups hospital delivery windows"><div class="card-body"><h4>Maternity Care</h4><p>Prenatal screening windows.</p><a href="#" class="btn-card-book btn-blue">Book Now</a></div></div>
+                <div class="appointment-card" data-type="Healthcare" data-tags="neurologist brain nerve spine trauma therapy advanced surgery slots hospital"><div class="card-body"><h4>Neurology Windows</h4><p>Brain and nerve diagnosis.</p><a href="#" class="btn-card-book btn-blue">Book Now</a></div></div>
+                <div class="appointment-card" data-type="Healthcare" data-tags="home nursing elder assistance attendant post surgery clinical help lines"><div class="card-body"><h4>Elder Nursing Care</h4><p>Trained physical attendants.</p><a href="#" class="btn-card-book btn-blue">Book Now</a></div></div>
+                <div class="appointment-card" data-type="Healthcare" data-tags="hair transplant scalp clinical care therapy dandruff fall treatment specialized clinic"><div class="card-body"><h4>Trichology Center</h4><p>Advanced scalp treatments.</p><a href="#" class="btn-card-book btn-blue">Book Now</a></div></div>
+                <div class="appointment-card" data-type="Healthcare" data-tags="ent clinic ear nose throat sinus infection hearing checking doctor consultation"><div class="card-body"><h4>ENT Care Desk</h4><p>Hearing diagnostics slots.</p><a href="#" class="btn-card-book btn-blue">Book Now</a></div></div>
 
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=400"
-                            alt="Education">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon ic-doc" style="background: #ffc107; color: white;"><i
-                                class="fa-solid fa-graduation-cap"></i></div>
-                        <h4>Education Services</h4>
-                        <p>Admissions, Career Counseling & Exams</p>
-                        <a href="education.html" class="btn-card-book btn-orange">Book Now</a>
-                    </div>
-                </div>
+                <div class="appointment-card" data-type="Government" data-tags="senior citizen dynamic concession profile identification age cards registration"><div class="card-body"><h4>Senior ID Windows</h4><p>State priority passes.</p><a href="#" class="btn-card-book btn-green">Process now</a></div></div>
+                <div class="appointment-card" data-type="Government" data-tags="ration card modification family names inclusions tracking grain allocation slot"><div class="card-body"><h4>Ration Card Update</h4><p>Family database entries.</p><a href="#" class="btn-card-book btn-green">Process now</a></div></div>
+                <div class="appointment-card" data-type="Government" data-tags="income tax returns file computing validation digital signatures pan matching desk"><div class="card-body"><h4>ITR Filing Channel</h4><p>Fast financial filing.</p><a href="#" class="btn-card-book btn-green">Process now</a></div></div>
+                <div class="appointment-card" data-type="Government" data-tags="shop act license local gumasta commercial profile dynamic checking counter legal"><div class="card-body"><h4>Gumasta Licenses</h4><p>Commercial establishment approvals.</p><a href="#" class="btn-card-book btn-green">Process now</a></div></div>
+                <div class="appointment-card" data-type="Government" data-tags="non creamy layer validity matching revenue files verification office slot profile"><div class="card-body"><h4>Non-Creamy Layer Slot</h4><p>Affidavit collection windows.</p><a href="#" class="btn-card-book btn-green">Process now</a></div></div>
+                <div class="appointment-card" data-type="Government" data-tags="provident fund pf withdrawal unified balance checking identity matches dispatch portal"><div class="card-body"><h4>EPFO Claim Verification</h4><p>Claim validation support.</p><a href="#" class="btn-card-book btn-green">Process now</a></div></div>
+                <div class="appointment-card" data-type="Government" data-tags="driving track slots rerun computer simulation license verification test center match"><div class="card-body"><h4>Driving Retest Counter</h4><p>Missed test re-allocations.</p><a href="#" class="btn-card-book btn-green">Process now</a></div></div>
 
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=400"
-                            alt="Passport">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon ic-pass"><i class="fa-solid fa-passport"></i></div>
-                        <h4>Business Service</h4>
-                        <p>Apply or book passport appointment</p>
-                        <a href="business.html" class="btn-card-book btn-orange">Book Now</a>
-                    </div>
-                </div>
+                <div class="appointment-card" data-type="Travel" data-tags="railway tatkal waitlist charts pass upgrade food processing system tracking berth"><div class="card-body"><h4>Railway Pass System</h4><p>Train database parameters.</p><a href="#" class="btn-card-book btn-purple">Register</a></div></div>
+                <div class="appointment-card" data-type="Travel" data-tags="wildlife safari sanctuary booking gypsy booking tiger reserve entry gate passes"><div class="card-body"><h4>Forest Safari Gates</h4><p>National park entries.</p><a href="#" class="btn-card-book btn-purple">Register</a></div></div>
+                <div class="appointment-card" data-type="Travel" data-tags="historical tour bus heritage walks dynamic travel guide translator booking sets monument"><div class="card-body"><h4>Heritage Tour Guides</h4><p>Certified linguistic guides.</p><a href="#" class="btn-card-book btn-purple">Register</a></div></div>
+                <div class="appointment-card" data-type="Travel" data-tags="amusement park tickets water resort entries massive group combo passes booking codes"><div class="card-body"><h4>Theme Park Combos</h4><p>High speed entry tickets.</p><a href="#" class="btn-card-book btn-purple">Register</a></div></div>
+                <div class="appointment-card" data-type="Travel" data-tags="airport drops private cabs local terminal tracking flight delays shifts dispatch pool"><div class="card-body"><h4>Airport Transit Pods</h4><p>Timely premium cab fleets.</p><a href="#" class="btn-card-book btn-purple">Register</a></div></div>
+                <div class="appointment-card" data-type="Travel" data-tags="camping lake site lakeside tents high terrain safety gear packs dynamic matching"><div class="card-body"><h4>Lakeside Camp Allotment</h4><p>Waterfront setups secured.</p><a href="#" class="btn-card-book btn-purple">Register</a></div></div>
+                <div class="appointment-card" data-type="Travel" data-tags="visa interview profile processing global immigration slots verification matching center"><div class="card-body"><h4>Biometric Visa Window</h4><p>Global documentation assist.</p><a href="#" class="btn-card-book btn-purple">Register</a></div></div>
 
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1558441719-ff34b0524a24?q=80&w=400" alt="Utility">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #20c997; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-bolt"></i>
-                        </div>
-                        <h4>Public Utility Services</h4>
-                        <p>Electricity, Water Bill & Gas Connections</p>
-                        <a href="utility.html" class="btn-card-book btn-green">Book Now</a>
-                    </div>
-                </div>
+                <div class="appointment-card" data-type="Agriculture" data-tags="soil micro nutrient scanning reports chemical balanced setups parameters farm card"><div class="card-body"><h4>Soil Health Scan</h4><p>N-P-K profiling logs.</p><a href="#" class="btn-card-book btn-green">Access</a></div></div>
+                <div class="appointment-card" data-type="Agriculture" data-tags="cold storage preservation bulk layout perishable foods vegetables booking slot allocation"><div class="card-body"><h4>Perishable Grid Slots</h4><p>Cold layout inventory preservation.</p><a href="#" class="btn-card-book btn-green">Access</a></div></div>
+                <div class="appointment-card" data-type="Agriculture" data-tags="drip irrigation installation pipes filters subsidies micro spray farm layout lines"><div class="card-body"><h4>Micro-Drip Infrastructure</h4><p>Water conservation engineering setups.</p><a href="#" class="btn-card-book btn-green">Access</a></div></div>
+                <div class="appointment-card" data-type="Agriculture" data-tags="organic food certification sorting testing global export standards clearance desk"><div class="card-body"><h4>Export Clean Desks</h4><p>Phytosanitary clearances checking.</p><a href="#" class="btn-card-book btn-green">Access</a></div></div>
+                <div class="appointment-card" data-type="Agriculture" data-tags="greenhouse setup building layout designs modern polyhouse control parameters system"><div class="card-body"><h4>Polyhouse Setup Consulting</h4><p>Climate controlled farming grids.</p><a href="#" class="btn-card-book btn-green">Access</a></div></div>
 
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=400" alt="Career">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #6610f2; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-briefcase"></i>
-                        </div>
-                        <h4>Employment & Career Services</h4>
-                        <p>Job Applications & Skill Development</p>
-                        <a href="employment.html" class="btn-card-book btn-purple">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=400"
-                            alt="Digital">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #007bff; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-laptop-code"></i>
-                        </div>
-                        <h4>Digital & Online Services</h4>
-                        <p>Web Development, Pan Card & Cyber Seva</p>
-                        <a href="digital.html" class="btn-card-book btn-blue">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=400"
-                            alt="Home Seva">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #fd7e14; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-screwdriver-wrench"></i>
-                        </div>
-                        <h4>Home & Personal Services</h4>
-                        <p>Plumbing, Cleaning & Home Maintenance</p>
-                        <a href="homeservices.html" class="btn-card-book btn-orange">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=400"
-                            alt="Smart City">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #17a2b8; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-city"></i>
-                        </div>
-                        <h4>Smart City Services</h4>
-                        <p>Municipality Permissions & Urban Facilities</p>
-                        <a href="smartcity.html" class="btn-card-book btn-blue">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1508873696983-2df5198e4009?q=80&w=400" alt="Rural">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #28a745; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-tree"></i>
-                        </div>
-                        <h4>Rural Services</h4>
-                        <p>Gram Panchayat Documents & Schemes</p>
-                        <a href="rural.html" class="btn-card-book btn-green">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=400" alt="Events">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #e83e8c; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-ticket"></i>
-                        </div>
-                        <h4>Entertainment & Events</h4>
-                        <p>Show Tickets, Hall Booking & Functions</p>
-                        <a href="events.html" class="btn-card-book btn-purple">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=400" alt="Telecom">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #007bff; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-wifi"></i>
-                        </div>
-                        <h4>Telecom & Internet Seva</h4>
-                        <p>Broadband Booking & Network Support</p>
-                        <a href="telecom.html" class="btn-card-book btn-blue">Book Now</a>
-                    </div>
-                </div>
-                <div> class"appointment-card">
-                    <div> class ="card-img"</div>
-                </div>
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?q=80&w=400" alt="Banking">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #28a745; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-wallet"></i>
-                        </div>
-                        <h4>Banking & Digital Payments</h4>
-                        <p>Account Appointments, CSP & Financial Guide</p>
-                        <a href="banking.html" class="btn-card-book btn-green">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=400"
-                            alt="Fitness">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #dc3545; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-dumbbell"></i>
-                        </div>
-                        <h4>Fitness & Wellness Services</h4>
-                        <p>Gym Slot Booking & Yoga Trainer Appointments</p>
-                        <a href="fitness.html" class="btn-card-book btn-red">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=400"
-                            alt="Agriculture">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #28a745; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-wheat-awn"></i>
-                        </div>
-                        <h4>Agriculture & Farming</h4>
-                        <p>Soil Testing, Solar Pump Info & Krishi Seva</p>
-                        <a href="agriculture.html" class="btn-card-book btn-green">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1609137144813-90d2358fb93b?q=80&w=400" alt="Temple">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #fd7e14; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-om"></i>
-                        </div>
-                        <h4>Religious & Temple Services</h4>
-                        <p>Darshan Pass Booking & Puja Appointments</p>
-                        <a href="religious.html" class="btn-card-book btn-orange">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1472851294608-062f824d296e?q=80&w=400"
-                            alt="Shopping">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #007bff; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </div>
-                        <h4>E-Commerce Services</h4>
-                        <p>Local Store Delivery & Shopping Hub</p>
-                        <a href="shopping.html" class="btn-card-book btn-blue">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1486006920555-c77dce18193b?q=80&w=400"
-                            alt="Automobile">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #6c757d; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-car-wrench"></i>
-                        </div>
-                        <h4>Automobile Services</h4>
-                        <p>Vehicle Servicing, PUC & Repair Appointments</p>
-                        <a href="automobile.html" class="btn-card-book btn-blue-light">Book Now</a>
-                    </div>
-                </div>
+                <div class="appointment-card" data-type="Home" data-tags="washing machine repair installation technician spinner tub leakage fix line appliance"><div class="card-body"><h4>Washing Machine Servicing</h4><p>Drum and motor alignments.</p><a href="#" class="btn-card-book btn-orange">Hire Team</a></div></div>
+                <div class="appointment-card" data-type="Home" data-tags="chimney cleaning kitchen exhaust repair cleaning deep oil removal dynamic service"><div class="card-body"><h4>Kitchen Chimney Scrub</h4><p>Exhaust duct carbon clearances.</p><a href="#" class="btn-card-book btn-orange">Hire Team</a></div></div>
+                <div class="appointment-card" data-type="Home" data-tags="sofa cleaning matress deep cleaner shampoo stain removal home cleanup service crew"><div class="card-body"><h4>Upholstery Care Experts</h4><p>Vacuum extraction operations.</p><a href="#" class="btn-card-book btn-orange">Hire Team</a></div></div>
+                <div class="appointment-card" data-type="Home" data-tags="smart locks tv setup installation home theater wall mount sound wiring system technician"><div class="card-body"><h4>Smart Device Setup</h4><p>Automated lock calibrations.</p><a href="#" class="btn-card-book btn-orange">Hire Team</a></div></div>
 
             </div>
 
-            <button class="scroll-btn right-btn" onclick="scrollContainer('servicesSlider', 320)"><i
-                    class="fa-solid fa-chevron-right"></i></button>
+            <button class="scroll-btn right-btn" onclick="scrollContainer('servicesSlider', 340)"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
     </section>
 
-    <section class="marketing-section">
-        <h3 class="section-title">Our Comprehensive Service Ecosystem</h3>
-        <p class="marketing-lead">
-            In the era of digital transformation, Seva Setu simplifies citizens' lives by bringing all types of
-            appointments and government services together under one platform.
-        </p>
+    <section class="marketing-section section-container" id="ecosystem">
+        <div class="section-title-area" data-aos="fade-up">
+            <h3 class="section-title">Our Unified Digital Ecosystem</h3>
+            <p class="section-subtitle">In the era of rapid digital transformation, Seva Setu acts as an essential bridge minimizing delays.</p>
+        </div>
 
         <div class="marketing-grid">
-            <div class="marketing-box">
-                <h4><i class="fa-solid fa-heart-pulse"></i> Healthcare & Emergency Support</h4>
-                <p>
-                    Whether it is booking appointments with nearby specialist doctors or accessing 24/7 ambulance
-                    emergency support (Ambulance 108), every healthcare-related need is fulfilled quickly and
-                    efficiently.
-                </p>
+            <div class="marketing-box" data-aos="fade-up" data-aos-delay="100">
+                <h4><i class="fa-solid fa-heart-pulse"></i> Healthcare Coordination</h4>
+                <p>From organizing specialist doctor tokens to procuring standard emergency response networks, everything functions at millisecond timelines.</p>
             </div>
-
-            <div class="marketing-box">
-                <h4><i class="fa-solid fa-landmark"></i> Government & MahaESeva Integration</h4>
-                <p>
-                    All assistance related to official processes such as government certificates, public welfare
-                    schemes, agricultural services like soil testing, and solar pump applications under the KUSUM Yojana
-                    is available with just one click.
-                </p>
+            <div class="marketing-box" data-aos="fade-up" data-aos-delay="200">
+                <h4><i class="fa-solid fa-building-columns"></i> Government Integration</h4>
+                <p>Acquire legal certificates, property document checkmarks, agriculture solar benefits via safe transparency matrices.</p>
             </div>
+            <div class="marketing-box" data-aos="fade-up" data-aos-delay="300">
+                <h4><i class="fa-solid fa-gears"></i> Local Business & Upkeep</h4>
+                <p>Ensuring instant professional access for deep structural fixing, modular support, logistics management smoothly.</p>
+            </div>
+        </div>
+    </section>
 
-            <div class="marketing-box">
-                <h4><i class="fa-solid fa-gears"></i> Local Business & Home Maintenance</h4>
-                <p>
-                    From personal services like plumbing and home cleaning to vehicle repair, e-commerce delivery, and
-                    smart city permissions, this platform fulfills everyday needs conveniently in one place.
-                </p>
+    <section class="digital-features section-container" id="advancedFeatures">
+        <div class="features-showcase">
+            <div class="feature-list-advanced" data-aos="fade-right">
+                <span class="badge" style="background:rgba(16,185,129,0.1); color:#34d399; border-color:rgba(16,185,129,0.3);">
+                    <i class="fa-solid fa-star"></i> High Tech System Attributes
+                </span>
+                <h3 class="section-title" style="text-align:left;">Secure and Reliable Booking Engine</h3>
+                
+                <div class="adv-feature-item">
+                    <div class="adv-feature-icon"><i class="fa-solid fa-qrcode"></i></div>
+                    <div class="adv-feature-text">
+                        <h5>Instant QR Tokens</h5>
+                        <p>Receive distinct secure scanning credentials upon verification to completely bypass real-world queue spaces.</p>
+                    </div>
+                </div>
+                <div class="adv-feature-item">
+                    <div class="adv-feature-icon"><i class="fa-solid fa-bell"></i></div>
+                    <div class="adv-feature-text">
+                        <h5>Automated Alerts</h5>
+                        <p>Real-time automated scheduling modifications push instantly straight into your WhatsApp chat grids.</p>
+                    </div>
+                </div>
+                <div class="adv-feature-item">
+                    <div class="adv-feature-icon"><i class="fa-solid fa-shield-cat"></i></div>
+                    <div class="adv-feature-text">
+                        <h5>End-to-End Encryption</h5>
+                        <p>Your records stay safe under robust high-grade cryptographic data container regulations continuously.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="feature-showcase-img" data-aos="fade-left">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600" alt="Advanced Interactive Analytics Graphics dashboard mockup">
             </div>
         </div>
     </section>
 
     <section class="stats-banner">
-        <div class="stat-item">
-            <i class="fa-solid fa-layer-group"></i>
-            <div>
-                <h3>200+</h3>
-                <p>Services Available</p>
-            </div>
-        </div>
-        <div class="stat-item">
-            <i class="fa-solid fa-users"></i>
-            <div>
-                <h3>5000+</h3>
-                <p>Happy Users</p>
-            </div>
-        </div>
-        <div class="stat-item">
-            <i class="fa-solid fa-calendar-check"></i>
-            <div>
-                <h3>10000+</h3>
-                <p>Appointments Booked</p>
-            </div>
-        </div>
-        <div class="stat-item">
-            <i class="fa-solid fa-handshake"></i>
-            <div>
-                <h3>100+</h3>
-                <p>Trusted Partners</p>
-            </div>
-        </div>
+        <div class="stat-item" data-aos="zoom-in"><i class="fa-solid fa-layer-group"></i><div><h3>200+</h3><p>Digital Services</p></div></div>
+        <div class="stat-item" data-aos="zoom-in" data-aos-delay="100"><i class="fa-solid fa-users"></i><div><h3>50,000+</h3><p>Happy Citizens</p></div></div>
+        <div class="stat-item" data-aos="zoom-in" data-aos-delay="200"><i class="fa-solid fa-calendar-check"></i><div><h3>1,00,000+</h3><p>Successful Bookings</p></div></div>
+        <div class="stat-item" data-aos="zoom-in" data-aos-delay="300"><i class="fa-solid fa-handshake"></i><div><h3>500+</h3><p>Verified Partners</p></div></div>
     </section>
 
-    <section class="why-choose-section">
-        <h3 class="section-title">Why Choose Seva Setu?</h3>
+    <section class="why-choose-section section-container">
+        <div class="section-title-area" data-aos="fade-up">
+            <h3 class="section-title">Why Use Seva Setu?</h3>
+            <p class="section-subtitle">We build clear, lightning-fast digital accessibility paradigms tailored for everyday requirements.</p>
+        </div>
         <div class="features-grid">
-            <div class="feature-item">
-                <i class="fa-solid fa-clock"></i>
-                <h4>Easy Booking</h4>
-                <p>Book in just a few clicks</p>
-            </div>
-            <div class="feature-item">
-                <i class="fa-solid fa-shield-halved"></i>
-                <h4>Trusted Services</h4>
-                <p>Verified and trusted service providers</p>
-            </div>
-            <div class="feature-item">
-                <i class="fa-solid fa-headset"></i>
-                <h4>24/7 Support</h4>
-                <p>We are always here to help you</p>
-            </div>
-            <div class="feature-item">
-                <i class="fa-solid fa-credit-card"></i>
-                <h4>Secure Payments</h4>
-                <p>Safe and secure payment options</p>
-            </div>
-            <div class="feature-item">
-                <i class="fa-solid fa-arrows-to-dot"></i>
-                <h4>Wide Range</h4>
-                <p>200+ services in one platform</p>
-            </div>
+            <div class="feature-item" data-aos="fade-up"><i class="fa-solid fa-clock"></i><h4>Simple 3-Step Flows</h4><p>Acquire confirmed tokens smoothly from your mobile layer in seconds.</p></div>
+            <div class="feature-item" data-aos="fade-up" data-aos-delay="100"><i class="fa-solid fa-shield-halved"></i><h4>Certified Agency Pool</h4><p>Every professional listing undergoes detailed background compliance filters.</p></div>
+            <div class="feature-item" data-aos="fade-up" data-aos-delay="200"><i class="fa-solid fa-headset"></i><h4>24/7 Help Escalation</h4><p>Dedicated processing experts to assist your payment query lines instantly.</p></div>
+            <div class="feature-item" data-aos="fade-up" data-aos-delay="300"><i class="fa-solid fa-credit-card"></i><h4>Unified Payment Layer</h4><p>Seamless processing across popular UPI frameworks, credit lines and wallets safely.</p></div>
         </div>
     </section>
 
-    <section class="emergency-banner">
+    <section class="emergency-banner" data-aos="zoom-in">
         <div class="emergency-left">
             <i class="fa-solid fa-truck-medical em-icon"></i>
             <div>
-                <h3>Need Emergency Help?</h3>
-                <p>We are ready 24/7 for your support</p>
+                <h3>Need Immediate Emergency Medical Aid?</h3>
+                <p>We provide 24-hour priority dispatch pipelines to direct ambulance support squads to your coordinates.</p>
             </div>
         </div>
-        <a href="tel:108" class="btn-emergency-call">Call Ambulance Now</a>
-    </section>
-
-    <section class="testimonials-section">
-        <h3 class="section-title">What Our Users Say</h3>
-        <div class="testimonials-grid">
-            <div class="testimonial-card">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rahul Patil">
-                <h4>Rahul Patil</h4>
-                <div class="stars">
-                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                </div>
-                <p>"Very easy to book appointments. This platform is a lifesaver!"</p>
-            </div>
-            <div class="testimonial-card">
-                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sneha Deshmukh">
-                <h4>Sneha Deshmukh</h4>
-                <div class="stars">
-                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                </div>
-                <p>"All services at one place. Highly recommended!"</p>
-            </div>
-            <div class="testimonial-card">
-                <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="Amit Kumar">
-                <h4>Amit Kumar</h4>
-                <div class="stars">
-                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                </div>
-                <p>"Quick booking and great customer support."</p>
-            </div>
-        </div>
+        <a href="tel:108" class="btn-emergency-call"><i class="fa-solid fa-phone-volume"></i> Call 108 Ambulance</a>
     </section>
 
     <footer>
         <div class="footer-container">
             <div class="footer-col brand-col">
-                <div class="footer-logo">
-                    <i class="fa-solid fa-handshake-angle"></i>
-                    <h2>Seva Setu</h2>
-                </div>
-                <p>Seva Setu is your one-stop solution for all appointments and bookings. Fast, easy and reliable.</p>
+                <div class="footer-logo"><i class="fa-solid fa-handshake-angle"></i><h2>Seva Setu</h2></div>
+                <p>Bridging the distance between citizen requests and essential civic services seamlessly through cutting edge responsive designs.</p>
                 <div class="social-icons">
-                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" title="Linkedin"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
             </div>
             <div class="footer-col">
@@ -754,64 +1831,114 @@
                     <li><a href="#">Appointments</a></li>
                     <li><a href="#">Services</a></li>
                     <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h3>Categories</h3>
+                <h3>Major Divisions</h3>
                 <ul>
                     <li><a href="#">Healthcare</a></li>
-                    <li><a href="#">Government Services</a></li>
-                    <li><a href="#">Travel & Tourism</a></li>
-                    <li><a href="#">Home Services</a></li>
-                    <li><a href="#">Emergency Services</a></li>
+                    <li><a href="#">Govt Operations</a></li>
+                    <li><a href="#">Agri Advisory</a></li>
+                    <li><a href="#">Emergency Links</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h3>Support</h3>
+                <h3>Policies</h3>
                 <ul>
                     <li><a href="#">Help Center</a></li>
-                    <li><a href="#">Terms & Conditions</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Refund Policy</a></li>
-                    <li><a href="#">Contact Support</a></li>
-
+                    <li><a href="#">Terms of Use</a></li>
+                    <li><a href="#">Privacy Framework</a></li>
                 </ul>
             </div>
             <div class="footer-col newsletter-col">
-                <h3>Newsletter</h3>
-                <p>Subscribe to get latest updates and offers.</p>
+                <h3>Digital Newsletter</h3>
+                <p>Stay updated on fresh municipal inclusions or scheme updates.</p>
                 <div class="subscribe-form">
-                    <input type="email" placeholder="Enter your email">
+                    <input type="email" placeholder="Enter your email...">
                     <button>Subscribe</button>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 Seva Setu. All Rights Reserved.</p>
+            <p>&copy; 2026 Seva Setu. All Rights Reserved. | Engineered by Advanced Digital Development Teams.</p>
         </div>
     </footer>
 
-    <script src="js/darkmode.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 
     <script>
-        // एकापेक्षा जास्त कंटेनर हाताळण्यासाठी सामान्यीकृत स्क्रोल फंक्शन
+        // Initialization of Animate on Scroll (AOS) Library
+        AOS.init({ duration: 1000, once: true, easing: 'ease-in-out' });
+
+        // Sticky Navbar Glassmorphic Effect logic on Scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('mainNavbar');
+            if (window.scrollY > 50) { navbar.classList.add('scrolled'); } 
+            else { navbar.classList.remove('scrolled'); }
+        });
+
+        // Carousel Horizontal Scrolling Logic
         function scrollContainer(containerId, scrollOffset) {
             const container = document.getElementById(containerId);
             if (container) {
-                container.scrollBy({
-                    left: scrollOffset,
-                    behavior: 'smooth'
-                });
+                container.scrollBy({ left: scrollOffset, behavior: 'smooth' });
             }
         }
+
+        /* ====================================================================
+           REAL-TIME ENGINE: LIVE INPUT SEARCH FILTERING LOGIC FOR ALL 50 CARDS
+           ==================================================================== */
+        const searchInput = document.getElementById('liveSearchInput');
+        const filterDropdown = document.getElementById('filterDropdown');
+        const searchBtn = document.getElementById('searchBtn');
+
+        function triggerLiveFilter() {
+            const queryText = searchInput.value.toLowerCase().trim();
+            const chosenDropdownCategory = filterDropdown.value;
+
+            // Filter Category Cards Group
+            const allCategoryCards = document.querySelectorAll('.category-card');
+            allCategoryCards.forEach(card => {
+                const searchTags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').toLowerCase() : '';
+                const cardName = card.querySelector('p').innerText.toLowerCase();
+                
+                if (queryText === "" || searchTags.includes(queryText) || cardName.includes(queryText)) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            // Filter Appointment Cards Group
+            const allAppointmentCards = document.querySelectorAll('.appointment-card');
+            allAppointmentCards.forEach(card => {
+                const cardType = card.getAttribute('data-type');
+                const cardTags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').toLowerCase() : '';
+                const cardTitle = card.querySelector('h4') ? card.querySelector('h4').innerText.toLowerCase() : '';
+                const cardDesc = card.querySelector('p') ? card.querySelector('p').innerText.toLowerCase() : '';
+
+                // Match Category Dropdown Filters
+                const matchCategory = (chosenDropdownCategory === 'all' || cardType === chosenDropdownCategory);
+                
+                // Match Search Input queries
+                const matchText = (queryText === "" || cardTags.includes(queryText) || cardTitle.includes(queryText) || cardDesc.includes(queryText));
+
+                if (matchCategory && matchText) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        // Attach event listeners for real-time live performance mapping
+        searchInput.addEventListener('input', triggerLiveFilter);
+        filterDropdown.addEventListener('change', triggerLiveFilter);
+        searchBtn.addEventListener('click', triggerLiveFilter);
     </script>
 
 </body>
-
 </html>
-
-```
 
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
