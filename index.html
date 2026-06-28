@@ -16,6 +16,15 @@
     <link rel="stylesheet" href="css/index.css">
 
     <link rel="icon" href="images/favicon.png">
+    <script>
+    // पेज उघडताच चेक करा की युजर लॉगिन आहे का?
+    let userLoggedIn = localStorage.getItem('isLoggedIn');
+
+    if (userLoggedIn !== 'true') {
+        // जर लॉगिन नसेल, तर त्याला थेट login.html वर ढकलून द्या
+        window.location.href = 'html/login.html'; // तुझ्या फाईलचा योग्य पाथ टाक
+    }
+</script>
 </head>
 
 <body>

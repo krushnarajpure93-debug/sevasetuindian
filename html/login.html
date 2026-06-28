@@ -747,5 +747,24 @@
         const singleApplicationRootInstance = ReactDOM.createRoot(targetContainerNode);
         singleApplicationRootInstance.render(<SevaSetuEngine />);
     </script>
+    <script>
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+        e.preventDefault(); // फॉर्म सबमिट होऊन पेज रिफ्रेश होऊ नये म्हणून
+
+        // येथे तुम्ही इमेल आणि पासवर्ड घेऊ शकता
+        let email = document.getElementById('login-email').value;
+        // let pass = document.getElementById('login-password').value; // जर पासवर्ड फील्ड असेल तर
+
+        // जर युजरने माहिती टाकली असेल (येथे तुम्ही डमी validation करू शकता)
+        if(email !== '') {
+            // १. युजर लॉगिन झाला आहे हे LocalStorage मध्ये सेव्ह करा
+            localStorage.setItem('isLoggedIn', 'true');
+            
+            // २. यशस्वी लॉगिन नंतर Main Page (index.html) वर पाठवा
+            // (जर login.html 'html' फोल्डरमध्ये असेल, तर '../index.html' वापरा)
+            window.location.href = '../index.html'; 
+        }
+    });
+</script>
 </body>
 </html>
