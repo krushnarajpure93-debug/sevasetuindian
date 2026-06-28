@@ -40,13 +40,13 @@
             <div class="dropdown">
                 <a href="#">Appointments <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></a>
             </div>
-            <a href="services.html">Services</a>
-            <a href="about.html">About Us</a>
-            <a href="contact.html">Contact</a>
+            <a href="html/services.html">Services</a>
+            <a href="html/about.html">About Us</a>
+            <a href="html/contact.html">Contact</a>
         </nav>
         <div class="nav-actions">
             <button id="dark-mode-toggle"><i class="fa-regular fa-moon"></i></button>
-            <a href="login.html" class="btn-login"><i class="fa-solid fa-user"></i> Login / Signup</a>
+            <a href="html/login.html" class="btn-login"><i class="fa-solid fa-user"></i> Login / Signup</a>
         </div>
     </header>
 
@@ -84,7 +84,7 @@
                 </div>
             </div>
             <div class="hero-image">
-                <img src="../images/image.jpg" alt="Happy Family using Laptop">
+                <img src="images/image.jpg" alt="Happy Family using Laptop">
             </div>
         </div>
     </section>
@@ -136,26 +136,50 @@
     </section>
 
     <section class="appointments-section">
-        <h3 class="section-title">Popular Appointments and Services</h3>
+    <h3 class="section-title">Popular Appointments and Services</h3>
 
-        <div class="appointments-wrapper">
-            <button class="scroll-btn left-btn" onclick="scrollContainer('servicesSlider', -320)"><i
-                    class="fa-solid fa-chevron-left"></i></button>
+    <div class="appointments-wrapper">
 
-            <div class="appointments-scroll-container" id="servicesSlider">
+        <button class="scroll-btn left-btn"
+            onclick="scrollContainer('servicesSlider', -320)">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
 
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=400"
-                            alt="Doctor Appointment">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon ic-doc"><i class="fa-solid fa-user-doctor"></i></div>
-                        <h4>Doctor Appointment</h4>
-                        <p>Book with best doctors near you</p>
-                    <a href="html/doctor.html"></a>" class="btn-card-book btn-blue">Book Now</a>
-                    </div>
+        <div class="appointments-scroll-container" id="servicesSlider">
+
+            <!-- Doctor Card -->
+            <div class="appointment-card">
+                <div class="card-img">
+                    <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=400"
+                        alt="Doctor Appointment">
                 </div>
+
+                <div class="card-body">
+                    <div class="card-icon ic-doc">
+                        <i class="fa-solid fa-user-doctor"></i>
+                    </div>
+
+                    <h4>Doctor Appointment</h4>
+
+                    <p>Book with best doctors near you</p>
+
+                    <a href="html/doctor.html"
+                       class="btn-card-book btn-blue">
+                        Book Now
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+
+        <button class="scroll-btn right-btn"
+            onclick="scrollContainer('servicesSlider', 320)">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+    </div>
+</section>
 
                 <div class="appointment-card">
                     <div class="card-img">
@@ -166,7 +190,7 @@
                         <h4>Hotel Booking</h4>
                         <p>Find and book best hotels</p>
                         <a href="html/hotel.html" class="btn-card-book btn-green">Book Now</a>
-                    </div
+                    </div>
                 </div>
 
                 <div class="appointment-card">
@@ -178,7 +202,7 @@
                         <div class="card-icon ic-bus"><i class="fa-solid fa-bus"></i></div>
                         <h4>Travel Booking Hub</h4>
                         <p>Book your bus tickets easily</p>
-                          <a href="html/travelbookinghub.html" class="btn-card-book btn-purple">book no</a>
+                          <a href="html/travelbookinghub.html" class="btn-card-book btn-purple">Book Now</a>
                     </div>
                 </div>
 
@@ -192,7 +216,7 @@
                                 class="fa-solid fa-building-columns"></i></div>
                         <h4>Government Services</h4>
                         <p>MahaESeva, Certificates & Aadhaar</p>
-                        <a href="government.html" class="btn-card-book btn-blue">Book Now</a>
+                        <a href="html/government.html" class="btn-card-book btn-blue">Book Now</a>
                     </div>
                 </div>
 
@@ -219,7 +243,7 @@
                         <div class="card-icon ic-pass"><i class="fa-solid fa-passport"></i></div>
                         <h4>Business Service</h4>
                         <p>Apply or book passport appointment</p>
-                        <a href="business.html" class="btn-card-book btn-orange">Book Now</a>
+                        <a href="html/business.html" class="btn-card-book btn-orange">Book Now</a>
                     </div>
                 </div>
 
@@ -342,11 +366,11 @@
                         </div>
                         <h4>Telecom & Internet Seva</h4>
                         <p>Broadband Booking & Network Support</p>
-                        <a href="telecommunication.html" class="btn-card-book btn-blue">Book Now</a>
+                        <a href="html/telecommunication.html" class="btn-card-book btn-blue">Book Now</a>
                     </div>
                 </div>
-                <div> class ="card-img"</div>
-                    <div> class ="card-img"</div>
+                
+                    
                 </div>
                 <div class="appointment-card">
                     <div class="card-img">
