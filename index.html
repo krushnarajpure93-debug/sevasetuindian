@@ -8,21 +8,17 @@
     <title>Seva Setu - One Stop Appointment Platform</title>
 
     <!-- Font Awesome -->
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/responsive.css">
-<link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/index.css">
 
-<script src="js/darkmode.js"></script>
-    <!-- Favicon -->
-<!-- <link rel="icon" href="images/favicon.png"> -->
+    <script src="js/darkmode.js"></script>
 </head>
 
 <body>
@@ -75,12 +71,8 @@
                 </div>
 
                 <div class="hero-buttons">
-                    <button class="btn-primary"
-                        onclick="document.getElementById('servicesSlider').scrollIntoView({behavior: 'smooth'});">Book
-                        Now</button>
-                    <button class="btn-secondary"
-                        onclick="document.getElementById('categoriesSlider').scrollIntoView({behavior: 'smooth'});">Explore
-                        Services</button>
+                    <button class="btn-primary" onclick="document.getElementById('servicesSlider').scrollIntoView({behavior: 'smooth'});">Book Now</button>
+                    <button class="btn-secondary" onclick="document.getElementById('categoriesSlider').scrollIntoView({behavior: 'smooth'});">Explore Services</button>
                 </div>
             </div>
             <div class="hero-image">
@@ -92,8 +84,7 @@
     <section class="categories-section">
         <h3 class="section-title">Browse by Categories</h3>
         <div class="categories-wrapper">
-            <button class="scroll-btn left-btn" onclick="scrollContainer('categoriesSlider', -200)"><i
-                    class="fa-solid fa-chevron-left"></i></button>
+            <button class="scroll-btn left-btn" onclick="scrollContainer('categoriesSlider', -200)"><i class="fa-solid fa-chevron-left"></i></button>
 
             <div class="categories-scroll-container" id="categoriesSlider">
                 <div class="category-card item-1">
@@ -130,57 +121,16 @@
                 </div>
             </div>
 
-            <button class="scroll-btn right-btn" onclick="scrollContainer('categoriesSlider', 200)"><i
-                    class="fa-solid fa-chevron-right"></i></button>
+            <button class="scroll-btn right-btn" onclick="scrollContainer('categoriesSlider', 200)"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
     </section>
 
-    <section class="appointments-section">
-    <h3 class="section-title">Popular Appointments and Services</h3>
-
-    <div class="appointments-wrapper">
-
-        <button class="scroll-btn left-btn"
-            onclick="scrollContainer('servicesSlider', -320)">
-            <i class="fa-solid fa-chevron-left"></i>
-        </button>
-
-        <div class="appointments-scroll-container" id="servicesSlider">
-
-            <!-- Doctor Card -->
-            <div class="appointment-card">
-                <div class="card-img">
-                    <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=400"
-                        alt="Doctor Appointment">
-                </div>
-
-                <div class="card-body">
-                    <div class="card-icon ic-doc">
-                        <i class="fa-solid fa-user-doctor"></i>
-                    </div>
-
-                    <h4>Doctor Appointment</h4>
-
-                    <p>Book with best doctors near you</p>
-
-                    <a href="html/doctor.html"
-                       class="btn-card-book btn-blue">
-                        Book Now
-                    </a>
-
-                </div>
-            </div>
-
-        </div>
-
-        <button class="scroll-btn right-btn"
-            onclick="scrollContainer('servicesSlider', 320)">
-            <i class="fa-solid fa-chevron-right"></i>
-        </button>
-
-    </div>
-</section>
-
+    <section class="services-section">
+        <h3 class="section-title">Popular Appointments</h3>
+        <div class="services-wrapper">
+            <button class="scroll-btn left-btn" onclick="scrollContainer('servicesSlider', -320)"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="services-scroll-container" id="servicesSlider">
+                
                 <div class="appointment-card">
                     <div class="card-img">
                         <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=400" alt="Hotel">
@@ -195,25 +145,22 @@
 
                 <div class="appointment-card">
                     <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=400"
-                            alt="booking hub">
+                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=400" alt="booking hub">
                     </div>
                     <div class="card-body">
                         <div class="card-icon ic-bus"><i class="fa-solid fa-bus"></i></div>
                         <h4>Travel Booking Hub</h4>
                         <p>Book your bus tickets easily</p>
-                          <a href="html/travelbookinghub.html" class="btn-card-book btn-purple">Book Now</a>
+                        <a href="html/travelbookinghub.html" class="btn-card-book btn-purple">Book Now</a>
                     </div>
                 </div>
 
                 <div class="appointment-card">
                     <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1541872703-74c5e44368f9?q=80&w=400"
-                            alt="Government Services">
+                        <img src="https://images.unsplash.com/photo-1541872703-74c5e44368f9?q=80&w=400" alt="Government Services">
                     </div>
                     <div class="card-body">
-                        <div class="card-icon ic-pass" style="background: #17a2b8; color: white;"><i
-                                class="fa-solid fa-building-columns"></i></div>
+                        <div class="card-icon ic-pass" style="background: #17a2b8; color: white;"><i class="fa-solid fa-building-columns"></i></div>
                         <h4>Government Services</h4>
                         <p>MahaESeva, Certificates & Aadhaar</p>
                         <a href="html/government.html" class="btn-card-book btn-blue">Book Now</a>
@@ -222,22 +169,19 @@
 
                 <div class="appointment-card">
                     <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=400"
-                            alt="Education">
+                        <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=400" alt="Education">
                     </div>
                     <div class="card-body">
-                        <div class="card-icon ic-doc" style="background: #ffc107; color: white;"><i
-                                class="fa-solid fa-graduation-cap"></i></div>
+                        <div class="card-icon ic-doc" style="background: #ffc107; color: white;"><i class="fa-solid fa-graduation-cap"></i></div>
                         <h4>Education Services</h4>
                         <p>Admissions, Career Counseling & Exams</p>
-                        <a href="education.html" class="btn-card-book btn-orange">Book Now</a>
+                        <a href="html/education.html" class="btn-card-book btn-orange">Book Now</a>
                     </div>
                 </div>
 
                 <div class="appointment-card">
                     <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=400"
-                            alt="Passport">
+                        <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=400" alt="Passport">
                     </div>
                     <div class="card-body">
                         <div class="card-icon ic-pass"><i class="fa-solid fa-passport"></i></div>
@@ -252,13 +196,12 @@
                         <img src="https://images.unsplash.com/photo-1558441719-ff34b0524a24?q=80&w=400" alt="Utility">
                     </div>
                     <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #20c997; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
+                        <div class="card-icon" style="background: #20c997; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
                             <i class="fa-solid fa-bolt"></i>
                         </div>
                         <h4>Public Utility Services</h4>
                         <p>Electricity, Water Bill & Gas Connections</p>
-                        <a href="utility.html" class="btn-card-book btn-green">Book Now</a>
+                        <a href="html/utility.html" class="btn-card-book btn-green">Book Now</a>
                     </div>
                 </div>
 
@@ -267,209 +210,16 @@
                         <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=400" alt="Career">
                     </div>
                     <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #6610f2; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
+                        <div class="card-icon" style="background: #6610f2; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
                             <i class="fa-solid fa-briefcase"></i>
                         </div>
                         <h4>Employment & Career Services</h4>
                         <p>Job Applications & Skill Development</p>
-                        <a href="employment.html" class="btn-card-book btn-purple">Book Now</a>
+                        <a href="html/employment.html" class="btn-card-book btn-purple">Book Now</a>
                     </div>
                 </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=400"
-                            alt="Digital">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #007bff; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-laptop-code"></i>
-                        </div>
-                        <h4>Digital & Online Services</h4>
-                        <p>Web Development, Pan Card & Cyber Seva</p>
-                        <a href="digital.html" class="btn-card-book btn-blue">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=400"
-                            alt="Home Seva">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #fd7e14; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-screwdriver-wrench"></i>
-                        </div>
-                        <h4>Home & Personal Services</h4>
-                        <p>Plumbing, Cleaning & Home Maintenance</p>
-                        <a href="homeservices.html" class="btn-card-book btn-orange">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=400"
-                            alt="Smart City">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #17a2b8; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-city"></i>
-                        </div>
-                        <h4>Smart City Services</h4>
-                        <p>Municipality Permissions & Urban Facilities</p>
-                        <a href="smartcity.html" class="btn-card-book btn-blue">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1508873696983-2df5198e4009?q=80&w=400" alt="Rural">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #28a745; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-tree"></i>
-                        </div>
-                        <h4>Rural Services</h4>
-                        <p>Gram Panchayat Documents & Schemes</p>
-                        <a href="rural.html" class="btn-card-book btn-green">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=400" alt="Events">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #e83e8c; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-ticket"></i>
-                        </div>
-                        <h4>Entertainment & Events</h4>
-                        <p>Show Tickets, Hall Booking & Functions</p>
-                        <a href="events.html" class="btn-card-book btn-purple">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=400" alt="Telecom">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #007bff; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-wifi"></i>
-                        </div>
-                        <h4>Telecom & Internet Seva</h4>
-                        <p>Broadband Booking & Network Support</p>
-                        <a href="html/telecommunication.html" class="btn-card-book btn-blue">Book Now</a>
-                    </div>
-                </div>
-                
-                    
-                </div>
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?q=80&w=400" alt="Banking">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #28a745; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-wallet"></i>
-                        </div>
-                        <h4>Banking & Digital Payments</h4>
-                        <p>Account Appointments, CSP & Financial Guide</p>
-                        <a href="banking.html" class="btn-card-book btn-green">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=400"
-                            alt="Fitness">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #dc3545; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-dumbbell"></i>
-                        </div>
-                        <h4>Fitness & Wellness Services</h4>
-                        <p>Gym Slot Booking & Yoga Trainer Appointments</p>
-                        <a href="fitness.html" class="btn-card-book btn-red">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=400"
-                            alt="Agriculture">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #28a745; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-wheat-awn"></i>
-                        </div>
-                        <h4>Agriculture & Farming</h4>
-                        <p>Soil Testing, Solar Pump Info & Krishi Seva</p>
-                        <a href="agriculture.html" class="btn-card-book btn-green">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1609137144813-90d2358fb93b?q=80&w=400" alt="Temple">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #fd7e14; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-om"></i>
-                        </div>
-                        <h4>Religious & Temple Services</h4>
-                        <p>Darshan Pass Booking & Puja Appointments</p>
-                        <a href="religious.html" class="btn-card-book btn-orange">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1472851294608-062f824d296e?q=80&w=400"
-                            alt="Shopping">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #007bff; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </div>
-                        <h4>E-Commerce Services</h4>
-                        <p>Local Store Delivery & Shopping Hub</p>
-                        <a href="shopping.html" class="btn-card-book btn-blue">Book Now</a>
-                    </div>
-                </div>
-
-                <div class="appointment-card">
-                    <div class="card-img">
-                        <img src="https://images.unsplash.com/photo-1486006920555-c77dce18193b?q=80&w=400"
-                            alt="Automobile">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-icon"
-                            style="background: #6c757d; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                            <i class="fa-solid fa-car-wrench"></i>
-                        </div>
-                        <h4>Automobile Services</h4>
-                        <p>Vehicle Servicing, PUC & Repair Appointments</p>
-                        <a href="automobile.html" class="btn-card-book btn-blue-light">Book Now</a>
-                    </div>
-                </div>
-
             </div>
-
-            <button class="scroll-btn right-btn" onclick="scrollContainer('servicesSlider', 320)"><i
-                    class="fa-solid fa-chevron-right"></i></button>
+            <button class="scroll-btn right-btn" onclick="scrollContainer('servicesSlider', 320)"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
     </section>
 
@@ -589,8 +339,7 @@
                 <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rahul Patil">
                 <h4>Rahul Patil</h4>
                 <div class="stars">
-                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                 </div>
                 <p>"Very easy to book appointments. This platform is a lifesaver!"</p>
             </div>
@@ -598,8 +347,7 @@
                 <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sneha Deshmukh">
                 <h4>Sneha Deshmukh</h4>
                 <div class="stars">
-                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                 </div>
                 <p>"All services at one place. Highly recommended!"</p>
             </div>
@@ -607,8 +355,7 @@
                 <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="Amit Kumar">
                 <h4>Amit Kumar</h4>
                 <div class="stars">
-                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                 </div>
                 <p>"Quick booking and great customer support."</p>
             </div>
@@ -635,9 +382,9 @@
                 <ul>
                     <li><a href="#">Home</a></li>
                     <li><a href="#">Appointments</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="html/services.html">Services</a></li>
+                    <li><a href="html/about.html">About Us</a></li>
+                    <li><a href="html/contact.html">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -658,7 +405,6 @@
                     <li><a href="#">Privacy Policy</a></li>
                     <li><a href="#">Refund Policy</a></li>
                     <li><a href="#">Contact Support</a></li>
-
                 </ul>
             </div>
             <div class="footer-col newsletter-col">
@@ -675,8 +421,8 @@
         </div>
     </footer>
 
-   <script src="js/darkmode.js"></script>
-<script src="js/index.js"></script>
+    <script src="js/darkmode.js"></script>
+    <script src="js/index.js"></script>
 </body>
 
 </html>
